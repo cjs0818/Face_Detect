@@ -111,4 +111,4 @@ def detect_faces_camera(path):
 # 메인 함수
 #----------------------------------------------------
 if __name__ == '__main__':
-	detect_faces_image(''./data/R1024x0.jpg")
+	detect_faces_image("./data/R1024x0.jpg")
