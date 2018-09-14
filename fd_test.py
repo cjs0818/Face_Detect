@@ -61,8 +61,10 @@ def detect_face(image_file):
 
         print('face bounds: {}'.format(','.join(vertices)))
 
+    return faces
 
-def detect_faces_image(input_filename):
+
+def detect_faces_image(input_filename, output_filename):
     with open(input_filename, 'rb') as image:
         faces = detect_face(image)
         if len(faces) == 1:
@@ -111,4 +113,4 @@ def detect_faces_camera(path):
 # 메인 함수
 #----------------------------------------------------
 if __name__ == '__main__':
-	detect_faces_image("./data/R1024x0.jpg")
+	detect_faces_image("./data/R1024x0.jpg", "./data/out.jpg")
