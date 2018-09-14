@@ -96,6 +96,15 @@ def detect_faces_camera(path):
 		# frame : Capture한 frame
 		ret, frame = cap.read()
 
+        #faces = detect_face(frame)
+        # im = Image.open(image)
+        # draw = ImageDraw.Draw(im)
+        # for face in faces:
+        #    box = [(vertex.x, vertex.y)
+        #           for vertex in face.bounding_poly.vertices]
+        #    draw.line(box + [box[0]], width=5, fill='#00ff00')
+
+
 		if (ret):
 			# image를 Grayscale로 Convert함.
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
