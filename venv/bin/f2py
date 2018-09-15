@@ -1,4 +1,4 @@
-#!/Users/jschoi/work/ChatBot/Face_Detect/venv/bin/python
+#!/Users/jschoi/work/ChaBot/Face_Detect/venv/bin/python3.7
 # See http://cens.ioc.ee/projects/f2py2e/
 from __future__ import division, print_function
 

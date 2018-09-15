@@ -1,4 +1,4 @@
-#!/Users/jschoi/work/ChatBot/Face_Detect/venv/bin/python
+#!/Users/jschoi/work/ChaBot/Face_Detect/venv/bin/python3.7
 
 # -*- coding: utf-8 -*-
 import re

@@ -1,3 +1,9 @@
+dlib
+numpy
+scipy
+matplotlib
+scikit-image
+scikit-learn
 opencv-contrib-python
 google-cloud-vision==0.30.1
 Pillow

@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyCharm files
+.idea/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+venv3/
+
+# temporary file
+tmp.mp3
+tts.mp3
