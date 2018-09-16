@@ -114,7 +114,7 @@ def load_registered_face():
             if file.endswith("png") or file.endswith("jpg"):
                 path = os.path.join(root, file)
                 label = os.path.basename(root).replace(" ", "-").lower()
-                # print(label, ", ", path)
+                print(label, ", ", path)
 
 
                 with open(path, 'rb') as image_file:
@@ -314,7 +314,7 @@ while(True):
         face_descriptor = facerec.compute_face_descriptor(frame, shape)
 
         fd_th = 0.5
-        #print(labels)
+        print(labels)
         #print(len(fd_known))
 
         min_dist = fd_th
@@ -323,7 +323,7 @@ while(True):
         for id in labels.keys():
             dist = np.subtract(face_descriptor, fd_known[id])
             dist = np.sqrt(np.dot(dist,dist))
-            #print("id: %2d, dist: %4.2f" % (id, dist))
+            print("id: %2d, dist: %4.2f" % (id, dist))
             if(dist < fd_th and dist < min_dist):
                 selected_label = labels[id]
                 min_dist = dist
@@ -353,7 +353,7 @@ while(True):
         roi_ratio_th = 0.3
         dist_ratio_th = 0.03
         print(" ")
-        print("roi_raatio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
+        print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
         if roi_ratio > roi_ratio_th and dist_ratio < dist_ratio_th:
             cv2.line(frame, p1, p2, (0, 0, 255), 2)
         else:
