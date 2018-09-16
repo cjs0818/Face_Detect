@@ -1,6 +1,6 @@
 # ----------------------------------------------
-# Face detection & Head Pose detection: by Dlib
-# Face recognition: by OpenCV
+# Face detection, Head Pose detection, and Face recognition: by Dlib
+# Camera Capture: by OpenCV
 # ----------------------------------------------
 
 import numpy as np
@@ -52,18 +52,6 @@ nose_stabilizers = [Stabilizer(
     measure_num=1,
     cov_process=0.1,
     cov_measure=0.1) for _ in range(6)]
-
-
-# ----------------------------
-# Face recognition: by OpenCV
-recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("./recognizers/face-trainner.yml")
-
-labels = {"person_name": 1}
-with open("pickles/face-labels.pickle", 'rb') as f:
-	og_labels = pickle.load(f)
-	labels = {v:k for k,v in og_labels.items()}
-#print(labels)
 
 
 
@@ -284,23 +272,13 @@ while(True):
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    '''
-    	# recognize? deep learned model predict keras tensorflow pytorch scikit learn
-    	id_, conf = recognizer.predict(roi_gray)
-    	if conf>=4 and conf <= 85:
-    		#print(5: #id_)
-    		#print(labels[id_])
-    		font = cv2.FONT_HERSHEY_SIMPLEX
-    		name = labels[id_]
-    		color = (255, 255, 255)
-    		stroke = 2
-    		cv2.putText(frame, name, (x,y), font, 1, color, stroke, cv2.LINE_AA)
-    '''
-
 
     #win.clear_overlay()
     #win.set_image(frame)
 
+
+    # ---------------------------------
+    # Face Detection
 
     # Ask the detector to find the bounding boxes of each face. The 1 in the
     # second argument indicates that we should upsample the image 1 time. This
@@ -312,35 +290,14 @@ while(True):
         print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
             k, d.left(), d.top(), d.right(), d.bottom()))
 
-        '''
-        #------------------------------
-        #  Recognize
-        # print(x,y,w,h)
-        roi_gray = gray[d.top():d.bottom(), d.left():d.right()]  # (ycord_start, ycord_end)
-        roi_color = frame[d.top():d.bottom(), d.left():d.right()]
-
-        #img_item = "7.png"
-        #cv2.imwrite(img_item, roi_color)
-
-        # recognize? deep learned model predict keras tensorflow pytorch scikit learn
-        try:
-            id_, conf = recognizer.predict(roi_gray)
-            #if conf >= 4 and conf <= 85:
-            if conf >= 45:
-                # print(5: #id_)
-                # print(labels[id_])
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                conf_str = "{0:3.1f}".format(conf)
-                name = labels[id_] + ", [" + conf_str + "]"
-                color = (255, 255, 255)
-                stroke = 2
-                cv2.putText(frame, name, (d.left(), d.top()), font, 1, color, stroke, cv2.LINE_AA)
-        except:
-            pass
-        # ...
-        # ...
-        #------------------------------
-        '''
+        # Draw ROI box for each face found by face detection
+        color = (255, 0, 0)  # BGR 0-255
+        x = d.left()
+        y = d.top()
+        end_cord_x = d.right()
+        end_cord_y = d.bottom()
+        stroke = 2
+        cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
 
 
         # ---------------------------------
@@ -355,20 +312,10 @@ while(True):
         # person, otherwise they are from different people. Here we just print
         # the vector to the screen.
         face_descriptor = facerec.compute_face_descriptor(frame, shape)
-        '''
-        if face_descriptor_p != []:
-            fd = np.array(face_descriptor, dtype=np.float64)
-            fd_p = np.array(face_descriptor_p, dtype=np.float64)
-            dist = np.subtract(fd, fd_p)
-            dist = np.sqrt(np.dot(dist,dist))
-            print("dist: ", dist)
-        face_descriptor_p = face_descriptor
-        '''
-        fd_th = 0.5
 
+        fd_th = 0.5
         #print(labels)
         #print(len(fd_known))
-
 
         min_dist = fd_th
         selected_label = None
@@ -388,8 +335,9 @@ while(True):
             color = (255, 255, 255)
             stroke = 2
             cv2.putText(frame, name, (d.left(), d.top()), font, 1, color, stroke, cv2.LINE_AA)
-        # ---------------------------------
 
+
+        # ---------------------------------
         # Get the landmarks/parts for the face in box d.
         shape = predictor(frame, d)
         #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
@@ -410,98 +358,6 @@ while(True):
             cv2.line(frame, p1, p2, (0, 0, 255), 2)
         else:
             cv2.line(frame, p1, p2, (0, 255, 0), 2)
-
-
-        # Draw ROI box
-        color = (255, 0, 0)  # BGR 0-255
-        x = d.left()
-        y = d.top()
-        end_cord_x = d.right()
-        end_cord_y = d.bottom()
-        stroke = 2
-        cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
-
-
-
-        '''
-        #-----------------------
-        # head_pose_estimation
-        #print(roi_color.shape)   # (214, 223, 3)
-        #print((d.left(), d.top()), (d.right(), d.bottom()))
-        #face_img = cv2.resize(roi_color, None, 128, 128, interpolation = cv2.INTER_CUBIC)
-        face_img = cv2.resize(roi_color, (128, 128))   # <- (214, 223)
-        marks = mark_detector.detect_marks(face_img)
-        #print(marks.shape)
-
-        # Convert the marks locations from local CNN to global image.
-        marks *= (d.right() - d.left())
-        marks[:, 0] += d.left()
-        marks[:, 1] += d.top()
-
-        # Uncomment following line to show raw marks.
-        # mark_detector.draw_marks(
-        #     frame, marks, color=(0, 255, 0))
-
-        # Try pose estimation with 68 points.
-        # pose = tuple of (pose[0], pose[1])
-        #     pose[0] = rotation_vector,    # Rotation in axis-angle form
-        #     pose[1] = translation_vector
-        # example:
-        #  pose = (array([[0.13766505],
-        #        [-0.04562614],
-        #        [-3.13804042]]),array([[-73.15168994],
-        #                                [-44.24913723],
-        #                                [-477.4216987]]))
-        pose = pose_estimator.solve_pose_by_68_points(marks)
-
-        print(pose)
-        print("--------")
-
-        # Stabilize the pose.
-        stable_pose = []
-        pose_np = np.array(pose).flatten()
-        for value, ps_stb in zip(pose_np, pose_stabilizers):
-            ps_stb.update([value])
-            stable_pose.append(ps_stb.state[0])
-        stable_pose = np.reshape(stable_pose, (-1, 3))
-        print(stable_pose)
-
-        # Uncomment following line to draw pose annotaion on frame.
-        # pose_estimator.draw_annotation_box(
-        #     frame, pose[0], pose[1], color=(255, 128, 128))
-
-        # Uncomment following line to draw stable pose annotation on frame.
-        pose_estimator.draw_annotation_box(
-            frame, stable_pose[0], stable_pose[1], color=(128, 255, 128))
-        '''
-
-
-        '''
-        # Project a 3D point (0, 0, 1000.0) onto the image plane.
-        # We use this to draw a line sticking out of the nose
-        # Camera internals
-        size = frame.shape
-        focal_length = size[1]
-        center = (size[1] / 2, size[0] / 2)
-        camera_matrix = np.array(
-            [[focal_length, 0, center[0]],
-             [0, focal_length, center[1]],
-             [0, 0, 1]], dtype="double"
-        )
-        rotation_vector = stable_pose[0]
-        translation_vector = stable_pose[1]
-        dist_coeffs = np.zeros((4, 1))  # Assuming no lens distortion
-        (nose_end_point2D, jacobian) = cv2.projectPoints(np.array([(0.0, 0.0, 1000.0)]), rotation_vector,
-                                                         translation_vector, camera_matrix, dist_coeffs)
-
-        Nose = 30
-        p1 = (int(marks[Nose][0]), int(marks[Nose][1]))
-        p2 = (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
-
-        cv2.line(frame, p1, p2, (0, 255, 0), 2)
-        '''
-        #-----------------------
-
 
 
 

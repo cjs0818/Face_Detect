@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/fd_dlib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fd_dlib_bak.py" beforeDir="false" afterPath="$PROJECT_DIR$/fd_dlib_bak.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +17,7 @@
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$image_test.coverage" NAME="image_test Coverage Results" MODIFIED="1536936160774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$face_train.coverage" NAME="face-train Coverage Results" MODIFIED="1537053932552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537106178177" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537106947450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -69,8 +69,8 @@
       <file leaf-file-name="fd_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fd_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1480">
-              <caret line="366" column="19" selection-start-line="366" selection-start-column="19" selection-end-line="366" selection-end-column="19" />
+            <state relative-caret-position="538">
+              <caret line="300" column="8" selection-start-line="300" selection-start-column="8" selection-end-line="300" selection-end-column="8" />
               <folding>
                 <element signature="e#177#195#0" expanded="true" />
               </folding>
@@ -116,7 +116,7 @@
       <find>labels</find>
       <find>face_cascade</find>
       <find>pose_stabilizers</find>
-      <find>Part 0</find>
+      <find />
       <find>shape</find>
       <find>Image</find>
       <find>recognizer</find>
@@ -481,8 +481,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1480">
-          <caret line="366" column="19" selection-start-line="366" selection-start-column="19" selection-end-line="366" selection-end-column="19" />
+        <state relative-caret-position="538">
+          <caret line="300" column="8" selection-start-line="300" selection-start-column="8" selection-end-line="300" selection-end-column="8" />
           <folding>
             <element signature="e#177#195#0" expanded="true" />
           </folding>
