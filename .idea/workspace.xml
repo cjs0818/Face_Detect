@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_fd_dlib.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -70,8 +69,17 @@
       <file leaf-file-name="main_fd_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="116" column="17" selection-start-line="116" selection-start-column="17" selection-end-line="116" selection-end-column="17" />
+            <state relative-caret-position="334">
+              <caret line="123" column="55" selection-start-line="123" selection-start-column="55" selection-end-line="123" selection-end-column="55" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="fd_dlib_bak.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fd_dlib_bak.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="235">
+              <caret line="431" column="8" lean-forward="true" selection-start-line="431" selection-start-column="8" selection-end-line="431" selection-end-column="70" />
             </state>
           </provider>
         </entry>
@@ -95,8 +103,8 @@
       <file leaf-file-name="face-train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/face-train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="591">
-              <caret line="48" selection-start-line="48" selection-end-line="49" selection-end-column="29" />
+            <state relative-caret-position="319">
+              <caret line="32" column="29" selection-start-line="32" selection-end-line="34" selection-end-column="56" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -118,6 +126,8 @@
       <find>shape</find>
       <find>recognizer</find>
       <find>Image</find>
+      <find>resize</find>
+      <find>resi</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -328,11 +338,11 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3288889" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3288889" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2550586" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2550586" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -463,16 +473,6 @@
         <state relative-caret-position="-2498" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/face-train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="591">
-          <caret line="48" selection-start-line="48" selection-end-line="49" selection-end-column="29" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4998">
@@ -493,10 +493,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/face-train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="32" column="29" selection-start-line="32" selection-end-line="34" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fd_dlib_bak.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="431" column="8" lean-forward="true" selection-start-line="431" selection-start-column="8" selection-end-line="431" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="116" column="17" selection-start-line="116" selection-start-column="17" selection-end-line="116" selection-end-column="17" />
+        <state relative-caret-position="334">
+          <caret line="123" column="55" selection-start-line="123" selection-start-column="55" selection-end-line="123" selection-end-column="55" />
         </state>
       </provider>
     </entry>

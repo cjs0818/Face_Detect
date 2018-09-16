@@ -121,6 +121,7 @@ def load_registered_face():
 
                     #frame = Image.open(image_file)
                     frame = cv2.imread(path, cv2.IMREAD_COLOR)
+                    frame = cv2.resize(frame, (320, 320))
 
                     # ---------------------------------
                     # Recognize by Dlib
