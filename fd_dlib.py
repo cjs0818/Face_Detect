@@ -3,7 +3,6 @@
 # Face recognition: by OpenCV
 # ----------------------------------------------
 
-
 import numpy as np
 import cv2
 import pickle    # used for Face recognition by OpenCV
@@ -11,6 +10,8 @@ import pickle    # used for Face recognition by OpenCV
 import sys
 import dlib     # used for Face detectiob by Dlib
 from skimage import io
+import os
+from PIL import Image
 
 # Head Pose Estimator from https://github.com/yinguobing/head-pose-estimation
 from mark_detector import MarkDetector
@@ -29,6 +30,23 @@ predictor = dlib.shape_predictor(predictor_path)
 You can download a trained facial shape predictor from:
     http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2
 '''
+
+# ----------------------------
+# Face Recognition: by Dlib
+predictor_path = "./shape_predictor_5_face_landmarks.dat"
+face_rec_model_path = "./dlib_face_recognition_resnet_model_v1.dat"
+sp = dlib.shape_predictor(predictor_path)
+facerec = dlib.face_recognition_model_v1(face_rec_model_path)
+face_descriptor_p = []
+'''
+"Call this program like this:\n"
+"   ./face_recognition.py shape_predictor_5_face_landmarks.dat dlib_face_recognition_resnet_model_v1.dat ../examples/faces\n"
+"You can download a trained facial shape predictor and recognition model from:\n"
+"    http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2\n"
+"    http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2")
+'''
+
+
 nose_stabilizers = [Stabilizer(
     state_num=2,
     measure_num=1,
@@ -88,6 +106,84 @@ model_points = np.array([
     (150.0, -150.0, -125.0)  # Right mouth corner
 
 ])
+
+
+def load_registered_face():
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    image_dir = os.path.join(BASE_DIR, "images")
+
+    current_id = 0
+    label_ids = {}
+    y_labels = []
+    x_train = []
+
+    each_label_cnt = 0
+    face_descriptor_sum = np.zeros(128)
+    fd_known = []
+
+    for root, dirs, files in os.walk(image_dir):
+        for file in files:
+            if file.endswith("png") or file.endswith("jpg"):
+                path = os.path.join(root, file)
+                label = os.path.basename(root).replace(" ", "-").lower()
+                # print(label, ", ", path)
+
+
+                with open(path, 'rb') as image_file:
+
+                    #frame = Image.open(image_file)
+                    frame = cv2.imread(path, cv2.IMREAD_COLOR)
+
+                    # ---------------------------------
+                    # Recognize by Dlib
+
+                    # Ask the detector to find the bounding boxes of each face. The 1 in the
+                    # second argument indicates that we should upsample the image 1 time. This
+                    # will make everything bigger and allow us to detect more faces.
+                    dets = detector(frame, 1)
+                    #print("Number of faces detected: {}".format(len(dets)))
+
+                    for k, d in enumerate(dets):
+                        each_label_cnt += 1
+
+                        # Get the landmarks/parts for the face in box d.
+                        shape = sp(frame, d)
+
+                        # Compute the 128D vector that describes the face in img identified by
+                        # shape.  In general, if two face descriptor vectors have a Euclidean
+                        # distance between them less than 0.6 then they are from the same
+                        # person, otherwise they are from different people. Here we just print
+                        # the vector to the screen.
+                        face_descriptor = facerec.compute_face_descriptor(frame, shape)
+                        face_descriptor_sum = np.add(face_descriptor_sum, face_descriptor)
+
+
+                    if not label in label_ids.values():
+                        if(current_id > 0):
+                            if(each_label_cnt > 0):
+                                #print("(current_id, each_label_cnt) = (%2d, %2d)" % (current_id, each_label_cnt))
+                                fd_avg = np.divide(face_descriptor_sum, each_label_cnt)
+                                fd_known.append(fd_avg)
+                            else:
+                                label_ids.popitem()
+                                current_id -= 1
+
+                        label_ids[current_id] = label
+                        current_id += 1
+                        each_label_cnt = 0
+                        face_descriptor_sum = np.zeros(128)
+    if(each_label_cnt > 0):
+        fd_known.append(np.divide(face_descriptor_sum, each_label_cnt))
+    else:
+        label_ids.popitem()
+
+    print(label_ids)
+    print(len(fd_known))
+
+    #print(label_ids)
+
+
+    return (label_ids, fd_known)
 
 
 
@@ -176,6 +272,11 @@ drawPolyline(im, landmarks, 60, 67, true); // Inner lip
 
 
 #------------------------------------------
+# Dlib: Load labels_id & face_descriptors of registered faces
+(labels, fd_known) = load_registered_face()
+#------------------------------------------
+
+
 
 
 while(True):
@@ -211,7 +312,7 @@ while(True):
         print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
             k, d.left(), d.top(), d.right(), d.bottom()))
 
-
+        '''
         #------------------------------
         #  Recognize
         # print(x,y,w,h)
@@ -233,13 +334,61 @@ while(True):
                 name = labels[id_] + ", [" + conf_str + "]"
                 color = (255, 255, 255)
                 stroke = 2
-                cv2.putText(frame, name, (x, y), font, 1, color, stroke, cv2.LINE_AA)
+                cv2.putText(frame, name, (d.left(), d.top()), font, 1, color, stroke, cv2.LINE_AA)
         except:
             pass
         # ...
         # ...
         #------------------------------
+        '''
 
+
+        # ---------------------------------
+        # Recognize by Dlib
+
+        # Get the landmarks/parts for the face in box d.
+        shape = sp(frame, d)
+
+        # Compute the 128D vector that describes the face in img identified by
+        # shape.  In general, if two face descriptor vectors have a Euclidean
+        # distance between them less than 0.6 then they are from the same
+        # person, otherwise they are from different people. Here we just print
+        # the vector to the screen.
+        face_descriptor = facerec.compute_face_descriptor(frame, shape)
+        '''
+        if face_descriptor_p != []:
+            fd = np.array(face_descriptor, dtype=np.float64)
+            fd_p = np.array(face_descriptor_p, dtype=np.float64)
+            dist = np.subtract(fd, fd_p)
+            dist = np.sqrt(np.dot(dist,dist))
+            print("dist: ", dist)
+        face_descriptor_p = face_descriptor
+        '''
+        fd_th = 0.5
+
+        #print(labels)
+        #print(len(fd_known))
+
+
+        min_dist = fd_th
+        selected_label = None
+
+        for id in labels.keys():
+            dist = np.subtract(face_descriptor, fd_known[id])
+            dist = np.sqrt(np.dot(dist,dist))
+            #print("id: %2d, dist: %4.2f" % (id, dist))
+            if(dist < fd_th and dist < min_dist):
+                selected_label = labels[id]
+                min_dist = dist
+        if(selected_label != None):
+            print(selected_label)
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            conf_str = "{0:3.1f}".format(min_dist)
+            name = selected_label + ", [" + conf_str + "]"
+            color = (255, 255, 255)
+            stroke = 2
+            cv2.putText(frame, name, (d.left(), d.top()), font, 1, color, stroke, cv2.LINE_AA)
+        # ---------------------------------
 
         # Get the landmarks/parts for the face in box d.
         shape = predictor(frame, d)
