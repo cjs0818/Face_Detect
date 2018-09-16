@@ -21,3 +21,7 @@ tts.mp3
 
 # large .dat file
 .dat
+
+# image data
+images/
+images_*/

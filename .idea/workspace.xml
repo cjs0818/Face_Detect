@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.requirements.txt.swp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/7.png" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/face-train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/fd_dlib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fd_opencv.py" beforeDir="false" afterPath="$PROJECT_DIR$/fd_opencv.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,7 +17,8 @@
     <SUITE FILE_PATH="coverage/Face_Detect$fd_test.coverage" NAME="fd_test Coverage Results" MODIFIED="1536970930211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$image_test.coverage" NAME="image_test Coverage Results" MODIFIED="1536936160774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537022552385" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$face_train.coverage" NAME="face-train Coverage Results" MODIFIED="1537053932552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537054299961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -70,10 +70,22 @@
       <file leaf-file-name="fd_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fd_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="520">
-              <caret line="132" column="17" selection-start-line="132" selection-start-column="17" selection-end-line="132" selection-end-column="17" />
+            <state relative-caret-position="561">
+              <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
               <folding>
-                <element signature="e#0#18#0" expanded="true" />
+                <element signature="e#178#196#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="face-train.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/face-train.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="442">
+              <caret line="26" column="31" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,6 +96,10 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>ret</find>
+      <find>load</find>
+      <find>landmark</find>
+      <find>labels</find>
+      <find>face_cascade</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -96,6 +112,7 @@
         <option value="$PROJECT_DIR$/fd_test.py" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/fd_opencv.py" />
+        <option value="$PROJECT_DIR$/face-train.py" />
         <option value="$PROJECT_DIR$/fd_dlib.py" />
       </list>
     </option>
@@ -154,6 +171,25 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.fd_dlib">
+    <configuration name="face-train" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Face_Detect" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/face-train.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
     <configuration name="fd_dlib" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Face_Detect" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -235,10 +271,12 @@
       <item itemvalue="Python.image_test" />
       <item itemvalue="Python.fd_opencv" />
       <item itemvalue="Python.fd_dlib" />
+      <item itemvalue="Python.face-train" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.fd_dlib" />
+        <item itemvalue="Python.face-train" />
         <item itemvalue="Python.fd_opencv" />
         <item itemvalue="Python.fd_test" />
         <item itemvalue="Python.image_test" />
@@ -291,6 +329,11 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="4" />
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/fd_test.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -327,7 +370,7 @@
         <state relative-caret-position="221">
           <caret line="13" column="32" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#178#196#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -393,12 +436,22 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/face-train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="31" selection-start-line="26" selection-start-column="31" selection-end-line="26" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="132" column="17" selection-start-line="132" selection-start-column="17" selection-end-line="132" selection-end-column="17" />
+        <state relative-caret-position="561">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#178#196#0" expanded="true" />
           </folding>
         </state>
       </provider>
