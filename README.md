@@ -1,13 +1,66 @@
-# Google Vision API + OpenCV(python)
+# Face Detection, Head Pose Detection and Face Recognition with OpenCV(python)
+
+## Install Python, pyenv, virtualenv
+- Install python3 
+	- Ref: [https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/](https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/)
+	```
+	$ brew install python3
+	```
+- Install pyenv (to manage several versions of python in one PC)
+	- Ref: [https://jiyeonseo.github.io/2016/07/27/install-pyenv/](https://jiyeonseo.github.io/2016/07/27/install-pyenv/)
+
+	- In macOS,
+	```
+	$ brew install pyenv
+	$ brew upgrade pyenv
+	```
+    - In Linux,
+    ```
+    $ sudo apt-get install pyenv
+    ```
+    - PATH 설정 (~/.bash_profile 또는 ~/.bashrc에 아래 내용 추가)
+    ```
+    $ export PYENV_ROOT="$HOME/.pyenv"
+	$ export PATH="$PYENV_ROOT/bin:$PATH"
+	$ eval "$(pyenv init -)"
+	$ source ~/.bash_profile
+    ```
+    - 설치할 수 있는 목록 확인
+    ```
+    $ pyenv install --list
+    ```
+    - 원하는 python 버전 설치 준비
+    ```
+    $ pyenv install 3.6.5
+    ```
+    - 설치된 pyenv 확인
+    ```
+    $ pyenv versions
+    ```
+    - 원하는 python 버전으로 변환
+    ```
+    $ pyenv shell 3.6.5
+    ```
+    - 설치된 python 버전 확인
+    ```
+    $ python -V
+    ```
+
+- Install virtualenv
+```
+$ pip3 install virtualenv virtualenvwrapper
+```
+	- Virtualenv의 기본적 명령어
+	```
+    $ virtualenv -p python3 venv   # <- virtual env -p <python version> <가상 environment name
+    ```
 
 ## Install OpenCV(python)
-- Reference: [https://pypi.org/project/opencv-python/](https://pypi.org/project/opencv-python/)
 
-- Install python
-- Install opencv-python
+- Install opencv-python ([https://pypi.org/project/opencv-python/](https://pypi.org/project/opencv-python/))
 ```
+$ pip3 install opencv-contrib-python # if you need both main and contrib modules (recommended)
 $ pip3 install opencv-python  # if you need only main modules
-$ pip3 install opencv-contrib-python # if you need both main and contrib modules
 ```
 
 - Reference for opencv stuffs: [https://opencv-python.readthedocs.io/en/latest/index.html](https://opencv-python.readthedocs.io/en/latest/index.html)
