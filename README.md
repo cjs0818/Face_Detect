@@ -12,7 +12,7 @@
 	- In macOS,
 	```
 	$ brew install pyenv
-	$ brew upgrade pyenv
+	$ brew upgrade pyenv  # It may generate some error message like "pyenv 1.2.7 already installed", but you can neglect it.
 	```
     - In Linux,
     ```
@@ -20,10 +20,10 @@
     ```
     - PATH 설정 (~/.bash_profile 또는 ~/.bashrc에 아래 내용 추가)
     ```
-    $ export PYENV_ROOT="$HOME/.pyenv"
-	$ export PATH="$PYENV_ROOT/bin:$PATH"
-	$ eval "$(pyenv init -)"
-	$ source ~/.bash_profile
+    export PYENV_ROOT="$HOME/.pyenv"
+	export PATH="$PYENV_ROOT/bin:$PATH"
+	eval "$(pyenv init -)"
+	source ~/.bash_profile
     ```
     - 설치할 수 있는 목록 확인
     ```
@@ -33,7 +33,7 @@
     ```
     $ pyenv install 3.6.5
     ```
-    - 설치된 pyenv 확인
+    - 설치 준비된 python 버전 확인
     ```
     $ pyenv versions
     ```
@@ -50,10 +50,31 @@
 ```
 $ pip3 install virtualenv virtualenvwrapper
 ```
-	- Virtualenv의 기본적 명령어
+
+
+## Download git source files & create virtualenv
+- Download git source files
+```
+$ git clone https://github.com/cjs0818/Face_Detect.git
+$ cd Face_Detect
+```
+- Create virtualenv
+```
+$ virtualenv -p python3 venv   # <-- virtual env -p <python version> <가상 environment name
+```
+- Go into the virtualenv
+```
+$ source venv/bin/activate
+```
+	- When you exit the virtualenv, just type `deactivate` in the environment.
 	```
-    $ virtualenv -p python3 venv   # <- virtual env -p <python version> <가상 environment name
+    $ (venv) deactivate
     ```
+- Install the required modules which are written in `requirements.txt.` file.
+```
+$ pip3 install -r requirements.txt
+```
+- Note, tensorflow is not compatible with python3.7. Then, you should use python 3.6.5 (it can be easily switched using pyenv)
 
 ## Install OpenCV(python)
 
