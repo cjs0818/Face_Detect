@@ -1,7 +1,7 @@
 # Face Detection, Head Pose Detection and Face Recognition with OpenCV(python)
 
 ## Install Python, pyenv, virtualenv
-- Install python3 
+- Install python3   (v3.6.5 is recommended, since v3.7 & above is not compatible with tensorflow yet)
 	- Ref: [https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/](https://beomi.github.io/2016/12/28/HowToSetup-Virtualenv-VirtualenvWrapper/)
 	```
 	$ brew install python3
@@ -74,7 +74,29 @@ $ source venv/bin/activate
 ```
 $ pip3 install -r requirements.txt
 ```
-- Note, tensorflow is not compatible with python3.7. Then, you should use python 3.6.5 (it can be easily switched using pyenv)
+- Note, tensorflow is not compatible with python3.7.
+  - Then, you should use python 3.6.5 (it can be easily switched using pyenv which is already described above)
+  - You need to install the fixed custom builds of tensorflow whose version is fit to your system from [https://github.com/lakshayg/tensorflow-build](https://github.com/lakshayg/tensorflow-build)
+  ```
+  $ pip3 install --ignore-installed --upgrade /path/to/binary.whl
+  ```
+  For my system, (python 3.6.5, tensorflow 1.9.0)
+  ```
+  $ pip3 install --ignore-installed --upgrade tensorflow-1.9.0-cp36-cp36m-macosx_10_13_x86_64.whl
+  ```
+  - Then, you need to remove the virtualenv folder venv and recreate a new venv with python3.6.5 like
+  ```
+  $ virtualenv -p python3 venv   # Make sure you are using python 3.6.5
+  ```
+  - If you do not have Cmake installed, install it first to use Dlib module.
+    - Download the compressed Cmake software from [https://cmake.org/download/](https://cmake.org/download/)
+      - [https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz](https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz)
+    - Uncompress the downloaded file
+    - Move inside the uncompressed folder (cmake-3.12.2)
+    - Install Cmake as
+  ```
+  $ ./bootstrap && make && make install
+  ```
 
 ## Install OpenCV(python)
 
