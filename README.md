@@ -58,10 +58,42 @@ $ pip3 install virtualenv virtualenvwrapper
 $ git clone https://github.com/cjs0818/Face_Detect.git
 $ cd Face_Detect
 ```
+
+- Note, **tensorflow is not compatible with python3.7**.
+  - Then, you should use python 3.6.5 (it can be easily switched using pyenv which is already described above)
+  ```
+  $ pyenv shell 3.6.5
+  ```
+  - You need to install the fixed custom builds of tensorflow whose version is fit to your system from [https://github.com/lakshayg/tensorflow-build](https://github.com/lakshayg/tensorflow-build)
+  ```
+  $ pip3 install --ignore-installed --upgrade /path/to/binary.whl
+  ```
+  For my system, (python 3.6.5 and tensorflow 1.9.0)
+  ```
+  $ pip3 install --ignore-installed --upgrade tensorflow-1.9.0-cp36-cp36m-macosx_10_13_x86_64.whl
+  ```
+
+- If you do not have **Cmake** installed, install it first to use **Dlib** module.
+    - Download the compressed Cmake software from [https://cmake.org/download/](https://cmake.org/download/)
+      - [https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz](https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz)
+    - Uncompress the downloaded file
+    - Move inside the uncompressed folder (cmake-3.12.2)
+    - Install Cmake as follows (**Note: It takes some time!**)
+  ```
+  $ ./bootstrap && make && make install
+  ```
+
 - Create virtualenv
 ```
 $ virtualenv -p python3 venv   # <-- virtual env -p <python version> <가상 environment name
 ```
+```
+ $ virtualenv -p python3 venv   # Make sure you are using python 3.6.5
+```
+  - If you have already had venv with different version of python3 (i.e, python3.7.0), then you first need to remove the virtualenv folder (venv) and recreate a new venv with python3.6.5 
+
+
+
 - Go into the virtualenv
 ```
 $ source venv/bin/activate
@@ -70,33 +102,10 @@ $ source venv/bin/activate
 	```
     $ (venv) deactivate
     ```
-- Install the required modules which are written in `requirements.txt.` file.
+- Install the required modules which are written in `requirements.txt.` file. (**It takes some time!!!**)
 ```
 $ pip3 install -r requirements.txt
 ```
-- Note, tensorflow is not compatible with python3.7.
-  - Then, you should use python 3.6.5 (it can be easily switched using pyenv which is already described above)
-  - You need to install the fixed custom builds of tensorflow whose version is fit to your system from [https://github.com/lakshayg/tensorflow-build](https://github.com/lakshayg/tensorflow-build)
-  ```
-  $ pip3 install --ignore-installed --upgrade /path/to/binary.whl
-  ```
-  For my system, (python 3.6.5, tensorflow 1.9.0)
-  ```
-  $ pip3 install --ignore-installed --upgrade tensorflow-1.9.0-cp36-cp36m-macosx_10_13_x86_64.whl
-  ```
-  - Then, you need to remove the virtualenv folder venv and recreate a new venv with python3.6.5 like
-  ```
-  $ virtualenv -p python3 venv   # Make sure you are using python 3.6.5
-  ```
-  - If you do not have Cmake installed, install it first to use Dlib module.
-    - Download the compressed Cmake software from [https://cmake.org/download/](https://cmake.org/download/)
-      - [https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz](https://cmake.org/files/v3.12/cmake-3.12.2.tar.gz)
-    - Uncompress the downloaded file
-    - Move inside the uncompressed folder (cmake-3.12.2)
-    - Install Cmake as
-  ```
-  $ ./bootstrap && make && make install
-  ```
 
 ## Install OpenCV(python)
 
