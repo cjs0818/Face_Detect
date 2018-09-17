@@ -334,8 +334,8 @@ while(True):
             conf_str = "{0:3.1f}".format(min_dist)
             name = selected_label + ", [" + conf_str + "]"
             color = (255, 255, 255)
-            stroke = 2
-            cv2.putText(frame, name, (d.left(), d.top()), font, 1, color, stroke, cv2.LINE_AA)
+            stroke = 1   # 글씨 굵기 ?
+            cv2.putText(frame, name, (d.left(), d.top()), font, 0.5, color, stroke, cv2.LINE_AA)
 
 
         # ---------------------------------
