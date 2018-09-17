@@ -100,3 +100,12 @@ while(True):
 cap.release()
 cv2.destroyAllWindows()
 ```
+
+## Install large model data
+### For Head Pose Detection (Dlib)
+ - Download a trained facial shape predictor from:
+ 	- [http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2](http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2)
+### For Face Recognition (Dlib)
+ - Da trained facial shape predictor and recognition model from:
+ 	- [http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2](http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2)
+ 	- [http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2](http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2/)
