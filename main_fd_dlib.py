@@ -43,6 +43,84 @@ eye_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_eye.xml')
 smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 '''
 
+EVENT_STATE_IDLE = 0
+EVENT_STATE_APPROACH = 1
+EVENT_STATE_DISAPPEAR = 2
+EVENT_STATE_FACE = 3
+
+
+class Event_Detector():
+    def __init__(self):
+        self.state = EVENT_STATE_IDLE
+        self.state_prev = EVENT_STATE_IDLE
+        self.approach_cnt = 0
+        self.approach_cnt_th = 5
+        self.disappear_cnt = 0
+        self.disappear_cnt_th = 5
+
+        self.id = -1
+
+
+    def approach_disappear(self, fr_labels, fr_box, min_width_id):
+        '''
+        if len(fr_labels) > 0:
+            self.approach_cnt += 1
+            if self.state == EVENT_STATE_IDLE:
+                if self.approach_cnt >= self.approach_cnt_th and self.state_prev != EVENT_STATE_APPROACH:
+                    self.state = EVENT_STATE_APPROACH
+            else:
+                self.state_prev = self.state
+                self.state = EVENT_STATE_IDLE
+                self.approach_cnt = 0
+                self.disappear_cnt = 0
+        else:
+            if self.state == EVENT_STATE_IDLE:
+                if self.state_prev == EVENT_STATE_APPROACH:
+                    self.disappear_cnt += 1
+                    if self.disappear_cnt >= self.disappear_cnt_th:
+                        self.state = EVENT_STATE_DISAPPEAR
+            else:
+                self.state_prev = self.state
+                self.state = EVENT_STATE_IDLE
+                self.disappear_cnt = 0
+        '''
+
+        if self.state == EVENT_STATE_APPROACH or self.state == EVENT_STATE_DISAPPEAR:
+            self.state = self.state_prev
+
+            
+        if len(fr_labels) > 0:
+            self.approach_cnt += 1
+            if self.approach_cnt >= self.approach_cnt_th:
+                self.state_prev = self.state
+                self.state = EVENT_STATE_FACE
+                self.approach_cnt = 0
+        else:
+            self.disappear_cnt += 1
+            if self.disappear_cnt >= self.disappear_cnt_th:
+                self.state_prev = self.state
+                self.state = EVENT_STATE_IDLE
+                self.disappear_cnt = 0
+        if self.state_prev == EVENT_STATE_IDLE and self.state == EVENT_STATE_FACE:
+            self.state_prev = self.state
+            self.state = EVENT_STATE_APPROACH
+            print("! --------  APPROACH  -------")
+        if self.state_prev == EVENT_STATE_FACE and self.state == EVENT_STATE_IDLE:
+            self.state_prev= self.state
+            self.state = EVENT_STATE_DISAPPEAR
+            print("! --------  DISAPPEAR  -------")
+        
+
+
+        print("   Evet State = %1d" % self.state)
+
+        return self.state
+
+    def get_state(self):
+        return self.state
+    def put_state(self, state):
+        self.state = state
+
 
 def main():
     cap = cv2.VideoCapture(0)
@@ -67,7 +145,7 @@ def main():
     (labels, fd_known) = fr.load_registered_face()
     # ------------------------------------------
 
-
+    event_detect = Event_Detector()
 
     while(True):
         # Capture frame-by-frame
@@ -102,6 +180,8 @@ def main():
             cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
         '''
 
+        min_width = frame.shape[0]
+        min_width_id = -1
 
         # ---------------------------------
         # Face Recognition
@@ -123,7 +203,17 @@ def main():
 
 
             # ---------------------------------
+            #   Select the closed face
+            d_width = d.right() - d.left()
+            if(d_width < min_width):
+                min_width_id = id
+
+        if(len(fr_labels) > 0):
+            # ---------------------------------
+            # Head Pose Detection for the closed face,
+
             # Get the landmarks/parts for the face in box d.
+            d = fr_box[min_width_id]
             shape = hpd.predictor(frame, d)
             #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
 
@@ -145,6 +235,7 @@ def main():
             else:
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
 
+        event_state = event_detect.approach_disappear(fr_labels, fr_box, min_width_id)
 
 
         # Display the resulting frame
