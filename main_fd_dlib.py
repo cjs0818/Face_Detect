@@ -129,14 +129,15 @@ def main():
 
             # Find Head Pose using the face landmarks and Draw them on the screen.
             (p1, p2) = hpd.draw_landmark_headpose(frame, shape)
-            dx = p2[0] - p1[0]
-            dy = p2[1] - p1[1]
-            dist = dx*dx + dy*dy
             roi_ratio = (d.right() - d.left()) / frame.shape[0]
-            dist_ratio = dist / (frame.shape[0]*frame.shape[0]) * ((d.right() - d.left()) / frame.shape[0])
 
-            roi_ratio_th = 0.3
-            dist_ratio_th = 0.03
+            dist = np.subtract(p2, p1)
+            dist = np.sqrt(np.dot(dist, dist))
+            dist_ratio = dist / (d.right() - d.left())
+            print((roi_ratio, dist_ratio))
+
+            roi_ratio_th = 0.15
+            dist_ratio_th = 0.75  # 0.03
             print(" ")
             print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
             if roi_ratio > roi_ratio_th and dist_ratio < dist_ratio_th:
