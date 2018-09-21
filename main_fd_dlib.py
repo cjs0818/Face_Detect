@@ -63,57 +63,7 @@ class Event_Detector():
 
 
     def approach_disappear(self, fr_labels, fr_box, min_width_id):
-        '''
-        if len(fr_labels) > 0:
-            self.approach_cnt += 1
-            if self.state == EVENT_STATE_IDLE:
-                if self.approach_cnt >= self.approach_cnt_th and self.state_prev != EVENT_STATE_APPROACH:
-                    self.state = EVENT_STATE_APPROACH
-            else:
-                self.state_prev = self.state
-                self.state = EVENT_STATE_IDLE
-                self.approach_cnt = 0
-                self.disappear_cnt = 0
-        else:
-            if self.state == EVENT_STATE_IDLE:
-                if self.state_prev == EVENT_STATE_APPROACH:
-                    self.disappear_cnt += 1
-                    if self.disappear_cnt >= self.disappear_cnt_th:
-                        self.state = EVENT_STATE_DISAPPEAR
-            else:
-                self.state_prev = self.state
-                self.state = EVENT_STATE_IDLE
-                self.disappear_cnt = 0
-        '''
-
-
-        '''
-        if self.state == EVENT_STATE_APPROACH or self.state == EVENT_STATE_DISAPPEAR:
-            self.state = self.state_prev
-
-        if len(fr_labels) > 0:
-            self.approach_cnt += 1
-            if self.approach_cnt >= self.approach_cnt_th:
-                self.state_prev = self.state
-                self.state = EVENT_STATE_FACE
-                self.approach_cnt = 0
-        else:
-            self.disappear_cnt += 1
-            if self.disappear_cnt >= self.disappear_cnt_th:
-                self.state_prev = self.state
-                self.state = EVENT_STATE_IDLE
-                self.disappear_cnt = 0
-        if self.state_prev == EVENT_STATE_IDLE and self.state == EVENT_STATE_FACE:
-            self.state_prev = self.state
-            self.state = EVENT_STATE_APPROACH
-            print("! --------  APPROACH  -------")
-        if self.state_prev == EVENT_STATE_FACE and self.state == EVENT_STATE_IDLE:
-            self.state_prev= self.state
-            self.state = EVENT_STATE_DISAPPEAR
-            print("! --------  DISAPPEAR  -------")
-        '''
-
-
+  
         if self.state == EVENT_STATE_IDLE:
             self.disappear_cnt = 0
             if len(fr_labels) > 0:

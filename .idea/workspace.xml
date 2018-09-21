@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition/fr_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/fr_dlib.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_fd_dlib.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,8 +26,8 @@
       <file leaf-file-name="main_fd_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="79" column="28" lean-forward="true" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
+            <state relative-caret-position="233">
+              <caret line="65" column="2" selection-start-line="65" selection-start-column="2" selection-end-line="65" selection-end-column="2" />
               <folding>
                 <element signature="e#221#239#0" expanded="true" />
               </folding>
@@ -649,8 +647,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="79" column="28" lean-forward="true" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
+        <state relative-caret-position="233">
+          <caret line="65" column="2" selection-start-line="65" selection-start-column="2" selection-end-line="65" selection-end-column="2" />
           <folding>
             <element signature="e#221#239#0" expanded="true" />
           </folding>
