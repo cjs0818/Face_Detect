@@ -7,7 +7,7 @@
 #   Face Detection: face_detection/fd_dlib.py
 #   Face Recognition: face_recognition/fr_dlib.py
 #   Head Pose Detection: hd_detection.py
-#   Action Event Detection: action_detection.py
+#   Action Event Detection: action_detection/action_detection.py
 # ----------------------------------------------
 
 import numpy as np
@@ -22,12 +22,15 @@ import os
 #from PIL import Image
 
 
-# ----------------------------
-# Face detection: by Dlib
-detector = dlib.get_frontal_face_detector()
 
 # ----------------------------
-# Face Recognition: by Dlib
+# Face detection: by Dlib:
+#    face_detection/fd_dlib.py
+#detector = dlib.get_frontal_face_detector()
+
+# ----------------------------
+# Face Recognition: by Dlib:
+#    face_recognition/fr_dlib.py
 #  ./face_recognition.py shape_predictor_5_face_landmarks.dat dlib_face_recognition_resnet_model_v1.dat ../examples/faces\n"
 #    You can download a trained facial shape predictor and recognition model from:\n"
 #     http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2\n"
@@ -35,11 +38,16 @@ detector = dlib.get_frontal_face_detector()
 from face_recognition.fr_dlib import FaceRecog
 
 # ----------------------------
-# Head Pose detection: by Dlib
+# Head Pose detection: by Dlib:
+#   hp_detection.py
 #   You can download a trained facial shape predictor from:
 #    http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2
 from hp_detection import HeadPose
 
+
+# ----------------------------
+#   Action Event Detection: action_detection/action_detection.py
+from action_detection.action_detection import Event_Detector
 
 
 '''
@@ -48,60 +56,6 @@ eye_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_eye.xml')
 smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 '''
 
-ACTION_STATE_IDLE = 0
-ACTION_EVENT_APPROACH = 1
-ACTION_EVENT_DISAPPEAR = 2
-ACTION_STATE_FACE_DETECTED = 3
-
-
-class Event_Detector():
-    def __init__(self):
-        self.event = ACTION_STATE_IDLE
-        self.state = ACTION_STATE_IDLE
-        self.state_prev = ACTION_STATE_IDLE
-        self.approach_cnt = 0
-        self.approach_cnt_th = 5
-        self.disappear_cnt = 0
-        self.disappear_cnt_th = 5
-
-        self.id = -1
-
-
-    def approach_disappear(self, fr_labels, fr_box, min_width_id):
-
-        if self.state == ACTION_STATE_IDLE:
-            self.disappear_cnt = 0
-            if len(fr_labels) > 0:
-                self.approach_cnt += 1
-                if self.approach_cnt >= self.approach_cnt_th:
-                    self.state = ACTION_STATE_FACE_DETECTED
-                    self.event = ACTION_EVENT_APPROACH
-                    print("! --------  APPROACH  -------")
-            else:
-                self.approach_cnt = 0
-        elif self.state == ACTION_STATE_FACE_DETECTED:
-            self.approach_cnt = 0
-            if len(fr_labels) > 0:
-                self.disappear_cnt = 0
-            else:
-                self.disappear_cnt += 1
-                if self.disappear_cnt >= self.disappear_cnt_th:
-                    self.state = ACTION_STATE_IDLE
-                    self.event = ACTION_EVENT_DISAPPEAR
-                    print("!        --------  DISAPPEAR  -------")
-
-
-
-
-
-        #print("   Event State = %1d" % self.state)
-
-        return self.state
-
-    def get_state(self):
-        return self.state
-    def put_state(self, state):
-        self.state = state
 
 
 def main():
