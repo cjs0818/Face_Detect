@@ -51,6 +51,7 @@ EVENT_STATE_FACE = 3
 
 class Event_Detector():
     def __init__(self):
+        self.event = EVENT_STATE_IDLE
         self.state = EVENT_STATE_IDLE
         self.state_prev = EVENT_STATE_IDLE
         self.approach_cnt = 0
@@ -85,10 +86,11 @@ class Event_Detector():
                 self.disappear_cnt = 0
         '''
 
+
+        '''
         if self.state == EVENT_STATE_APPROACH or self.state == EVENT_STATE_DISAPPEAR:
             self.state = self.state_prev
 
-            
         if len(fr_labels) > 0:
             self.approach_cnt += 1
             if self.approach_cnt >= self.approach_cnt_th:
@@ -109,10 +111,35 @@ class Event_Detector():
             self.state_prev= self.state
             self.state = EVENT_STATE_DISAPPEAR
             print("! --------  DISAPPEAR  -------")
-        
+        '''
 
 
-        print("   Evet State = %1d" % self.state)
+        if self.state == EVENT_STATE_IDLE:
+            self.disappear_cnt = 0
+            if len(fr_labels) > 0:
+                self.approach_cnt += 1
+                if self.approach_cnt >= self.approach_cnt_th:
+                    self.state = EVENT_STATE_FACE
+                    self.event = EVENT_STATE_APPROACH
+                    print("! --------  APPROACH  -------")
+            else:
+                self.approach_cnt = 0
+        elif self.state == EVENT_STATE_FACE:
+            self.approach_cnt = 0
+            if len(fr_labels) > 0:
+                self.disappear_cnt = 0
+            else:
+                self.disappear_cnt += 1
+                if self.disappear_cnt >= self.disappear_cnt_th:
+                    self.state = EVENT_STATE_IDLE
+                    self.event = EVENT_STATE_DISAPPEAR
+                    print("!        --------  DISAPPEAR  -------")
+
+
+
+
+
+        #print("   Event State = %1d" % self.state)
 
         return self.state
 
@@ -145,6 +172,8 @@ def main():
     (labels, fd_known) = fr.load_registered_face()
     # ------------------------------------------
 
+    # ------------------------------------------
+    # Generate a class for event detection such as approach or disappear
     event_detect = Event_Detector()
 
     while(True):
@@ -193,7 +222,7 @@ def main():
             min_dist = fr_min_dist[id]
 
             if(selected_label != None):
-                print(selected_label)
+                #print(selected_label)
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 conf_str = "{0:3.1f}".format(min_dist)
                 name = selected_label + ", [" + conf_str + "]"
@@ -224,12 +253,11 @@ def main():
             dist = np.subtract(p2, p1)
             dist = np.sqrt(np.dot(dist, dist))
             dist_ratio = dist / (d.right() - d.left())
-            print((roi_ratio, dist_ratio))
 
             roi_ratio_th = 0.15
             dist_ratio_th = 0.75  # 0.03
-            print(" ")
-            print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
+            #print(" ")
+            #print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
             if roi_ratio > roi_ratio_th and dist_ratio < dist_ratio_th:
                 cv2.line(frame, p1, p2, (0, 0, 255), 2)
             else:

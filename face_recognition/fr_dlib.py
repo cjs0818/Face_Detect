@@ -118,7 +118,7 @@ class FaceRecog():
             label_ids.popitem()
 
         print(label_ids)
-        print(len(fd_known))
+        #print(len(fd_known))
 
         #print(label_ids)
 
@@ -134,15 +134,15 @@ class FaceRecog():
         # second argument indicates that we should upsample the image 1 time. This
         # will make everything bigger and allow us to detect more faces.
         dets = self.detector(frame, 1)
-        print("Number of faces detected: {}".format(len(dets)))
+        #print("Number of faces detected: {}".format(len(dets)))
 
         fr_labels = []
         fr_box = []
         fr_min_dist = []
 
         for k, d in enumerate(dets):
-            print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
-                k, d.left(), d.top(), d.right(), d.bottom()))
+            #print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
+            #    k, d.left(), d.top(), d.right(), d.bottom()))
 
             # Draw ROI box for each face found by face detection
             color = (255, 0, 0)  # BGR 0-255
@@ -167,7 +167,7 @@ class FaceRecog():
             face_descriptor = self.facerec.compute_face_descriptor(frame, shape)
 
             # self.fr_th = 0.5
-            print(self.label_ids)
+            #print(self.label_ids)
             # print(len(fd_known))
 
             min_dist = self.fr_th
@@ -176,7 +176,7 @@ class FaceRecog():
             for id in self.label_ids.keys():
                 dist = np.subtract(face_descriptor, self.fd_known[id])
                 dist = np.sqrt(np.dot(dist, dist))
-                print("id: %2d, dist: %4.2f" % (id, dist))
+                #print("id: %2d, dist: %4.2f" % (id, dist))
                 if (dist < self.fr_th and dist < min_dist):
                     selected_label = self.label_ids[id]
                     min_dist = dist
@@ -210,8 +210,8 @@ class FaceRecog():
         face_descriptor = self.facerec.compute_face_descriptor(frame, shape)
 
         # self.fr_th = 0.5
-        print(self.label_ids)
-        # print(len(fd_known))
+        #print(self.label_ids)
+        #print(len(fd_known))
 
         min_dist = self.fr_th
         selected_label = None
@@ -219,7 +219,7 @@ class FaceRecog():
         for id in self.label_ids.keys():
             dist = np.subtract(face_descriptor, self.fd_known[id])
             dist = np.sqrt(np.dot(dist, dist))
-            print("id: %2d, dist: %4.2f" % (id, dist))
+            #print("id: %2d, dist: %4.2f" % (id, dist))
             if (dist < self.fr_th and dist < min_dist):
                 selected_label = self.label_ids[id]
                 min_dist = dist
