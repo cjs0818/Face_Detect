@@ -46,7 +46,7 @@ class FaceRecog():
         try:
             (self.label_ids, self.fd_known) = self.load_registered_face()
         except:
-            self.save_registered_face()
+            (self.label_ids, self.fd_known) = self.save_registered_face()
 
 
     def save_registered_face(self):
@@ -130,6 +130,7 @@ class FaceRecog():
         #print(len(fd_known))
         #print(label_ids)
 
+        return (label_ids, fd_known)
 
 
     def load_registered_face(self):
