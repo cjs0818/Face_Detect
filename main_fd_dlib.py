@@ -17,7 +17,7 @@ import pickle    # used for Face recognition by OpenCV
 
 import dlib     # used for Face detectiob by Dlib
 import os
-#import sys
+import sys
 #from skimage import io
 #from PIL import Image
 
@@ -78,8 +78,8 @@ def main():
     predictor_path = "face_recognition/shape_predictor_5_face_landmarks.dat"
     face_rec_model_path = "face_recognition/dlib_face_recognition_resnet_model_v1.dat"
     fr = FaceRecog(predictor_path, face_rec_model_path, fr_th=0.5)
-    (labels, fd_known) = fr.load_registered_face()
     # ------------------------------------------
+
 
     # ------------------------------------------
     # Generate a class for event detection such as approach or disappear
@@ -124,6 +124,7 @@ def main():
         # ---------------------------------
         # Face Recognition
         (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
+
 
         for id in range(len(fr_labels)):
             selected_label = fr_labels[id]

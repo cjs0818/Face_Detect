@@ -43,18 +43,19 @@ class FaceRecog():
         self.facerec = dlib.face_recognition_model_v1(face_rec_model_path)
         self.face_descriptor_p = []
 
+        try:
+            (self.label_ids, self.fd_known) = self.load_registered_face()
+        except:
+            self.save_registered_face()
 
-        (self.label_ids, self.fd_known) = self.load_registered_face()
 
-
-    def load_registered_face(self):
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."   # images 폴더가 있는 위치
-        image_dir = os.path.join(BASE_DIR, "images")
+    def save_registered_face(self):
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))   # 이 파일이 있는 폴더 위치
+        PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."   # images 폴더가 있는 위치
+        image_dir = os.path.join(PARENT_DIR, "images")
 
         current_id = 0
         label_ids = {}
-        y_labels = []
-        x_train = []
 
         each_label_cnt = 0
         face_descriptor_sum = np.zeros(128)
@@ -118,10 +119,31 @@ class FaceRecog():
             label_ids.popitem()
 
         print(label_ids)
-        #print(len(fd_known))
 
+
+        # File Write 'lables_ids' & 'fd_known' into a pickle file
+        pickle_file = BASE_DIR + "/face-labels.pickle"
+        with open(pickle_file, 'wb') as f:
+            pickle.dump(label_ids, f)
+            pickle.dump(fd_known, f)
+
+        #print(len(fd_known))
         #print(label_ids)
 
+
+
+    def load_registered_face(self):
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        pickle_file = BASE_DIR + "/face-labels.pickle"
+
+        with open(pickle_file, 'rb') as f:
+            label_ids = pickle.load(f)
+            fd_known = pickle.load(f)
+
+
+        print("Registered_Faces: Load Completed !!!")
+        print(label_ids)
+        #print(len(fd_known))
 
         return (label_ids, fd_known)
 
