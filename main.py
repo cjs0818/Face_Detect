@@ -17,6 +17,7 @@ import pickle    # used for Face recognition by OpenCV
 
 import dlib
 import os
+from multiprocessing import Process
 import sys
 #from skimage import io
 #from PIL import Image
@@ -150,6 +151,10 @@ def main(tts_enable):
     #tts.play("안녕하십니까?")
 
     capture_idx = 0
+
+    # --------------------------------
+    # Multi-processing
+    procs = []
 
     while(True):
         # Capture frame-by-frame
@@ -327,6 +332,12 @@ def main(tts_enable):
                     print(message)
                     # ===============================
                     # TTS
+                    #if tts_enable == 1:
+                        #for proc in procs:
+                        #    proc.join()
+                        #proc = Process(target=tts.play_proc, args=(message,))
+                        #procs.append(proc)
+
                     if tts_enable == 1:
                         tts.play(message)
                     # -------------------------------
