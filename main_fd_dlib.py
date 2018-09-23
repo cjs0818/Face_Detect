@@ -132,9 +132,10 @@ def main():
 
     # ------------------------
     # Load Database
-    PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
-    DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
-    filename = DB_DIR + "/RMI_researchers.csv"
+    #PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
+    #DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
+    #filename = DB_DIR + "/RMI_researchers.csv"
+    filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
     db = get_datatbase(filename)
 
     while(True):

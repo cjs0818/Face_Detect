@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/tracker/obj_tracker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/action_detection/action_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/action_detection/action_detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main_fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_fd_dlib.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,7 +16,7 @@
     <SUITE FILE_PATH="coverage/Face_Detect$fd_test.coverage" NAME="fd_test Coverage Results" MODIFIED="1536970930211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$image_test.coverage" NAME="image_test Coverage Results" MODIFIED="1536936160774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$main_fd_dlib.coverage" NAME="main_fd_dlib Coverage Results" MODIFIED="1537705104546" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$main_fd_dlib.coverage" NAME="main_fd_dlib Coverage Results" MODIFIED="1537705243907" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$face_train.coverage" NAME="face-train Coverage Results" MODIFIED="1537053932552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537108206505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib__1_.coverage" NAME="fd_dlib (1) Coverage Results" MODIFIED="1537276921356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_detection" />
@@ -29,8 +26,11 @@
       <file leaf-file-name="main_fd_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="49" column="64" selection-start-line="49" selection-start-column="64" selection-end-line="49" selection-end-column="64" />
+            <state relative-caret-position="184">
+              <caret line="131" selection-start-line="131" selection-end-line="131" />
+              <folding>
+                <element signature="e#425#443#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -464,6 +464,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4485">
           <caret line="299" column="18" lean-forward="true" selection-start-line="299" selection-start-column="18" selection-end-line="299" selection-end-column="18" />
+          <folding>
+            <element signature="e#425#443#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -523,6 +526,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
+          <folding>
+            <element signature="e#425#443#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -740,8 +746,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main_fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="49" column="64" selection-start-line="49" selection-start-column="64" selection-end-line="49" selection-end-column="64" />
+        <state relative-caret-position="184">
+          <caret line="131" selection-start-line="131" selection-end-line="131" />
+          <folding>
+            <element signature="e#425#443#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
