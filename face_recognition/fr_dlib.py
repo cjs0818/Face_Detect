@@ -56,7 +56,7 @@ class FaceRecog():
         image_dir = os.path.join(PARENT_DIR, "images")
 
         current_id = 0
-        label_ids = []
+        label_ids = {0:"test"}
 
         each_label_cnt = 0
         face_descriptor_sum = np.zeros(128)
@@ -67,7 +67,7 @@ class FaceRecog():
                 if file.endswith("png") or file.endswith("jpg") or file.endswith("PNG") or file.endswith("JPG"):
                     path = os.path.join(root, file)
                     label = os.path.basename(root).replace(" ", "-").lower()
-                    #print(label, ", ", path)
+                    print(label, ", ", path)
 
 
                     with open(path, 'rb') as image_file:
@@ -100,7 +100,8 @@ class FaceRecog():
                             face_descriptor_sum = np.add(face_descriptor_sum, face_descriptor)
 
 
-                        if not label in label_ids.values():
+
+                        if current_id == 0 or not label in label_ids.values():
                             if(current_id > 0):
                                 if(each_label_cnt > 0):
                                     #print("(current_id, each_label_cnt) = (%2d, %2d)" % (current_id, each_label_cnt))
@@ -110,7 +111,8 @@ class FaceRecog():
                                     label_ids.popitem()
                                     current_id -= 1
 
-                            label_ids[current_id] = label
+                            #label_ids[current_id] = label
+                            label_ids.update({current_id: label})
                             current_id += 1
                             each_label_cnt = 0
                             face_descriptor_sum = np.zeros(128)
@@ -199,7 +201,7 @@ class FaceRecog():
 
             roi_ratio = (d.right() - d.left()) / frame.shape[0]
 
-            roi_ratio_th = 0.15
+            roi_ratio_th = 0.25
 
             if roi_ratio > roi_ratio_th:
                 for id in self.label_ids.keys():

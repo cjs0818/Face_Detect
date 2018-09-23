@@ -149,6 +149,8 @@ def main(tts_enable):
     tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
     #tts.play("안녕하십니까?")
 
+    capture_idx = 0
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -189,7 +191,7 @@ def main(tts_enable):
 
         #-------------------------------------
         #  일정시간마다 tracking reset하기
-        if iter % 50 == 0:
+        if iter % 100 == 0:
             obj_track.track_started = False
             if obj_track.track_started == True:
                 if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
@@ -210,6 +212,7 @@ def main(tts_enable):
                 obj_track.start_tracking(frame, fr_box[max_width_id])
                 obj_track.label = fr_labels[max_width_id]
                 obj_track.tracking(frame)
+                obj_track.min_dist = fr_min_dist[max_width_id]
 
         else:
             if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
@@ -231,7 +234,7 @@ def main(tts_enable):
                 fr_min_dist = []
                 fr_labels.append(obj_track.label)
                 fr_box.append(obj_track.roi)
-                fr_min_dist.append(0)
+                fr_min_dist.append(obj_track.min_dist)
 
                 obj_track.tracking(frame)
                 if obj_track.track_started == False:
@@ -345,9 +348,17 @@ def main(tts_enable):
 
         #win.add_overlay(dets)
 
-
-        if cv2.waitKey(20) & 0xFF == ord('q'):
+        key_in = cv2.waitKey(20) & 0xFF
+        if key_in == ord('q'):
             break
+        elif key_in == ord('c'):
+            f_name = "./images/capture" + str(capture_idx) + ".png"
+            print("Captured to file: {}".format(f_name))
+            #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+            #f_name = BASE_DIR + f_name
+            capture_idx += 1
+            cv2.imwrite(f_name, frame)
+
 
     # When everything done, release the capture
     cap.release()

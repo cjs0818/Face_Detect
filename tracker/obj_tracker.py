@@ -16,6 +16,8 @@ class Obj_Tracker():
         self.track_started = False
         self.track_running = False
         self.roi = []
+        self.label = []
+        self.min_dist = 0
 
     def start_tracking(self, image, roi):
         tracker = self.tracker
