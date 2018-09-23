@@ -15,12 +15,13 @@ import cv2
 import pickle    # used for Face recognition by OpenCV
 
 
-import dlib     # used for Face detectiob by Dlib
+import dlib
 import os
 import sys
 #from skimage import io
 #from PIL import Image
 
+import csv
 
 
 # ----------------------------
@@ -48,6 +49,10 @@ from hp_detection import HeadPose
 # ----------------------------
 #   Action Event Detection: action_detection/action_detection.py
 from action_detection.action_detection import Event_Detector
+ACTION_STATE_IDLE = 0
+ACTION_EVENT_APPROACH = 1
+ACTION_EVENT_DISAPPEAR = 2
+ACTION_STATE_FACE_DETECTED = 3
 
 
 '''
@@ -59,47 +64,39 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 
 # ------------------------
 # Object Tracking by Dlib correlation_tracker
-# ------------------------
-class Obj_Tracker():
-    def __init__(self):
-        self.tracker = dlib.correlation_tracker()
-        self.track_started = False
-        self.roi = []
-        self.result = []
-
-    def start_tracking(self, image, roi):
-        tracker = self.tracker
-        rect = dlib.rectangle(roi)
-        tracker.start_track(image, rect)
-        self.track_started = True
-
-    def tracking(self, image):
-        #if self.track_started == True:
-        tracker = self.tracker
-        #tracker.start_track(image, roi)
-
-        self.result = tracker.update(image)
-        new_roi = tracker.get_position()
-        x  = int(new_roi.left())
-        y  = int(new_roi.top())
-        x1 = int(new_roi.right())
-        y1 = int(new_roi.bottom())
-        cv2.rectangle(image, (x, y), (x1, y1), (0, 255, 255), 2)
+from tracker.obj_tracker import Obj_Tracker
 
 
-        self.roi = dlib.rectangle(x,y, x1, y1)
+# ----------------------------------------------------
+# database from CSV file
+# ----------------------------------------------------
+def get_datatbase(filename):
+    #filename = 'RMI_researchers.csv'
 
-        if x < 0 or y1 < 0 or x1 > image.shape[1] or y1 > image.shape[0]:
-            #print("Lost!!!")
-            self.track_started = False
+    with open(filename, 'r', encoding='UTF-8-sig') as f:
+        csv_data = csv.reader(f, delimiter=',')
+        print("-------------")
+        dict = {}
+        row_cnt = 0
+        for row in csv_data:
+            row_cnt = row_cnt + 1
+            if row_cnt == 1:
+                key = row
+            else:
+                for i in range(0, len(row), 1):
+                    if i == 0:
+                        # print(dict_name)
+                        dict_info = {}
+                    else:
+                        dict_info.update({key[i]: row[i]})
+                        # print(dict_info)
+                dict.update({row[0]: dict_info})
+                # print("dict_name = ", dict_name)
 
-        #print("obj_tracking!")
+    # json_data = json.dumps(dict, indent=4, ensure_ascii=False)
+    # print(json_data)
 
-        #print("[left, top] = [%3d, %3d], [right, bottom] = [%3d, %3d]" %
-        #      (int(new_roi.left()), int(new_roi.top()), int(new_roi.right()), int(new_roi.bottom())))
-
-
-        return(self.roi)
+    return dict
 
 
 def main():
@@ -133,11 +130,17 @@ def main():
     # Object Tracking by Dlib correlation_tracker
     obj_track = Obj_Tracker()
 
+    # ------------------------
+    # Load Database
+    PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
+    DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
+    filename = DB_DIR + "/RMI_researchers.csv"
+    db = get_datatbase(filename)
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
 
         '''
@@ -184,15 +187,16 @@ def main():
                 obj_track.tracking(frame)
 
         else:
-            if len(fr_labels) > 0:
+            if len(fr_labels) > 0 and fr_labels[max_width_id] == obj_track.label:
                 obj_track.start_tracking(frame, fr_box[max_width_id])
             else:
+                #obj_track.track_running = True
                 max_width_id = 0
                 fr_labels = []
                 fr_box = []
+                fr_min_dist = []
                 fr_labels.append(obj_track.label)
                 fr_box.append(obj_track.roi)
-                fr_min_dist = []
                 fr_min_dist.append(0)
 
                 obj_track.tracking(frame)
@@ -251,8 +255,24 @@ def main():
             else:
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
 
-        event_state = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
+        (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
+        kor_name = []
+        if ad_event == ACTION_EVENT_APPROACH:
+            eng_name = fr_labels[max_width_id]
+            #print(db.keys())
+            for name in db.keys():
+                info = db[name]
+                if info["english_name"] == eng_name:
+                    kor_name = name
+            if len(kor_name) > 0:
+                if ad_event == ACTION_EVENT_APPROACH:
+                    event_detect.event_label = kor_name
+                    print("Hi! Nice to meet you, {}".format(kor_name))
+        elif ad_event == ACTION_EVENT_DISAPPEAR:
+            if len(event_detect.event_label) > 0:
+                print("Good Bye! {}".format(event_detect.event_label))
+                event_detect.event_label = []
 
 
 

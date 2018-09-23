@@ -21,11 +21,14 @@ class Event_Detector():
         self.approach_cnt_th = 5
         self.disappear_cnt = 0
         self.disappear_cnt_th = 5
+        self.event_label = []
 
         self.id = -1
 
 
     def approach_disappear(self, fr_labels, fr_box, min_width_id):
+
+        self.event = ACTION_STATE_IDLE
 
         if self.state == ACTION_STATE_IDLE:
             self.disappear_cnt = 0
@@ -54,7 +57,7 @@ class Event_Detector():
 
         #print("   Event State = %1d" % self.state)
 
-        return self.state
+        return (self.state, self.event)
 
     def get_state(self):
         return self.state
