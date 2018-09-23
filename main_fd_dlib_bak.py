@@ -15,12 +15,18 @@ import cv2
 import pickle    # used for Face recognition by OpenCV
 
 
-import dlib     # used for Face detectiob by Dlib
+import dlib
 import os
 import sys
 #from skimage import io
 #from PIL import Image
 
+import csv
+
+# ----------------------------------------------------------
+#  You need to setup PYTHONPATH to include tts/naver_tts.py
+#   ex.) export PYTHONPATH=/Users/jschoi/work/ChatBot/Receptionbot_Danbee/receptionbot:$PYTHONPATH
+from tts.naver_tts import NaverTTS  # TTS: NaverTTS
 
 
 # ----------------------------
@@ -47,7 +53,11 @@ from hp_detection import HeadPose
 
 # ----------------------------
 #   Action Event Detection: action_detection/action_detection.py
-from action_detection.action_detection import Event_Detector
+from action_detection.action_detect import Event_Detector
+ACTION_STATE_IDLE = 0
+ACTION_EVENT_APPROACH = 1
+ACTION_EVENT_DISAPPEAR = 2
+ACTION_STATE_FACE_DETECTED = 3
 
 
 '''
@@ -57,7 +67,44 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 '''
 
 
-def main():
+# ------------------------
+# Object Tracking by Dlib correlation_tracker
+from tracker.obj_tracker import Obj_Tracker
+
+
+# ----------------------------------------------------
+# database from CSV file
+# ----------------------------------------------------
+def get_datatbase(filename):
+    #filename = 'RMI_researchers.csv'
+
+    with open(filename, 'r', encoding='UTF-8-sig') as f:
+        csv_data = csv.reader(f, delimiter=',')
+        print("-------------")
+        dict = {}
+        row_cnt = 0
+        for row in csv_data:
+            row_cnt = row_cnt + 1
+            if row_cnt == 1:
+                key = row
+            else:
+                for i in range(0, len(row), 1):
+                    if i == 0:
+                        # print(dict_name)
+                        dict_info = {}
+                    else:
+                        dict_info.update({key[i]: row[i]})
+                        # print(dict_info)
+                dict.update({row[0]: dict_info})
+                # print("dict_name = ", dict_name)
+
+    # json_data = json.dumps(dict, indent=4, ensure_ascii=False)
+    # print(json_data)
+
+    return dict
+
+
+def main(tts_enable):
     cap = cv2.VideoCapture(0)
     cap.set(3, 320)
     cap.set(4, 240)
@@ -88,11 +135,23 @@ def main():
     # Object Tracking by Dlib correlation_tracker
     obj_track = Obj_Tracker()
 
+    # ------------------------
+    # Load Database
+    #PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
+    #DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
+    #filename = DB_DIR + "/RMI_researchers.csv"
+    filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
+    db = get_datatbase(filename)
+
+    # --------------------------------
+    # Create NaverTTS Class
+    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    #tts.play("안녕하십니까?")
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
 
         '''
@@ -122,52 +181,83 @@ def main():
             cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
         '''
 
-        min_width = frame.shape[0]
-        min_width_id = -1
+        max_width = 0   #frame.shape[0]
+        max_width_id = -1
+        # ---------------------------------
+        # Face Recognition
+        (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
 
-# ---------------------------------
-# Face Recognition
-(fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
-    
-    
-    for id in range(len(fr_labels)):
-        selected_label = fr_labels[id]
-        d = fr_box[id]
-        min_dist = fr_min_dist[id]
-        
-        if(selected_label != None):
-            #print(selected_label)
-            font = cv2.FONT_HERSHEY_SIMPLEX
+
+        # --------------------------------------
+        # Object Tracking for undetected face
+        #   Ref: https://www.codesofinterest.com/2018/02/track-any-object-in-video-with-dlib.html
+        if obj_track.track_started == False:
+            if len(fr_labels) > 0:
+                obj_track.track_started = True
+                obj_track.start_tracking(frame, fr_box[max_width_id])
+                obj_track.label = fr_labels[max_width_id]
+                obj_track.tracking(frame)
+
+        else:
+            if len(fr_labels) > 0 and fr_labels[max_width_id] == obj_track.label:
+                obj_track.start_tracking(frame, fr_box[max_width_id])
+            else:
+                #obj_track.track_running = True
+                max_width_id = 0
+                fr_labels = []
+                fr_box = []
+                fr_min_dist = []
+                fr_labels.append(obj_track.label)
+                fr_box.append(obj_track.roi)
+                fr_min_dist.append(0)
+
+                obj_track.tracking(frame)
+                if obj_track.track_started == False:
+                    fr_labels = []
+                    fr_box = []
+        # --------------------------------------
+
+
+        # --------------------------------------
+        # Display for the name of the selected face
+        for id in range(len(fr_labels)):
+            selected_label = fr_labels[id]
+            d = fr_box[id]
+            min_dist = fr_min_dist[id]
+
+            if(selected_label != None):
+                #print(selected_label)
+                font = cv2.FONT_HERSHEY_SIMPLEX
                 conf_str = "{0:3.1f}".format(min_dist)
                 name = selected_label + ", [" + conf_str + "]"
                 color = (255, 255, 255)
                 stroke = 1   # 글씨 굵기 ?
                 cv2.putText(frame, name, (d.left(), d.top()), font, 0.5, color, stroke, cv2.LINE_AA)
-            
-            
+
+
             # ---------------------------------
             #   Select the closed face
             d_width = d.right() - d.left()
-            if(d_width < min_width):
-                min_width_id = id
-    
+            if(d_width > max_width):
+                max_width_id = id
+
         if(len(fr_labels) > 0):
             # ---------------------------------
             # Head Pose Detection for the closed face,
-            
+
             # Get the landmarks/parts for the face in box d.
-            d = fr_box[min_width_id]
-            shape = hpd.predictor(frame, d)
+            d = fr_box[max_width_id]
+            shape = hpd.predictor(frame, d)    # predict 68_face_landmarks
             #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
-            
+
             # Find Head Pose using the face landmarks and Draw them on the screen.
             (p1, p2) = hpd.draw_landmark_headpose(frame, shape)
             roi_ratio = (d.right() - d.left()) / frame.shape[0]
-            
+
             dist = np.subtract(p2, p1)
             dist = np.sqrt(np.dot(dist, dist))
             dist_ratio = dist / (d.right() - d.left())
-            
+
             roi_ratio_th = 0.15
             dist_ratio_th = 0.75  # 0.03
             #print(" ")
@@ -176,15 +266,38 @@ def main():
                 cv2.line(frame, p1, p2, (0, 0, 255), 2)
             else:
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
-                    
-        event_state = event_detect.approach_disappear(fr_labels, fr_box, min_width_id)
 
+        (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
+        kor_name = []
+        if ad_event == ACTION_EVENT_APPROACH:
+            eng_name = fr_labels[max_width_id]
+            #print(db.keys())
+            for name in db.keys():
+                info = db[name]
+                if info["english_name"] == eng_name:
+                    kor_name = name
+            if len(kor_name) > 0:
+                if ad_event == ACTION_EVENT_APPROACH:
+                    event_detect.event_label = kor_name
+                    message = kor_name + "님, 안녕하세요? 반갑습니다."
+                    print(message)
+                    # ===============================
+                    # TTS
+                    if tts_enable == 1:
+                        tts.play(message)
+                    # -------------------------------
+        elif ad_event == ACTION_EVENT_DISAPPEAR:
+            if len(event_detect.event_label) > 0:
+                message = event_detect.event_label + "님, 안녕히 가세요."
+                print(message)
+                event_detect.event_label = []
+                # ===============================
+                # TTS
+                if tts_enable == 1:
+                    tts.play(message)
+                # -------------------------------
 
-        #print("obj_tracking!")
-        #print(obj_track.result)
-        #print(obj_track.roi)
-        #print(frame.shape)
 
 
         # Display the resulting frame
@@ -205,4 +318,5 @@ def main():
 # 메인 함수
 #----------------------------------------------------
 if __name__ == '__main__':
-    main()
+    tts_enable = 0
+    main(tts_enable)

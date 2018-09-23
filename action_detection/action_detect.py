@@ -25,6 +25,16 @@ class Event_Detector():
 
         self.id = -1
 
+    def reset(self):
+        self.event = ACTION_STATE_IDLE
+        self.state = ACTION_STATE_IDLE
+        self.state_prev = ACTION_STATE_IDLE
+        self.approach_cnt = 0
+        self.approach_cnt_th = 5
+        self.disappear_cnt = 0
+        self.disappear_cnt_th = 5
+        self.event_label = []
+
 
     def approach_disappear(self, fr_labels, fr_box, min_width_id):
 

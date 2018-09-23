@@ -124,6 +124,7 @@ def main(tts_enable):
     predictor_path = "face_recognition/shape_predictor_5_face_landmarks.dat"
     face_rec_model_path = "face_recognition/dlib_face_recognition_resnet_model_v1.dat"
     fr = FaceRecog(predictor_path, face_rec_model_path, fr_th=0.5)
+    iter = 0
     # ------------------------------------------
 
 
@@ -183,15 +184,27 @@ def main(tts_enable):
 
         max_width = 0   #frame.shape[0]
         max_width_id = -1
-        # ---------------------------------
-        # Face Recognition
-        (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
 
+
+
+        #-------------------------------------
+        #  일정시간마다 tracking reset하기
+        if iter % 50 == 0:
+            obj_track.track_started = False
+            if obj_track.track_started == True:
+                if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
+                    event_detect.reset()
+        iter += 1
+        #-------------------------------------
 
         # --------------------------------------
         # Object Tracking for undetected face
         #   Ref: https://www.codesofinterest.com/2018/02/track-any-object-in-video-with-dlib.html
         if obj_track.track_started == False:
+            # ---------------------------------
+            # Face Recognition
+            (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
+
             if len(fr_labels) > 0:
                 obj_track.track_started = True
                 obj_track.start_tracking(frame, fr_box[max_width_id])
@@ -199,6 +212,32 @@ def main(tts_enable):
                 obj_track.tracking(frame)
 
         else:
+            if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
+                event_detect.reset()
+
+                # ---------------------------------
+                # Face Recognition
+                (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
+
+                if len(fr_labels) > 0:
+                    obj_track.track_started = True
+                    obj_track.start_tracking(frame, fr_box[max_width_id])
+                    obj_track.label = fr_labels[max_width_id]
+                    obj_track.tracking(frame)
+            else:
+                max_width_id = 0
+                fr_labels = []
+                fr_box = []
+                fr_min_dist = []
+                fr_labels.append(obj_track.label)
+                fr_box.append(obj_track.roi)
+                fr_min_dist.append(0)
+
+                obj_track.tracking(frame)
+                if obj_track.track_started == False:
+                    fr_labels = []
+                    fr_box = []
+            '''
             if len(fr_labels) > 0 and fr_labels[max_width_id] == obj_track.label:
                 obj_track.start_tracking(frame, fr_box[max_width_id])
             else:
@@ -215,6 +254,7 @@ def main(tts_enable):
                 if obj_track.track_started == False:
                     fr_labels = []
                     fr_box = []
+            '''
         # --------------------------------------
 
 

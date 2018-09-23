@@ -197,13 +197,20 @@ class FaceRecog():
             min_dist = self.fr_th
             selected_label = None
 
-            for id in self.label_ids.keys():
-                dist = np.subtract(face_descriptor, self.fd_known[id])
-                dist = np.sqrt(np.dot(dist, dist))
-                #print("id: %2d, dist: %4.2f" % (id, dist))
-                if (dist < self.fr_th and dist < min_dist):
-                    selected_label = self.label_ids[id]
-                    min_dist = dist
+            roi_ratio = (d.right() - d.left()) / frame.shape[0]
+
+            roi_ratio_th = 0.15
+
+            if roi_ratio > roi_ratio_th:
+                for id in self.label_ids.keys():
+                    dist = np.subtract(face_descriptor, self.fd_known[id])
+                    dist = np.sqrt(np.dot(dist, dist))
+                    #print("id: %2d, dist: %4.2f" % (id, dist))
+                    if (dist < self.fr_th and dist < min_dist):
+                        selected_label = self.label_ids[id]
+                        min_dist = dist
+            else:
+                selected_label = "unknown"
 
             if (selected_label != None):
                 fr_labels.append(selected_label)
