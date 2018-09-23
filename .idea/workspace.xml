@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition/face-labels.pickle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition/fr_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/fr_dlib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tracker/obj_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/tracker/obj_tracker.py" afterDir="false" />
-    </list>
+    <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,12 +13,12 @@
     <SUITE FILE_PATH="coverage/Face_Detect$fr_dlib.coverage" NAME="fr_dlib Coverage Results" MODIFIED="1537350922706" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_recognition" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_test.coverage" NAME="fd_test Coverage Results" MODIFIED="1536970930211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1537724370436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1537724940398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$image_test.coverage" NAME="image_test Coverage Results" MODIFIED="1536936160774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$main_fd_dlib.coverage" NAME="main_fd_dlib Coverage Results" MODIFIED="1537706862249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$face_train.coverage" NAME="face-train Coverage Results" MODIFIED="1537053932552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537108206505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib__1_.coverage" NAME="fd_dlib (1) Coverage Results" MODIFIED="1537276921356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_detection" />
+    <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib.coverage" NAME="fd_dlib Coverage Results" MODIFIED="1537724911837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -97,8 +91,8 @@
       <file leaf-file-name="fr_dlib.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
+            <state relative-caret-position="139">
+              <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
               <folding>
                 <element signature="e#576#594#0" expanded="true" />
               </folding>
@@ -250,21 +244,13 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="PyConsoleConfigurable.Python Console" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
       <console-settings module-name="Face_Detect" is-module-sdk="true">
-        <envs>
-          <env key="PYTHONPATH" value="$PROJECT_DIR$/../Receptionbot_Danbee/receptionbot:/Users/jschoi/work/ChatBot/Face_Detect/action_detection:$PYTHONPATH" />
-        </envs>
         <option name="myUseModuleSdk" value="true" />
         <option name="myModuleName" value="Face_Detect" />
-        <option name="myEnvs">
-          <map>
-            <entry key="PYTHONPATH" value="$PROJECT_DIR$/../Receptionbot_Danbee/receptionbot:/Users/jschoi/work/ChatBot/Face_Detect/action_detection:$PYTHONPATH" />
-          </map>
-        </option>
       </console-settings>
     </option>
   </component>
@@ -387,10 +373,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.fd_dlib" />
         <item itemvalue="Python.main_fd_dlib" />
         <item itemvalue="Python.fr_dlib" />
         <item itemvalue="Python.fd_dlib (1)" />
-        <item itemvalue="Python.fd_dlib" />
       </list>
     </recent_temporary>
   </component>
@@ -409,7 +395,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="487" y="25" width="1433" height="1134" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5003595" side_tool="true" weight="0.32786885" />
@@ -792,8 +777,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="69" column="20" selection-start-line="69" selection-start-column="20" selection-end-line="69" selection-end-column="20" />
+        <state relative-caret-position="139">
+          <caret line="58" column="27" selection-start-line="58" selection-start-column="27" selection-end-line="58" selection-end-column="27" />
           <folding>
             <element signature="e#576#594#0" expanded="true" />
           </folding>
