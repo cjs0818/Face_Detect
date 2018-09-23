@@ -17,9 +17,10 @@ import numpy as np
 import cv2
 import pickle    # used for Face recognition by OpenCV
 
-
 import dlib     # used for Face detection by Dlib
 import os
+import csv
+
 #import sys
 #from skimage import io
 #from PIL import Image

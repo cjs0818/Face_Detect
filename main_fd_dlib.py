@@ -57,6 +57,34 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 '''
 
 
+# ------------------------
+# Object Tracking by Dlib correlation_tracker
+# ------------------------
+class Obj_Tracker():
+    def __init__(self):
+        self.tracker = dlib.correlation_tracker()
+        self.track_started = False
+        self.roi = []
+        self.result = []
+
+    def tracking(self, image, roi):
+        #if self.track_started == True:
+        tracker = self.tracker
+        tracker.start_track(image, roi)
+
+        self.result = tracker.update(image)
+        new_roi = tracker.get_position()
+        x  = int(new_roi.left())
+        y  = int(new_roi.top())
+        x1 = int(new_roi.right())
+        y1 = int(new_roi.bottom())
+        cv2.rectangle(image, (x, y), (x1, y1), (0, 255, 255), 2)
+
+        self.roi = new_roi
+
+
+        return(roi)
+
 
 def main():
     cap = cv2.VideoCapture(0)
@@ -85,6 +113,10 @@ def main():
     # Generate a class for event detection such as approach or disappear
     event_detect = Event_Detector()
 
+    # ------------------------
+    # Object Tracking by Dlib correlation_tracker
+    obj_track = Obj_Tracker()
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -99,6 +131,7 @@ def main():
         # Ask the detector to find the bounding boxes of each face. The 1 in the
         # second argument indicates that we should upsample the image 1 time. This
         # will make everything bigger and allow us to detect more faces.
+        
         dets = detector(frame, 1)
         print("Number of faces detected: {}".format(len(dets)))
     
@@ -174,6 +207,18 @@ def main():
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
 
         event_state = event_detect.approach_disappear(fr_labels, fr_box, min_width_id)
+
+
+        if obj_track.track_started == True:
+            obj_track.tracking(frame, obj_track.roi)
+        elif len(fr_labels) > 0:
+            obj_track.label = fr_labels[min_width_id]
+            obj_track.tracking(frame, fr_box[min_width_id])
+
+        print("obj_tracking!")
+        print(obj_track.result)
+        print(obj_track.roi)
+        print(frame.shape)
 
 
         # Display the resulting frame
