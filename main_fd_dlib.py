@@ -187,6 +187,7 @@ def main(tts_enable):
 
         # --------------------------------------
         # Object Tracking for undetected face
+        #   Ref: https://www.codesofinterest.com/2018/02/track-any-object-in-video-with-dlib.html
         if obj_track.track_started == False:
             if len(fr_labels) > 0:
                 obj_track.track_started = True
