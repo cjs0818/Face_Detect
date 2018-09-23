@@ -67,10 +67,16 @@ class Obj_Tracker():
         self.roi = []
         self.result = []
 
-    def tracking(self, image, roi):
+    def start_tracking(self, image, roi):
+        tracker = self.tracker
+        rect = dlib.rectangle(roi)
+        tracker.start_track(image, rect)
+        self.track_started = True
+
+    def tracking(self, image):
         #if self.track_started == True:
         tracker = self.tracker
-        tracker.start_track(image, roi)
+        #tracker.start_track(image, roi)
 
         self.result = tracker.update(image)
         new_roi = tracker.get_position()
@@ -80,10 +86,20 @@ class Obj_Tracker():
         y1 = int(new_roi.bottom())
         cv2.rectangle(image, (x, y), (x1, y1), (0, 255, 255), 2)
 
-        self.roi = new_roi
+
+        self.roi = dlib.rectangle(x,y, x1, y1)
+
+        if x < 0 or y1 < 0 or x1 > image.shape[1] or y1 > image.shape[0]:
+            #print("Lost!!!")
+            self.track_started = False
+
+        #print("obj_tracking!")
+
+        #print("[left, top] = [%3d, %3d], [right, bottom] = [%3d, %3d]" %
+        #      (int(new_roi.left()), int(new_roi.top()), int(new_roi.right()), int(new_roi.bottom())))
 
 
-        return(roi)
+        return(self.roi)
 
 
 def main():
@@ -151,14 +167,43 @@ def main():
             cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
         '''
 
-        min_width = frame.shape[0]
-        min_width_id = -1
-
+        max_width = 0   #frame.shape[0]
+        max_width_id = -1
         # ---------------------------------
         # Face Recognition
         (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
 
 
+        # --------------------------------------
+        # Object Tracking for undetected face
+        if obj_track.track_started == False:
+            if len(fr_labels) > 0:
+                obj_track.track_started = True
+                obj_track.start_tracking(frame, fr_box[max_width_id])
+                obj_track.label = fr_labels[max_width_id]
+                obj_track.tracking(frame)
+
+        else:
+            if len(fr_labels) > 0:
+                obj_track.start_tracking(frame, fr_box[max_width_id])
+            else:
+                max_width_id = 0
+                fr_labels = []
+                fr_box = []
+                fr_labels.append(obj_track.label)
+                fr_box.append(obj_track.roi)
+                fr_min_dist = []
+                fr_min_dist.append(0)
+
+                obj_track.tracking(frame)
+                if obj_track.track_started == False:
+                    fr_labels = []
+                    fr_box = []
+        # --------------------------------------
+
+
+        # --------------------------------------
+        # Display for the name of the selected face
         for id in range(len(fr_labels)):
             selected_label = fr_labels[id]
             d = fr_box[id]
@@ -177,15 +222,15 @@ def main():
             # ---------------------------------
             #   Select the closed face
             d_width = d.right() - d.left()
-            if(d_width < min_width):
-                min_width_id = id
+            if(d_width > max_width):
+                max_width_id = id
 
         if(len(fr_labels) > 0):
             # ---------------------------------
             # Head Pose Detection for the closed face,
 
             # Get the landmarks/parts for the face in box d.
-            d = fr_box[min_width_id]
+            d = fr_box[max_width_id]
             shape = hpd.predictor(frame, d)
             #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
 
@@ -206,19 +251,9 @@ def main():
             else:
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
 
-        event_state = event_detect.approach_disappear(fr_labels, fr_box, min_width_id)
+        event_state = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
 
-        if obj_track.track_started == True:
-            obj_track.tracking(frame, obj_track.roi)
-        elif len(fr_labels) > 0:
-            obj_track.label = fr_labels[min_width_id]
-            obj_track.tracking(frame, fr_box[min_width_id])
-
-        print("obj_tracking!")
-        print(obj_track.result)
-        print(obj_track.roi)
-        print(frame.shape)
 
 
         # Display the resulting frame

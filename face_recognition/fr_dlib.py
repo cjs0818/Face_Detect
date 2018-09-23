@@ -56,7 +56,7 @@ class FaceRecog():
         image_dir = os.path.join(PARENT_DIR, "images")
 
         current_id = 0
-        label_ids = {}
+        label_ids = []
 
         each_label_cnt = 0
         face_descriptor_sum = np.zeros(128)
