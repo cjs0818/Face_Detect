@@ -131,11 +131,11 @@ def cam_loop(queue_from_cam):
 #    folder: BASE_DIR/data/db
 class MongoDB():
     def __init__(self, db_name="DB_reception", coll_name="RMI_researchers"):
-        self.mongodb_client = MongoClient('localhost', 27017)
-        #self.mdb = self.mongodb_client["DB_Episode"]
-        #self.mdb_collection = self.mdb.coll_Test
-        self.mdb = self.mongodb_client[db_name]
-        self.mdb_collection = self.mdb[coll_name]
+        self.db_client = MongoClient('localhost', 27017)
+        #self.db = self.db_client["DB_Episode"]
+        #self.coll = self.db.coll_Test
+        self.db = self.db_client[db_name]
+        self.coll = self.db[coll_name]
 
     def insert(self, post):
         post_id = self.mdb_collection.insert_one(post).inserted_id
@@ -201,11 +201,17 @@ def main(tts_enable):
 
 
     # Mongo DB
-    mgdb = MongoDB()
+    db_name = "DB_reception"
+    coll_name = "RMI_researchers"
+    mgdb = MongoDB(db_name, coll_name)
+
+    db_name = "DB_reception"
+    coll_name = "Event"
+    mgdb_event = MongoDB(db_name, coll_name)
 
     eng_name = "jschoi"
     name_dict = { "english_name": eng_name }
-    result = mgdb.mdb_collection.find(name_dict)
+    result = mgdb.coll.find(name_dict)
     #print(result[0])
     pprint.pprint(result[0])
     print(result[0]["name"])
@@ -383,19 +389,40 @@ def main(tts_enable):
             #------------------------
             # Search from MongoDB
             name_dict = {"english_name": eng_name}
-            result = mgdb.mdb_collection.find(name_dict)
-            kor_name = result[0]["name"]
+            result = mgdb.coll.find(name_dict)
+            try:
+                kor_name = result[0]["name"]
+            except Exception as e:
+                pass
 
-            #------------------------
-            # Search from csv file
-            #for name in db.keys():
+            # ----------------------------
+            # -- Search from csv file
+            # for name in db.keys():
             #    info = db[name]
             #    if info["english_name"] == eng_name:
             #        kor_name = name
             if len(kor_name) > 0:
                 if ad_event == ACTION_EVENT_APPROACH:
+                    # -------------------------------
+                    # -- Approach 할 때마다 MongoDB에 { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() } 형태로 기록
+                    # -------------------------------
+                    # dict_contents = { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() }
+                    # mgdb_event.coll.insert_one(dict_contents)
+                    # -------------------------------
+                    for ret in mgdb_event.coll.find({"name": kor_name}):
+                        last_time = ret['datetime']
+                    now = datetime.datetime.now()
+                    dt = now - last_time
+                    #print(dt)
+                    #print("days: ", dt.days, ", seconds: ", dt.seconds)
+
+
                     event_detect.event_label = kor_name
                     message = kor_name + "님, 안녕하세요? 반갑습니다."
+                    if dt.days > 0:
+                        message = message + " " + str(dt.days) + "일만에 오셨군요."
+                    elif dt.seconds > 0:
+                        message = message + " " + str(dt.seconds) + "초만에 오셨군요"
                     print(message)
                     # ===============================
                     # TTS
