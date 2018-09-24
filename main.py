@@ -128,6 +128,7 @@ def cam_loop(queue_from_cam):
 '''
 
 # Mongo DB
+#    folder: BASE_DIR/data/db
 class MongoDB():
     def __init__(self, db_name="DB_reception", coll_name="RMI_researchers"):
         self.mongodb_client = MongoClient('localhost', 27017)
