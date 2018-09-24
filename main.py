@@ -24,6 +24,12 @@ import sys
 
 import csv
 
+# Mongo DB
+from pymongo import MongoClient
+import datetime
+import pprint
+
+
 # ----------------------------------------------------------
 #  You need to setup PYTHONPATH to include tts/naver_tts.py
 #   ex.) export PYTHONPATH=/Users/jschoi/work/ChatBot/Receptionbot_Danbee/receptionbot:$PYTHONPATH
@@ -121,6 +127,22 @@ def cam_loop(queue_from_cam):
 #------------------------------
 '''
 
+# Mongo DB
+class MongoDB():
+    def __init__(self, db_name="DB_reception", coll_name="RMI_researchers"):
+        self.mongodb_client = MongoClient('localhost', 27017)
+        #self.mdb = self.mongodb_client["DB_Episode"]
+        #self.mdb_collection = self.mdb.coll_Test
+        self.mdb = self.mongodb_client[db_name]
+        self.mdb_collection = self.mdb[coll_name]
+
+    def insert(self, post):
+        post_id = self.mdb_collection.insert_one(post).inserted_id
+        coll_list = self.mdb.collection_names()
+        print(coll_list)
+
+
+
 def main(tts_enable):
 
     cap = cv2.VideoCapture(0)
@@ -130,7 +152,6 @@ def main(tts_enable):
     ret, sample_frame = cap.read()
 
     '''
-
     cam_process = Process(target=cam_loop, args=(queue_from_cam,))
     cam_process.start()
     while queue_from_cam.empty():
@@ -178,11 +199,25 @@ def main(tts_enable):
     #tts.play("안녕하십니까?")
 
 
+    # Mongo DB
+    mgdb = MongoDB()
+
+    eng_name = "jschoi"
+    name_dict = { "english_name": eng_name }
+    result = mgdb.mdb_collection.find(name_dict)
+    #print(result[0])
+    pprint.pprint(result[0])
+    print(result[0]["name"])
+
+
+
+
     # Multi-processing
     procs = []
 
     # For instantaneous image capture
     capture_idx = 0
+
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
@@ -343,10 +378,19 @@ def main(tts_enable):
         if ad_event == ACTION_EVENT_APPROACH:
             eng_name = fr_labels[max_width_id]
             #print(db.keys())
-            for name in db.keys():
-                info = db[name]
-                if info["english_name"] == eng_name:
-                    kor_name = name
+
+            #------------------------
+            # Search from MongoDB
+            name_dict = {"english_name": eng_name}
+            result = mgdb.mdb_collection.find(name_dict)
+            kor_name = result[0]["name"]
+
+            #------------------------
+            # Search from csv file
+            #for name in db.keys():
+            #    info = db[name]
+            #    if info["english_name"] == eng_name:
+            #        kor_name = name
             if len(kor_name) > 0:
                 if ad_event == ACTION_EVENT_APPROACH:
                     event_detect.event_label = kor_name
