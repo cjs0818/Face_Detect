@@ -212,7 +212,7 @@ class FaceRecog():
                         selected_label = self.label_ids[id]
                         min_dist = dist
             else:
-                selected_label = "unknown"
+                selected_label = "unknown_far"
 
             if (selected_label != None):
                 fr_labels.append(selected_label)

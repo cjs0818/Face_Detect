@@ -17,7 +17,7 @@ import pickle    # used for Face recognition by OpenCV
 
 import dlib
 import os
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 import sys
 #from skimage import io
 #from PIL import Image
@@ -105,12 +105,38 @@ def get_datatbase(filename):
     return dict
 
 
+'''
+#------------------------------
+# For Multiprocessing
+queue_from_cam = Queue()
+
+def cam_loop(queue_from_cam):
+    cap = cv2.VideoCapture(0)
+    cap.set(3, 320)
+    cap.set(4, 240)
+
+    while True:
+        ret, frame = cap.read()
+        queue_from_cam.put(frame)
+#------------------------------
+'''
+
 def main(tts_enable):
+
     cap = cv2.VideoCapture(0)
     cap.set(3, 320)
     cap.set(4, 240)
 
     ret, sample_frame = cap.read()
+
+    '''
+
+    cam_process = Process(target=cam_loop, args=(queue_from_cam,))
+    cam_process.start()
+    while queue_from_cam.empty():
+        pass
+    sample_frame = queue_from_cam.get()
+    '''
 
     # ----------------------------
     # Head Pose Detection: by Dlib
@@ -145,20 +171,28 @@ def main(tts_enable):
     filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
     db = get_datatbase(filename)
 
+
     # --------------------------------
     # Create NaverTTS Class
     tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
     #tts.play("안녕하십니까?")
 
-    capture_idx = 0
 
-    # --------------------------------
     # Multi-processing
     procs = []
 
+    # For instantaneous image capture
+    capture_idx = 0
     while(True):
         # Capture frame-by-frame
         ret, frame = cap.read()
+
+        '''
+        while queue_from_cam.empty():
+            pass
+        frame = queue_from_cam.get()
+        '''
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
 
@@ -199,9 +233,13 @@ def main(tts_enable):
         if iter % 100 == 0:
             obj_track.track_started = False
             if obj_track.track_started == True:
-                if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
+                if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
                     event_detect.reset()
         iter += 1
+
+        # 아니면, 매번 얼굴인식 수행
+        # Face Recognition
+        #(fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
         #-------------------------------------
 
         # --------------------------------------
@@ -220,7 +258,7 @@ def main(tts_enable):
                 obj_track.min_dist = fr_min_dist[max_width_id]
 
         else:
-            if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown":
+            if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
                 event_detect.reset()
 
                 # ---------------------------------
@@ -245,24 +283,6 @@ def main(tts_enable):
                 if obj_track.track_started == False:
                     fr_labels = []
                     fr_box = []
-            '''
-            if len(fr_labels) > 0 and fr_labels[max_width_id] == obj_track.label:
-                obj_track.start_tracking(frame, fr_box[max_width_id])
-            else:
-                #obj_track.track_running = True
-                max_width_id = 0
-                fr_labels = []
-                fr_box = []
-                fr_min_dist = []
-                fr_labels.append(obj_track.label)
-                fr_box.append(obj_track.roi)
-                fr_min_dist.append(0)
-
-                obj_track.tracking(frame)
-                if obj_track.track_started == False:
-                    fr_labels = []
-                    fr_box = []
-            '''
         # --------------------------------------
 
 
@@ -317,6 +337,8 @@ def main(tts_enable):
 
         (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
+
+
         kor_name = []
         if ad_event == ACTION_EVENT_APPROACH:
             eng_name = fr_labels[max_width_id]
@@ -332,14 +354,18 @@ def main(tts_enable):
                     print(message)
                     # ===============================
                     # TTS
-                    #if tts_enable == 1:
-                        #for proc in procs:
-                        #    proc.join()
-                        #proc = Process(target=tts.play_proc, args=(message,))
-                        #procs.append(proc)
-
                     if tts_enable == 1:
                         tts.play(message)
+                    # -------------------------------
+                    # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
+                    #if tts_enable == 1:
+                    #    for proc in procs:
+                    #        proc.join()
+                    #        procs.pop()
+                    #    proc = Process(target=tts.play, args=(message,))
+                    #    procs.append(proc)
+                    #    proc.start()
+                    #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
                     # -------------------------------
         elif ad_event == ACTION_EVENT_DISAPPEAR:
             if len(event_detect.event_label) > 0:
@@ -350,7 +376,6 @@ def main(tts_enable):
                 # TTS
                 if tts_enable == 1:
                     tts.play(message)
-                # -------------------------------
 
 
 
@@ -375,6 +400,7 @@ def main(tts_enable):
     cap.release()
     cv2.destroyAllWindows()
 
+    #cam_process.join()
 
 #----------------------------------------------------
 # 메인 함수
