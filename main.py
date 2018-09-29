@@ -29,6 +29,10 @@ from pymongo import MongoClient
 import datetime
 import pprint
 
+#-------------------------------------------------------------
+# chatbot/dialogflow.py  for Dialogflow chatbot platform
+from chatbot.dialogflow import ChatBot   # Chatbot platform: Dialogflow.ai
+
 
 # ----------------------------------------------------------
 #  You need to setup PYTHONPATH to include tts/naver_tts.py
@@ -200,23 +204,29 @@ def main(tts_enable):
     #tts.play("안녕하십니까?")
 
 
+    # --------------------------------
     # Mongo DB
-    db_name = "DB_reception"
-    coll_name = "RMI_researchers"
+    db_name = "DB_reception"        # define a Database
+    coll_name = "RMI_researchers"   # define a Collection
     mgdb = MongoDB(db_name, coll_name)
 
-    db_name = "DB_reception"
-    coll_name = "Event"
+    db_name = "DB_reception"        # define a Database
+    coll_name = "Event"             # define a Collection
     mgdb_event = MongoDB(db_name, coll_name)
 
-    eng_name = "jschoi"
-    name_dict = { "english_name": eng_name }
-    result = mgdb.coll.find(name_dict)
-    #print(result[0])
-    pprint.pprint(result[0])
-    print(result[0]["name"])
+    # Test the 'find' of Mongo DB
+    #eng_name = "jschoi"
+    #name_dict = { "english_name": eng_name }
+    #result = mgdb.coll.find(name_dict)
+    #pprint.pprint(result[0])
+    #print(result[0]["name"])
 
 
+    # -------------------------------------------------------------
+    # chatbot/dialogflow.py  for Dialogflow chatbot platform
+    user_key = 'DeepTasK'
+    chatbot_id = 'c54e4466-d26d-4966-af1f-ca4d087d0c4a'
+    chat = ChatBot(chatbot_id)
 
 
     # Multi-processing
@@ -382,25 +392,28 @@ def main(tts_enable):
 
 
         kor_name = []
+        event_data = {'visitor_name': ""}
         if ad_event == ACTION_EVENT_APPROACH:
             eng_name = fr_labels[max_width_id]
             #print(db.keys())
 
             #------------------------
             # Search from MongoDB
-            name_dict = {"english_name": eng_name}
-            result = mgdb.coll.find(name_dict)
-            try:
-                kor_name = result[0]["name"]
-            except Exception as e:
-                pass
+            #name_dict = {"english_name": eng_name}
+            #result = mgdb.coll.find(name_dict)
+            #try:
+            #    kor_name = result[0]["name"]
+            #except Exception as e:
+            #    pass
 
             # ----------------------------
             # -- Search from csv file
-            # for name in db.keys():
-            #    info = db[name]
-            #    if info["english_name"] == eng_name:
-            #        kor_name = name
+            for name in db.keys():
+                info = db[name]
+                if info["english_name"] == eng_name:
+                    kor_name = name
+
+
             if len(kor_name) > 0:
                 if ad_event == ACTION_EVENT_APPROACH:
                     # -------------------------------
@@ -409,21 +422,28 @@ def main(tts_enable):
                     # dict_contents = { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() }
                     # mgdb_event.coll.insert_one(dict_contents)
                     # -------------------------------
+                    dt = []
                     for ret in mgdb_event.coll.find({"name": kor_name}):
                         last_time = ret['datetime']
-                    now = datetime.datetime.now()
-                    dt = now - last_time
+                        now = datetime.datetime.now()
+                        dt = now - last_time
                     #print(dt)
                     #print("days: ", dt.days, ", seconds: ", dt.seconds)
 
 
                     event_detect.event_label = kor_name
                     message = kor_name + "님, 안녕하세요? 반갑습니다."
-                    if dt.days > 0:
-                        message = message + " " + str(dt.days) + "일만에 오셨군요."
-                    elif dt.seconds > 0:
-                        message = message + " " + str(dt.seconds) + "초만에 오셨군요"
+                    try:
+                        if dt.days > 0:
+                            message = message + " " + str(dt.days) + "일만에 오셨군요."
+                            how_long = str(dt.days) + "일"
+                        elif dt.seconds > 0:
+                            message = message + " " + str(dt.seconds) + "초만에 오셨군요"
+                            how_long = str(dt.seconds) + "초"
+                    except Exception as e:
+                        pass
                     print(message)
+
                     # ===============================
                     # TTS
                     if tts_enable == 1:
@@ -439,6 +459,22 @@ def main(tts_enable):
                     #    proc.start()
                     #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
                     # -------------------------------
+
+
+                    # -------------------------------------------------------------
+                    # chatbot/dialogflow.py  for Dialogflow chatbot platform
+                    #content = "안녕, " + kor_name + "또 왔어요"
+                    event_name = 'KnownApproach'
+                    event_data = {'visitor_name': kor_name}
+                    res = chat.event_api_dialogflow(event_name, event_data, user_key)
+                    message = res['result']['fulfillment']['speech']
+
+                    # ===============================
+                    # TTS
+                    if tts_enable == 1:
+                        tts.play(message)
+                    # -------------------------------
+
         elif ad_event == ACTION_EVENT_DISAPPEAR:
             if len(event_detect.event_label) > 0:
                 message = event_detect.event_label + "님, 안녕히 가세요."

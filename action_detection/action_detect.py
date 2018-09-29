@@ -36,7 +36,7 @@ class Event_Detector():
         self.event_label = []
 
 
-    def approach_disappear(self, fr_labels, fr_box, min_width_id):
+    def approach_disappear(self, fr_labels, fr_box, max_width_id):
 
         self.event = ACTION_STATE_IDLE
 
@@ -47,7 +47,7 @@ class Event_Detector():
                 if self.approach_cnt >= self.approach_cnt_th:
                     self.state = ACTION_STATE_FACE_DETECTED
                     self.event = ACTION_EVENT_APPROACH
-                    print("! --------  APPROACH: {}  -------".format(fr_labels[min_width_id]))
+                    print("! --------  APPROACH: {}  -------".format(fr_labels[max_width_id]))
             else:
                 self.approach_cnt = 0
         elif self.state == ACTION_STATE_FACE_DETECTED:
