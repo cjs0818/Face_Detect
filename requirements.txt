@@ -14,5 +14,6 @@ pyobjc		# for OSX
 playsound	# for OSX
 pymongo
 pprint
+google-cloud-speech==0.35.0	# Google Speech
 #pyglet		# AVBin required: [OSX] http://avbin.github.io/AVbin/Download.html, [Linux] sudo apt-get install libavbin-dev libavbin0
 #Pillow==5.0.0

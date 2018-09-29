@@ -29,10 +29,12 @@ from pymongo import MongoClient
 import datetime
 import pprint
 
+
 #-------------------------------------------------------------
 # chatbot/dialogflow.py  for Dialogflow chatbot platform
 from chatbot.dialogflow import ChatBot   # Chatbot platform: Dialogflow.ai
-
+from stt.gspeech import Gspeech     # STT: Google Cloud Speech
+import json
 
 # ----------------------------------------------------------
 #  You need to setup PYTHONPATH to include tts/naver_tts.py
@@ -148,7 +150,31 @@ class MongoDB():
 
 
 
-def main(tts_enable):
+def main(stt_enable=1, tts_enable=1):
+    if stt_enable == 1:
+        # 음성인식인 경우 무한 loop
+        flag = True
+        gsp = Gspeech()
+    else:
+        # 음성인식 아닌 경우, 테스트 query에 대해 문장 단위로 테스트
+        query = [
+            "사람",
+                "아나스타샤를 찾으러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "최종석 박사님을 만나러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "홍길동님을 찾으러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "여진구 박사님이요",
+                "끝내자"
+                 ]
+        q_length = len(query)
+        q_iter = 0
+        flag = q_iter < q_length
+
 
     cap = cv2.VideoCapture(0)
     cap.set(3, 320)
@@ -390,7 +416,6 @@ def main(tts_enable):
         (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
 
-
         kor_name = []
         event_name = 'UnknownApproach'
         event_data = {'visitor_name': ""}
@@ -448,7 +473,7 @@ def main(tts_enable):
                 event_data = {'visitor_name': kor_name}
 
             else:   # MongoDB에서 한국이름을 찾을 수 없는 경우
-                message = "안녕하세요? 처음 뵙겠습니다."
+                message = "안녕하십니까? 저는 안내를 도와드리는 ReceptionBot입니다."
                 print(message)
 
                 event_data = {'visitor_name': 'UNKNOWN'}
@@ -476,7 +501,7 @@ def main(tts_enable):
             ##event_data = {'visitor_name': kor_name}
             #res = chat.event_api_dialogflow(event_name, event_data, user_key)
             #message = res['result']['fulfillment']['speech']
-            content = "안녕, 최종석 왔어요"
+            content = "안녕, 안내를 부탁해요"
             res = chat.get_answer_dialogflow(content, user_key)
             message = res['result']['fulfillment']['speech']
 
@@ -500,14 +525,79 @@ def main(tts_enable):
 
         elif ad_state == ACTION_STATE_FACE_DETECTED:
             # 음성인식
-            # -------------------------------------------------------------
-            # chatbot/dialogflow.py  for Dialogflow chatbot platform
-            #    v1 API
-            context_flag = True
-            context_value = "EventApproachHello-followup"
-            content = "사람"
-            res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
-            message = res['result']['fulfillment']['speech']
+
+            if stt_enable == 1:
+                flag = True
+                content = gsp.getText()
+            else:
+                if flag:
+                    q_iter = q_iter + 1
+                flag = q_iter < q_length
+                content = query[q_iter-1]
+
+            if flag:
+                # -------------------------------------------------------------
+                # chatbot/dialogflow.py  for Dialogflow chatbot platform
+                #    v1 API
+                #context_flag = True
+                #context_value = "EventApproachHello-followup"
+                #res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
+                res = chat.get_answer_dialogflow(content, user_key)
+                message = res['result']['fulfillment']['speech']
+
+                try:
+                    person_to_visit = res['result']['parameters']['person_to_visit']
+                    # ------------------------
+                    # 최종석 박사 -> 최종석
+                    # 최종석 -> 최종석
+                    # ------------------------
+                    person_to_visit = person_to_visit.split()
+                    person_to_visit = person_to_visit[0]
+                    #print (person_to_visit)
+
+                    print('============= print from internal process ==================')
+
+                    # ------------------------
+                    # database에 해당 name의 사람이 있으면 그 사람의 information을 갖고 오고,
+                    # ''     ''      ''     ''  없으면 ERROR를 갖고 온다.
+                    # ------------------------
+                    try:
+                        info = db[person_to_visit]
+                        try:
+                            room_num = info["room#"]
+                            msg = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
+                        except:
+                            msg = person_to_visit + "님의 정보는 다음과 같습니다."
+                        '''
+                        info = {
+                            "name": "최종석",
+                            "information": {
+                                "center": "지능로봇연구단",
+                                "room#": "8402",
+                                "phone#": "5618",
+                                "e-mail": "cjs@kist.re.kr"
+                            }
+                        }
+                        '''
+                        # print('   information about ', name, ': ', json.dumps(info, indent=4, ensure_ascii=False))
+                    except:
+                        msg = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
+                        info = 'ERROR'
+
+                    answer = {
+                        'name': person_to_visit,
+                        'information': info
+                    }
+                    print(msg)
+                    # ===============================
+                    if tts_enable == 1:
+                        tts.play(msg)
+                    # -------------------------------
+                    print(json.dumps(answer, indent=4, ensure_ascii=False))
+                    #print (info)
+
+                except:
+                    pass
 
 
 
@@ -538,5 +628,8 @@ def main(tts_enable):
 # 메인 함수
 #----------------------------------------------------
 if __name__ == '__main__':
-    tts_enable = 0
-    main(tts_enable)
+
+    stt_enable = 0  # 0: Disable speech recognition (STT), 1: Enable it
+    tts_enable = 0  # 0: Disable speech synthesis (TTS),   1: Enable it
+
+    main(stt_enable, tts_enable)
