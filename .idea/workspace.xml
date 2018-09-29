@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RMI_researchers.csv" beforeDir="false" afterPath="$PROJECT_DIR$/RMI_researchers.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/action_detection/action_detect.py" beforeDir="false" afterPath="$PROJECT_DIR$/action_detection/action_detect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition/face-labels.pickle" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/face-labels.pickle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatbot/dialogflow.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatbot/dialogflow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/face_recognition/fr_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/fr_dlib.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,7 +18,7 @@
     <SUITE FILE_PATH="coverage/Face_Detect$fr_dlib.coverage" NAME="fr_dlib Coverage Results" MODIFIED="1537753307270" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_recognition" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_test.coverage" NAME="fd_test Coverage Results" MODIFIED="1536970930211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538194736597" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538216911239" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$image_test.coverage" NAME="image_test Coverage Results" MODIFIED="1536936160774" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$main_fd_dlib.coverage" NAME="main_fd_dlib Coverage Results" MODIFIED="1537706862249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$face_train.coverage" NAME="face-train Coverage Results" MODIFIED="1537053932552" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -29,11 +27,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
-              <caret line="353" column="38" lean-forward="true" selection-start-line="353" selection-start-column="38" selection-end-line="353" selection-end-column="38" />
+            <state relative-caret-position="322">
+              <caret line="507" column="25" lean-forward="true" selection-start-line="507" selection-start-column="25" selection-end-line="507" selection-end-column="25" />
               <folding>
                 <element signature="e#425#443#0" expanded="true" />
               </folding>
@@ -44,8 +42,8 @@
       <file leaf-file-name="dialogflow.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/chatbot/dialogflow.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="407">
-              <caret line="100" column="70" selection-start-line="100" selection-start-column="70" selection-end-line="100" selection-end-column="70" />
+            <state relative-caret-position="478">
+              <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
               <folding>
                 <element signature="e#151#166#0" expanded="true" />
               </folding>
@@ -77,8 +75,8 @@
       <file leaf-file-name="action_detect.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="25" column="20" lean-forward="true" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+            <state relative-caret-position="270">
+              <caret line="47" column="59" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="59" />
             </state>
           </provider>
         </entry>
@@ -104,11 +102,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fr_dlib.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="fr_dlib.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="199" column="33" selection-start-line="199" selection-start-column="29" selection-end-line="199" selection-end-column="33" />
+            <state relative-caret-position="-538">
+              <caret line="167" column="28" selection-start-line="167" selection-start-column="28" selection-end-line="167" selection-end-column="28" />
               <folding>
                 <element signature="e#576#594#0" expanded="true" />
               </folding>
@@ -128,7 +126,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pose_stabilizers</find>
       <find />
       <find>shape</find>
       <find>recognizer</find>
@@ -158,6 +155,7 @@
       <find>unknown</find>
       <find>pyglet</find>
       <find>min_width_id</find>
+      <find>ACTION_STATE_FACE_DETECTED</find>
     </findStrings>
     <replaceStrings>
       <replace>ACTION_EVENT_DISAPPEAR</replace>
@@ -185,10 +183,10 @@
         <option value="$PROJECT_DIR$/action_detection/action_detection.py" />
         <option value="$PROJECT_DIR$/main_fd_dlib.py" />
         <option value="$PROJECT_DIR$/tracker/obj_tracker.py" />
-        <option value="$PROJECT_DIR$/face_recognition/fr_dlib.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/chatbot/dialogflow.py" />
         <option value="$PROJECT_DIR$/action_detection/action_detect.py" />
+        <option value="$PROJECT_DIR$/face_recognition/fr_dlib.py" />
+        <option value="$PROJECT_DIR$/chatbot/dialogflow.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -748,39 +746,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
+    <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="25" column="20" lean-forward="true" selection-start-line="25" selection-start-column="20" selection-end-line="25" selection-end-column="20" />
+        <state relative-caret-position="-538">
+          <caret line="167" column="28" selection-start-line="167" selection-start-column="28" selection-end-line="167" selection-end-column="28" />
+          <folding>
+            <element signature="e#576#594#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
-          <caret line="353" column="38" lean-forward="true" selection-start-line="353" selection-start-column="38" selection-end-line="353" selection-end-column="38" />
-          <folding>
-            <element signature="e#425#443#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="270">
+          <caret line="47" column="59" selection-start-line="47" selection-start-column="33" selection-end-line="47" selection-end-column="59" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chatbot/dialogflow.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="100" column="70" selection-start-line="100" selection-start-column="70" selection-end-line="100" selection-end-column="70" />
+        <state relative-caret-position="478">
+          <caret line="175" column="13" selection-start-line="175" selection-start-column="13" selection-end-line="175" selection-end-column="13" />
           <folding>
             <element signature="e#151#166#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="199" column="33" selection-start-line="199" selection-start-column="29" selection-end-line="199" selection-end-column="33" />
+        <state relative-caret-position="322">
+          <caret line="507" column="25" lean-forward="true" selection-start-line="507" selection-start-column="25" selection-end-line="507" selection-end-column="25" />
           <folding>
-            <element signature="e#576#594#0" expanded="true" />
+            <element signature="e#425#443#0" expanded="true" />
           </folding>
         </state>
       </provider>

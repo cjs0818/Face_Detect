@@ -158,7 +158,7 @@ class ChatBot():
     # ----------------------------------------------------
     # Dialogflow에서 대답 구함
     # ----------------------------------------------------
-    def get_answer_dialogflow(self, text, user_key):
+    def get_answer_dialogflow(self, text, user_key, context_flag=False, context_value=""):
         # --------------------------------
         # Dialogflow에 요청
         # --------------------------------
@@ -168,10 +168,14 @@ class ChatBot():
             'sessionId': user_key,
             'timezone': 'Asia/Seoul'
         }
+        if context_flag == True:
+            data_send['contexts'] = context_value
 
         data_header = {
             'Content-Type': 'application/json; charset=utf-8',
-            'Authorization': 'Bearer 9d10041bdb9c4c68a88b7899ca1540c1'  # Dialogflow의 Client access token 입력
+            #'Authorization': 'Bearer 9d10041bdb9c4c68a88b7899ca1540c1'  # Dialogflow의 Client access token 입력
+            'Authorization': 'Bearer 73d41dcf34e849a1b8c911559a790112'  # Dialogflow의 Client access token 입력 (/query, /contexts, /userEntities에 대해서)
+
         }
 
         dialogflow_url = 'https://api.dialogflow.com/v1/query?v=20150910'

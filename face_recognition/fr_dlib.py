@@ -165,6 +165,7 @@ class FaceRecog():
         fr_labels = []
         fr_box = []
         fr_min_dist = []
+        elected_label = None
 
         for k, d in enumerate(dets):
             #print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
@@ -197,7 +198,7 @@ class FaceRecog():
             # print(len(fd_known))
 
             min_dist = self.fr_th
-            selected_label = None
+            selected_label = 'UNKNOWN'
 
             roi_ratio = (d.right() - d.left()) / frame.shape[0]
 

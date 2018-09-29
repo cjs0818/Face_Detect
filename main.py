@@ -392,10 +392,12 @@ def main(tts_enable):
 
 
         kor_name = []
+        event_name = 'UnknownApproach'
         event_data = {'visitor_name': ""}
         if ad_event == ACTION_EVENT_APPROACH:
-            eng_name = fr_labels[max_width_id]
-            #print(db.keys())
+            event_name = 'Approach'     # For query API of Dialogflow
+
+            eng_name = fr_labels[max_width_id]      #  인식된 얼굴의 영문 이름 -> csv 파일에서 한국이름을 찾고자 함
 
             #------------------------
             # Search from MongoDB
@@ -414,66 +416,77 @@ def main(tts_enable):
                     kor_name = name
 
 
-            if len(kor_name) > 0:
-                if ad_event == ACTION_EVENT_APPROACH:
-                    # -------------------------------
-                    # -- Approach 할 때마다 MongoDB에 { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() } 형태로 기록
-                    # -------------------------------
-                    # dict_contents = { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() }
-                    # mgdb_event.coll.insert_one(dict_contents)
-                    # -------------------------------
-                    dt = []
-                    for ret in mgdb_event.coll.find({"name": kor_name}):
-                        last_time = ret['datetime']
-                        now = datetime.datetime.now()
-                        dt = now - last_time
-                    #print(dt)
-                    #print("days: ", dt.days, ", seconds: ", dt.seconds)
+            if len(kor_name) > 0:   #  MongoDB에서 한국이름을 찾을 수 있는 경우
+                # -------------------------------
+                # -- Approach 할 때마다 MongoDB에 { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() } 형태로 기록
+                # -------------------------------
+                # dict_contents = { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() }
+                # mgdb_event.coll.insert_one(dict_contents)
+                # -------------------------------
+                dt = []
+                for ret in mgdb_event.coll.find({"name": kor_name}):
+                    last_time = ret['datetime']
+                    now = datetime.datetime.now()
+                    dt = now - last_time
+                #print(dt)
+                #print("days: ", dt.days, ", seconds: ", dt.seconds)
 
 
-                    event_detect.event_label = kor_name
-                    message = kor_name + "님, 안녕하세요? 반갑습니다."
-                    try:
-                        if dt.days > 0:
-                            message = message + " " + str(dt.days) + "일만에 오셨군요."
-                            how_long = str(dt.days) + "일"
-                        elif dt.seconds > 0:
-                            message = message + " " + str(dt.seconds) + "초만에 오셨군요"
-                            how_long = str(dt.seconds) + "초"
-                    except Exception as e:
-                        pass
-                    print(message)
+                event_detect.event_label = kor_name
+                message = kor_name + "님, 안녕하세요? 반갑습니다."
+                try:
+                    if dt.days > 0:
+                        message = message + " " + str(dt.days) + "일만에 오셨군요."
+                        how_long = str(dt.days) + "일"
+                    elif dt.seconds > 0:
+                        message = message + " " + str(dt.seconds) + "초만에 오셨군요"
+                        how_long = str(dt.seconds) + "초"
+                except Exception as e:
+                    pass
+                print(message)
 
-                    # ===============================
-                    # TTS
-                    if tts_enable == 1:
-                        tts.play(message)
-                    # -------------------------------
-                    # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
-                    #if tts_enable == 1:
-                    #    for proc in procs:
-                    #        proc.join()
-                    #        procs.pop()
-                    #    proc = Process(target=tts.play, args=(message,))
-                    #    procs.append(proc)
-                    #    proc.start()
-                    #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
-                    # -------------------------------
+                event_data = {'visitor_name': kor_name}
+
+            else:   # MongoDB에서 한국이름을 찾을 수 없는 경우
+                message = "안녕하세요? 처음 뵙겠습니다."
+                print(message)
+
+                event_data = {'visitor_name': 'UNKNOWN'}
+
+            # ===============================
+            # TTS
+            if tts_enable == 1:
+                tts.play(message)
+            # -------------------------------
+            # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
+            # if tts_enable == 1:
+            #    for proc in procs:
+            #        proc.join()
+            #        procs.pop()
+            #    proc = Process(target=tts.play, args=(message,))
+            #    procs.append(proc)
+            #    proc.start()
+            #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
+            # -------------------------------
+
+            # -------------------------------------------------------------
+            # chatbot/dialogflow.py  for Dialogflow chatbot platform
+            #    v1 API
+            ##event_name = 'Approach'
+            ##event_data = {'visitor_name': kor_name}
+            #res = chat.event_api_dialogflow(event_name, event_data, user_key)
+            #message = res['result']['fulfillment']['speech']
+            content = "안녕, 최종석 왔어요"
+            res = chat.get_answer_dialogflow(content, user_key)
+            message = res['result']['fulfillment']['speech']
+
+            # ===============================
+            # TTS
+            if tts_enable == 1:
+                tts.play(message)
+            # -------------------------------
 
 
-                    # -------------------------------------------------------------
-                    # chatbot/dialogflow.py  for Dialogflow chatbot platform
-                    #content = "안녕, " + kor_name + "또 왔어요"
-                    event_name = 'KnownApproach'
-                    event_data = {'visitor_name': kor_name}
-                    res = chat.event_api_dialogflow(event_name, event_data, user_key)
-                    message = res['result']['fulfillment']['speech']
-
-                    # ===============================
-                    # TTS
-                    if tts_enable == 1:
-                        tts.play(message)
-                    # -------------------------------
 
         elif ad_event == ACTION_EVENT_DISAPPEAR:
             if len(event_detect.event_label) > 0:
@@ -484,6 +497,17 @@ def main(tts_enable):
                 # TTS
                 if tts_enable == 1:
                     tts.play(message)
+
+        elif ad_state == ACTION_STATE_FACE_DETECTED:
+            # 음성인식
+            # -------------------------------------------------------------
+            # chatbot/dialogflow.py  for Dialogflow chatbot platform
+            #    v1 API
+            context_flag = True
+            context_value = "EventApproachHello-followup"
+            content = "사람"
+            res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
+            message = res['result']['fulfillment']['speech']
 
 
 
