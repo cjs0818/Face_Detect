@@ -529,6 +529,7 @@ def main(stt_enable=1, tts_enable=1):
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
                     tts.play(message)
+            dialog_flag = False
 
         elif ad_state == ACTION_STATE_FACE_DETECTED:
             # 음성인식
@@ -601,9 +602,9 @@ def main(stt_enable=1, tts_enable=1):
                     # 최종석 박사 -> 최종석
                     # 최종석 -> 최종석
                     # ------------------------
-                    person_to_visit = person_to_visit.split()
-                    person_to_visit = person_to_visit[0]
-                    #print (person_to_visit)
+                    person_to_visit2 = person_to_visit.split()
+                    person_to_visit2 = person_to_visit2[0]
+                    #print (person_to_visit2)
 
                     print('============= print from internal process ==================')
                     # ------------------------
@@ -611,7 +612,7 @@ def main(stt_enable=1, tts_enable=1):
                     # ''     ''      ''     ''  없으면 ERROR를 갖고 온다.
                     # ------------------------
                     try:
-                        info = db[person_to_visit]
+                        info = db[person_to_visit2]
                         try:
                             room_num = info["room#"]
                             message = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
@@ -641,7 +642,7 @@ def main(stt_enable=1, tts_enable=1):
                         info = 'ERROR'
 
                     answer = {
-                        'name': person_to_visit,
+                        'name': person_to_visit2,
                         'information': info
                     }
                     print(message)
@@ -696,6 +697,6 @@ def main(stt_enable=1, tts_enable=1):
 if __name__ == '__main__':
 
     stt_enable = 1  # 0: Disable speech recognition (STT), 1: Enable it
-    tts_enable = 0  # 0: Disable speech synthesis (TTS),   1: Enable it
+    tts_enable = 1  # 0: Disable speech synthesis (TTS),   1: Enable it
 
     main(stt_enable, tts_enable)
