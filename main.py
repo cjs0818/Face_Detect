@@ -537,27 +537,51 @@ def main(stt_enable=1, tts_enable=1):
             #dialog_flag = False
 
             try:
-                if stt_enable == 1:
-                    if dialog_flag:
+                if dialog_flag:
+                    if stt_enable == 1:
+                        # -------------------------------
+                        # STT 재시작
+                        print("------- 음성인식 대기중 -------")
+                        gsp.resumeMic()
                         content = gsp.getText()
                         if content is not None:
                             print (content)
-                else:
-                    if dialog_flag:
+                        else:
+                            # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
+                            print("Recreate Gspeech()!")
+                            del gsp
+                            gsp = Gspeech()
+                    else:
                         q_iter = q_iter + 1
-                    dialog_flag = q_iter < q_length
-                    content = query[q_iter-1]
+                        dialog_flag = q_iter < q_length
+                        content = query[q_iter-1]
+
+
             except Exception as e:
-                if stt_enable == 1:
-                    # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
-                    print("Recreate Gspeech()!")
-                    del gsp
-                    gsp = Gspeech()
+                #if stt_enable == 1:
+                #    # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
+                #    print("Recreate Gspeech()!")
+                #    del gsp
+                #    gsp = Gspeech()
                 pass
 
             #dialog_flag = False
 
             if dialog_flag and content is not None:
+                if (u'끝내자' in content):
+                    if len(event_detect.event_label) > 0:
+                        message = event_detect.event_label + "님, 안녕히 가세요."
+                    else:
+                        message = "네. 안녕히 가세요."
+                    print(message)
+                    # ===============================
+                    if tts_enable == 1:
+                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                            gsp.pauseMic()
+                        tts.play(message)
+                    # -------------------------------
+                    break
+
                 # -------------------------------------------------------------
                 # chatbot/dialogflow.py  for Dialogflow chatbot platform
                 #    v1 API
@@ -567,6 +591,12 @@ def main(stt_enable=1, tts_enable=1):
                 res = chat.get_answer_dialogflow(content, user_key)
                 message = res['result']['fulfillment']['speech']
 
+                # ===============================
+                if tts_enable == 1:
+                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                        gsp.pauseMic()
+                    tts.play(message)
+                # -------------------------------
 
                 try:
                     person_to_visit = res['result']['parameters']['person_to_visit']
@@ -579,7 +609,6 @@ def main(stt_enable=1, tts_enable=1):
                     #print (person_to_visit)
 
                     print('============= print from internal process ==================')
-
                     # ------------------------
                     # database에 해당 name의 사람이 있으면 그 사람의 information을 갖고 오고,
                     # ''     ''      ''     ''  없으면 ERROR를 갖고 온다.
@@ -588,9 +617,9 @@ def main(stt_enable=1, tts_enable=1):
                         info = db[person_to_visit]
                         try:
                             room_num = info["room#"]
-                            msg = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
+                            message = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
                         except:
-                            msg = person_to_visit + "님의 정보는 다음과 같습니다."
+                            message = person_to_visit + "님의 정보는 다음과 같습니다."
                         
                         #info = {
                         #    "name": "최종석",
@@ -603,25 +632,31 @@ def main(stt_enable=1, tts_enable=1):
                         #}
                         
                         # print('   information about ', name, ': ', json.dumps(info, indent=4, ensure_ascii=False))
+
+
+                        # This is the end of a dialog
+                        dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+                        if stt_enable == 1:
+                            gsp.pauseMic()
                     except:
-                        msg = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
+                        message = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
+                        message = message + " 찾으시는 다른 분이 계시면 말씀하세요. 끝내시려면 끝내자 라고 해주세요."
                         info = 'ERROR'
 
                     answer = {
                         'name': person_to_visit,
                         'information': info
                     }
-                    print(msg)
+                    print(message)
+
                     # ===============================
                     if tts_enable == 1:
-                        if stt_enable == 1: # TTS 하는 동안 STT 일시 중지 --
+                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
-                        tts.play(msg)
+                        tts.play(message)
                     # -------------------------------
                     print(json.dumps(answer, indent=4, ensure_ascii=False))
                     #print (info)
-
-                    dialog_flag = False # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
 
 
                 except Exception as e:
@@ -630,13 +665,13 @@ def main(stt_enable=1, tts_enable=1):
         #time.sleep(0.01)
         # -------------------------------
         # STT 재시작
-        if stt_enable == 1 and tts_enable == 1:
-            gsp.resumeMic()
+        #if stt_enable == 1 and tts_enable == 1:
+        #    gsp.resumeMic()
 
 
 
         # Display the resulting frame
-        cv2.imshow('frame',frame)
+        cv2.imshow('frame',frame)   # When Google Speech stt crashes, comment this out!
 
         #win.add_overlay(dets)
 
