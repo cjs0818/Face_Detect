@@ -13,6 +13,7 @@
 import numpy as np
 import cv2
 import pickle    # used for Face recognition by OpenCV
+import time
 
 
 import dlib
@@ -28,6 +29,7 @@ import csv
 from pymongo import MongoClient
 import datetime
 import pprint
+
 
 
 #-------------------------------------------------------------
@@ -152,9 +154,9 @@ class MongoDB():
 
 def main(stt_enable=1, tts_enable=1):
     if stt_enable == 1:
-        # 음성인식인 경우 무한 loop
-        flag = True
+        dialog_flag = True
         gsp = Gspeech()
+        sr_active = True   # Enable speech recognition when APPROACH, Disable when dialog ends
     else:
         # 음성인식 아닌 경우, 테스트 query에 대해 문장 단위로 테스트
         query = [
@@ -173,7 +175,7 @@ def main(stt_enable=1, tts_enable=1):
                  ]
         q_length = len(query)
         q_iter = 0
-        flag = q_iter < q_length
+        dialog_flag = q_iter < q_length
 
 
     cap = cv2.VideoCapture(0)
@@ -421,7 +423,7 @@ def main(stt_enable=1, tts_enable=1):
         event_data = {'visitor_name': ""}
         if ad_event == ACTION_EVENT_APPROACH:
             event_name = 'Approach'     # For query API of Dialogflow
-
+            dialog_flag = True  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
             eng_name = fr_labels[max_width_id]      #  인식된 얼굴의 영문 이름 -> csv 파일에서 한국이름을 찾고자 함
 
             #------------------------
@@ -481,6 +483,8 @@ def main(stt_enable=1, tts_enable=1):
             # ===============================
             # TTS
             if tts_enable == 1:
+                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                    gsp.pauseMic()
                 tts.play(message)
             # -------------------------------
             # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
@@ -508,6 +512,8 @@ def main(stt_enable=1, tts_enable=1):
             # ===============================
             # TTS
             if tts_enable == 1:
+                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                    gsp.pauseMic()
                 tts.play(message)
             # -------------------------------
 
@@ -521,21 +527,37 @@ def main(stt_enable=1, tts_enable=1):
                 # ===============================
                 # TTS
                 if tts_enable == 1:
+                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                        gsp.pauseMic()
                     tts.play(message)
 
         elif ad_state == ACTION_STATE_FACE_DETECTED:
             # 음성인식
 
-            if stt_enable == 1:
-                flag = True
-                content = gsp.getText()
-            else:
-                if flag:
-                    q_iter = q_iter + 1
-                flag = q_iter < q_length
-                content = query[q_iter-1]
+            #dialog_flag = False
 
-            if flag:
+            try:
+                if stt_enable == 1:
+                    if dialog_flag:
+                        content = gsp.getText()
+                        if content is not None:
+                            print (content)
+                else:
+                    if dialog_flag:
+                        q_iter = q_iter + 1
+                    dialog_flag = q_iter < q_length
+                    content = query[q_iter-1]
+            except Exception as e:
+                if stt_enable == 1:
+                    # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
+                    print("Recreate Gspeech()!")
+                    del gsp
+                    gsp = Gspeech()
+                pass
+
+            #dialog_flag = False
+
+            if dialog_flag and content is not None:
                 # -------------------------------------------------------------
                 # chatbot/dialogflow.py  for Dialogflow chatbot platform
                 #    v1 API
@@ -544,6 +566,7 @@ def main(stt_enable=1, tts_enable=1):
                 #res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
                 res = chat.get_answer_dialogflow(content, user_key)
                 message = res['result']['fulfillment']['speech']
+
 
                 try:
                     person_to_visit = res['result']['parameters']['person_to_visit']
@@ -568,17 +591,17 @@ def main(stt_enable=1, tts_enable=1):
                             msg = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
                         except:
                             msg = person_to_visit + "님의 정보는 다음과 같습니다."
-                        '''
-                        info = {
-                            "name": "최종석",
-                            "information": {
-                                "center": "지능로봇연구단",
-                                "room#": "8402",
-                                "phone#": "5618",
-                                "e-mail": "cjs@kist.re.kr"
-                            }
-                        }
-                        '''
+                        
+                        #info = {
+                        #    "name": "최종석",
+                        #    "information": {
+                        #        "center": "지능로봇연구단",
+                        #        "room#": "8402",
+                        #        "phone#": "5618",
+                        #        "e-mail": "cjs@kist.re.kr"
+                        #    }
+                        #}
+                        
                         # print('   information about ', name, ': ', json.dumps(info, indent=4, ensure_ascii=False))
                     except:
                         msg = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
@@ -591,13 +614,24 @@ def main(stt_enable=1, tts_enable=1):
                     print(msg)
                     # ===============================
                     if tts_enable == 1:
+                        if stt_enable == 1: # TTS 하는 동안 STT 일시 중지 --
+                            gsp.pauseMic()
                         tts.play(msg)
                     # -------------------------------
                     print(json.dumps(answer, indent=4, ensure_ascii=False))
                     #print (info)
 
-                except:
+                    dialog_flag = False # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+
+
+                except Exception as e:
                     pass
+
+        #time.sleep(0.01)
+        # -------------------------------
+        # STT 재시작
+        if stt_enable == 1 and tts_enable == 1:
+            gsp.resumeMic()
 
 
 
@@ -629,7 +663,7 @@ def main(stt_enable=1, tts_enable=1):
 #----------------------------------------------------
 if __name__ == '__main__':
 
-    stt_enable = 0  # 0: Disable speech recognition (STT), 1: Enable it
+    stt_enable = 1  # 0: Disable speech recognition (STT), 1: Enable it
     tts_enable = 0  # 0: Disable speech synthesis (TTS),   1: Enable it
 
     main(stt_enable, tts_enable)

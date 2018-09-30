@@ -189,6 +189,7 @@ class ChatBot():
         # 대답 처리
         # --------------------------------
         if res.status_code != requests.codes.ok:
+            print(data_send)
             return ERROR_MESSAGE
 
         data_receive = res.json()
