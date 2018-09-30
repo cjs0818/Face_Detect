@@ -540,13 +540,14 @@ def main(stt_enable=1, tts_enable=1):
                     if stt_enable == 1:
                         # -------------------------------
                         # STT 재시작
-                        print("------- 음성인식 대기중 -------")
+                        #print("------- 음성인식 대기중 -------")
                         gsp.resumeMic()
-                        content = gsp.getText()
+                        block = False
+                        content = gsp.getText(block)
                         if content is not None:
                             print (content)
                         else:
-                            # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
+                            # 구글 음성인식기의 경우 1분 제한을 넘으면 None 발생 -> 다시 클래스를 생성시킴
                             print("Recreate Gspeech()!")
                             del gsp
                             gsp = Gspeech()
@@ -557,11 +558,8 @@ def main(stt_enable=1, tts_enable=1):
 
 
             except Exception as e:
-                #if stt_enable == 1:
-                #    # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
-                #    print("Recreate Gspeech()!")
-                #    del gsp
-                #    gsp = Gspeech()
+                # 음성인식기의 block=False로 해 놓았을 때, 아직 버퍼에 쌓이지 않으면 오류 처리
+                content = None
                 pass
 
             #dialog_flag = False
@@ -634,9 +632,9 @@ def main(stt_enable=1, tts_enable=1):
 
 
                         # This is the end of a dialog
-                        dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
-                        if stt_enable == 1:
-                            gsp.pauseMic()
+                        #dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+                        #if stt_enable == 1:
+                        #    gsp.pauseMic()
                     except:
                         message = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
                         message = message + " 찾으시는 다른 분이 계시면 말씀하세요. 끝내시려면 끝내자 라고 해주세요."

@@ -191,15 +191,27 @@ class Gspeech(Thread):
 
 def main():
     gsp = Gspeech()
+
+    block = True    # 음성인식 하는 동안 block 한다
+    block = False   # 음성인식 하는 동안 block 하지 않는다
     while True:
         # 음성 인식 될때까지 대기 한다.
-        stt = gsp.getText()
-        if stt is None:
-            break
-        print(stt)
+        print("                block?: {}".format(block))
         time.sleep(0.01)
-        if ('끝내자' in stt):
-            break
+        try:
+            stt = gsp.getText(block)
+            if stt is None:
+                # 구글 음성인식기의 경우 1분 제한을 넘으면 오류 발생 -> 다시 클래스를 생성시킴
+                print("Recreate Gspeech()!")
+                del gsp
+                gsp = Gspeech()
+            else:
+                print(stt)
+                if ('끝내자' in stt):
+                    break
+        except:
+            #print("skip")
+            pass
 
 
 if __name__ == '__main__':
