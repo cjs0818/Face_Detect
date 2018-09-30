@@ -154,9 +154,8 @@ class MongoDB():
 
 def main(stt_enable=1, tts_enable=1):
     if stt_enable == 1:
-        dialog_flag = True
+        dialog_flag = True  # Enable speech recognition when APPROACH, Disable when dialog ends
         gsp = Gspeech()
-        sr_active = True   # Enable speech recognition when APPROACH, Disable when dialog ends
     else:
         # 음성인식 아닌 경우, 테스트 query에 대해 문장 단위로 테스트
         query = [
