@@ -30,6 +30,8 @@ from pymongo import MongoClient
 import datetime
 import pprint
 
+from ffpyplayer.player import MediaPlayer
+
 
 
 #-------------------------------------------------------------
@@ -85,6 +87,11 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 # ------------------------
 # Object Tracking by Dlib correlation_tracker
 from tracker.obj_tracker import Obj_Tracker
+
+
+# ----------------------------
+# To Play Video: The first frame
+from animation.play_animation import Play_AV
 
 
 # ----------------------------------------------------
@@ -190,6 +197,17 @@ def main(stt_enable=1, tts_enable=1):
         pass
     sample_frame = queue_from_cam.get()
     '''
+
+    # ----------------------------
+    # To Play Video: The first frame
+    av = Play_AV()
+    video_path = './animation/csy02.mov'
+    audio_enable = 0
+    pause = 1
+    av.play_av(video_path, pause, audio_enable)
+    # ----------------------------
+
+
 
     # ----------------------------
     # Head Pose Detection: by Dlib
@@ -531,6 +549,7 @@ def main(stt_enable=1, tts_enable=1):
                     tts.play(message)
             dialog_flag = False
 
+
         elif ad_state == ACTION_STATE_FACE_DETECTED:
             # 음성인식
 
@@ -667,9 +686,19 @@ def main(stt_enable=1, tts_enable=1):
         #    gsp.resumeMic()
 
 
-
         # Display the resulting frame
         cv2.imshow('frame',frame)   # When Google Speech stt crashes, comment this out!
+
+
+        # ----------------------------
+        # To Play Video
+        if ad_event == ACTION_EVENT_APPROACH:
+            video_path = './animation/csy02.mov'
+            audio_enable = 1
+            pause = 0
+            av.play_av(video_path, pause, audio_enable)
+        # ----------------------------
+
 
         #win.add_overlay(dets)
 
