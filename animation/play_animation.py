@@ -31,6 +31,7 @@ class Play_AV():
             cv2.moveWindow(winname, 0, 10)
             cv2.imshow(winname, play_frame)
 
+
             if pause == 0:
                 while True:
                     grabbed, play_frame = video.read()

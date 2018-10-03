@@ -741,16 +741,6 @@ def main(stt_enable=1, tts_enable=1):
 
 
 
-        # Display the resulting frame
-        winname = "Face Recognition"
-        cv2.namedWindow(winname)
-        cv2.moveWindow(winname, 1280, 10)
-        cv2.imshow(winname,frame)   # When Google Speech stt crashes, comment this out!
-
-
-
-        #win.add_overlay(dets)
-
         key_in = cv2.waitKey(20) & 0xFF
         if key_in == ord('q'):
             break
@@ -761,6 +751,16 @@ def main(stt_enable=1, tts_enable=1):
             #f_name = BASE_DIR + f_name
             capture_idx += 1
             cv2.imwrite(f_name, frame)
+
+
+
+        # Display the resulting frame
+        winname = "Face Recognition"
+        cv2.namedWindow(winname)
+        cv2.moveWindow(winname, 1280, 10)
+        cv2.imshow(winname,frame)   # When Google Speech stt crashes, comment this out!
+
+
 
 
     # When everything done, release the capture
