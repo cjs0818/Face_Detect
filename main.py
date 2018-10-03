@@ -459,6 +459,8 @@ def main(stt_enable=1, tts_enable=1):
                 if info["english_name"] == eng_name:
                     kor_name = name
 
+            video_path = './animation/csy02_known_approach.mov'
+
 
             if len(kor_name) > 0:   #  MongoDB에서 한국이름을 찾을 수 있는 경우
                 # -------------------------------
@@ -485,6 +487,7 @@ def main(stt_enable=1, tts_enable=1):
                     elif dt.seconds > 0:
                         message = message + " " + str(dt.seconds) + "초만에 오셨군요"
                         how_long = str(dt.seconds) + "초"
+                    video_path = './animation/csy02_known_approach_memory.mov'
                 except Exception as e:
                     pass
                 print(message)
@@ -506,10 +509,10 @@ def main(stt_enable=1, tts_enable=1):
 
                 # ----------------------------
                 # To Play Video
-                video_path = './animation/csy02_known_approach.mov'
+                #video_path = './animation/csy02_known_approach.mov'
                 audio_enable = 0
                 pause = 0
-                video_delay = 1
+                video_delay = 70
                 av.play_av(video_path, pause, audio_enable, video_delay)
                 # ----------------------------
             # -------------------------------
@@ -525,17 +528,17 @@ def main(stt_enable=1, tts_enable=1):
             # -------------------------------
 
 
-
             # -------------------------------------------------------------
             # chatbot/dialogflow.py  for Dialogflow chatbot platform
-            #    v1 API
-            ##event_name = 'Approach'
-            ##event_data = {'visitor_name': kor_name}
-            #res = chat.event_api_dialogflow(event_name, event_data, user_key)
-            #message = res['result']['fulfillment']['speech']
             content = "안녕, 안내를 부탁해요"
             res = chat.get_answer_dialogflow(content, user_key)
             message = res['result']['fulfillment']['speech']
+            #    v1 API
+            ##event_name = 'Approach'
+            ##event_data = {'visitor_name': kor_name}
+            # res = chat.event_api_dialogflow(event_name, event_data, user_key)
+            # message = res['result']['fulfillment']['speech']
+
 
             # ===============================
             # TTS
@@ -549,7 +552,7 @@ def main(stt_enable=1, tts_enable=1):
                 video_path = './animation/csy02_Person_Place.mov'
                 audio_enable = 0
                 pause = 0
-                video_delay = 50
+                video_delay = 60
                 av.play_av(video_path, pause, audio_enable, video_delay)
                 # ----------------------------
             # -------------------------------
@@ -574,18 +577,19 @@ def main(stt_enable=1, tts_enable=1):
                     video_path = './animation/csy02_GoodBye.mov'
                     audio_enable = 0
                     pause = 0
-                    video_delay = 50
+                    video_delay = 56
                     av.play_av(video_path, pause, audio_enable, video_delay)
                     # ----------------------------
                 # ----------------------------
 
-            dialog_flag = False
+
+            dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+
 
 
         elif ad_state == ACTION_STATE_FACE_DETECTED:
             # 음성인식
 
-            #dialog_flag = False
 
             try:
                 if dialog_flag:
@@ -614,7 +618,6 @@ def main(stt_enable=1, tts_enable=1):
                 content = None
                 pass
 
-            #dialog_flag = False
 
             if dialog_flag and content is not None:
                 if (u'끝내자' in content):
@@ -634,7 +637,7 @@ def main(stt_enable=1, tts_enable=1):
                         video_path = './animation/csy02_GoodBye.mov'
                         audio_enable = 0
                         pause = 0
-                        video_delay = 50
+                        video_delay = 60
                         av.play_av(video_path, pause, audio_enable, video_delay)
                         # ----------------------------
                     # -------------------------------
@@ -657,10 +660,10 @@ def main(stt_enable=1, tts_enable=1):
 
                     # ----------------------------
                     # To Play Video
-                    video_path = './animation/csy02_GoodBye.mov'
+                    video_path = './animation/csy02_Hi_Short.mp4'
                     audio_enable = 0
                     pause = 0
-                    video_delay = 10
+                    video_delay = 60
                     print(len(message))
                     av.play_av(video_path, pause, audio_enable, video_delay, len(message))
                     # ----------------------------
@@ -702,10 +705,6 @@ def main(stt_enable=1, tts_enable=1):
                         # print('   information about ', name, ': ', json.dumps(info, indent=4, ensure_ascii=False))
 
 
-                        # This is the end of a dialog
-                        #dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
-                        #if stt_enable == 1:
-                        #    gsp.pauseMic()
                     except:
                         message = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
                         message = message + " 찾으시는 다른 분이 계시면 말씀하세요. 끝내시려면 끝내자 라고 해주세요."
@@ -725,10 +724,10 @@ def main(stt_enable=1, tts_enable=1):
 
                         # ----------------------------
                         # To Play Video
-                        video_path = './animation/csy02_Person_Place.mov'
+                        video_path = './animation/csy02_Hi_Short.mp4'
                         audio_enable = 0
                         pause = 0
-                        video_delay = 10
+                        video_delay = 60
                         print(len(message))
                         av.play_av(video_path, pause, audio_enable, video_delay, len(message))
                         # ----------------------------
@@ -740,27 +739,11 @@ def main(stt_enable=1, tts_enable=1):
                 except Exception as e:
                     pass
 
-        #time.sleep(0.01)
-        # -------------------------------
-        # STT 재시작
-        #if stt_enable == 1 and tts_enable == 1:
-        #    gsp.resumeMic()
 
 
         # Display the resulting frame
         cv2.imshow('frame',frame)   # When Google Speech stt crashes, comment this out!
 
-
-        # ----------------------------
-        # To Play Video
-        '''
-        if ad_event == ACTION_EVENT_APPROACH:
-            video_path = './animation/csy02.mov'
-            audio_enable = 1
-            pause = 0
-            av.play_av(video_path, pause, audio_enable)
-        '''
-        # ----------------------------
 
 
         #win.add_overlay(dets)

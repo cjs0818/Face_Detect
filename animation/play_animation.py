@@ -3,13 +3,19 @@
 from ffpyplayer.player import MediaPlayer
 import cv2
 
+# ----------------------------------------------------------
+#  You need to setup PYTHONPATH to include tts/naver_tts.py
+#   ex.) export PYTHONPATH=/Users/jschoi/work/ChatBot/Receptionbot_Danbee/receptionbot:$PYTHONPATH
+from tts.naver_tts import NaverTTS  # TTS: NaverTTS
+
+
 class Play_AV():
     def __init__(self):
         self.audio_enable = 0
 
     def play_av(self, video_path, pause=0, audio_enable=0, video_delay=3, audio_length=0):
         cnt = 0
-        cnt_th = int(audio_length / 20) + 1
+        cnt_th = int(audio_length / 15) + 1
 
         while cnt < cnt_th:
             cnt += 1
@@ -46,12 +52,27 @@ if __name__ == '__main__':
 
     av = Play_AV()
 
-    video_path = './csy02.mov'
+    video_path = './csy02_Hi_Short.mp4'
     audio_enable = 0
     pause = 1
     av.play_av(video_path, pause, audio_enable)
 
-    audio_enable = 1
+
+    # ===============================
+    # Create NaverTTS Class
+    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+
+    message = "안녕하세요. 반갑습니다. 두번째로 반가워요. 세번째로 반갑습니다."
+    tts.play(message, False)
+
+    # ----------------------------
+    # To Play Video
+    video_path = './csy02_Hi_Short.mp4'
+    audio_enable = 0
     pause = 0
-    av.play_av(video_path, pause, audio_enable)
+    video_delay = 60
+    print(len(message))
+    av.play_av(video_path, pause, audio_enable, video_delay, len(message))
+    # ----------------------------
+    # -------------------------------
 
