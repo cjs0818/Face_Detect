@@ -168,15 +168,15 @@ def main(stt_enable=1, tts_enable=1):
         query = [
             "사람",
                 "아나스타샤를 찾으러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "최종석 박사님을 만나러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "홍길동님을 찾으러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "여진구 박사님이요",
+#            "안녕, 안내를 부탁해요",
+#            "사람",
+#                "최종석 박사님을 만나러 왔어요",
+#            "안녕, 안내를 부탁해요",
+#            "사람",
+#                "홍길동님을 찾으러 왔어요",
+#            "안녕, 안내를 부탁해요",
+#            "사람",
+#                "여진구 박사님이요",
                 "끝내자"
                  ]
         q_length = len(query)
@@ -201,7 +201,7 @@ def main(stt_enable=1, tts_enable=1):
     # ----------------------------
     # To Play Video: The first frame
     av = Play_AV()
-    video_path = './animation/csy02.mov'
+    video_path = './animation/csy02_known_approach.mov'
     audio_enable = 0
     pause = 1
     av.play_av(video_path, pause, audio_enable)
@@ -502,7 +502,16 @@ def main(stt_enable=1, tts_enable=1):
             if tts_enable == 1:
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
-                tts.play(message)
+                tts.play(message, False)
+
+                # ----------------------------
+                # To Play Video
+                video_path = './animation/csy02_known_approach.mov'
+                audio_enable = 0
+                pause = 0
+                video_delay = 1
+                av.play_av(video_path, pause, audio_enable, video_delay)
+                # ----------------------------
             # -------------------------------
             # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
             # if tts_enable == 1:
@@ -514,6 +523,8 @@ def main(stt_enable=1, tts_enable=1):
             #    proc.start()
             #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
             # -------------------------------
+
+
 
             # -------------------------------------------------------------
             # chatbot/dialogflow.py  for Dialogflow chatbot platform
@@ -531,7 +542,16 @@ def main(stt_enable=1, tts_enable=1):
             if tts_enable == 1:
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
-                tts.play(message)
+                tts.play(message, False)
+
+                # ----------------------------
+                # To Play Video
+                video_path = './animation/csy02_Person_Place.mov'
+                audio_enable = 0
+                pause = 0
+                video_delay = 50
+                av.play_av(video_path, pause, audio_enable, video_delay)
+                # ----------------------------
             # -------------------------------
 
 
@@ -541,12 +561,24 @@ def main(stt_enable=1, tts_enable=1):
                 message = event_detect.event_label + "님, 안녕히 가세요."
                 print(message)
                 event_detect.event_label = []
+
                 # ===============================
                 # TTS
                 if tts_enable == 1:
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
-                    tts.play(message)
+                    tts.play(message, False)
+
+                    # ----------------------------
+                    # To Play Video
+                    video_path = './animation/csy02_GoodBye.mov'
+                    audio_enable = 0
+                    pause = 0
+                    video_delay = 50
+                    av.play_av(video_path, pause, audio_enable, video_delay)
+                    # ----------------------------
+                # ----------------------------
+
             dialog_flag = False
 
 
@@ -589,13 +621,22 @@ def main(stt_enable=1, tts_enable=1):
                     if len(event_detect.event_label) > 0:
                         message = event_detect.event_label + "님, 안녕히 가세요."
                     else:
-                        message = "네. 안녕히 가세요."
+                        message = "네. 그럼, 안녕히 가세요."
                     print(message)
                     # ===============================
                     if tts_enable == 1:
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
-                        tts.play(message)
+                        tts.play(message, False)
+
+                        # ----------------------------
+                        # To Play Video
+                        video_path = './animation/csy02_GoodBye.mov'
+                        audio_enable = 0
+                        pause = 0
+                        video_delay = 50
+                        av.play_av(video_path, pause, audio_enable, video_delay)
+                        # ----------------------------
                     # -------------------------------
                     break
 
@@ -612,7 +653,17 @@ def main(stt_enable=1, tts_enable=1):
                 if tts_enable == 1:
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
-                    tts.play(message)
+                    tts.play(message, False)
+
+                    # ----------------------------
+                    # To Play Video
+                    video_path = './animation/csy02_GoodBye.mov'
+                    audio_enable = 0
+                    pause = 0
+                    video_delay = 10
+                    print(len(message))
+                    av.play_av(video_path, pause, audio_enable, video_delay, len(message))
+                    # ----------------------------
                 # -------------------------------
 
                 try:
@@ -670,7 +721,17 @@ def main(stt_enable=1, tts_enable=1):
                     if tts_enable == 1:
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
-                        tts.play(message)
+                        tts.play(message, False)
+
+                        # ----------------------------
+                        # To Play Video
+                        video_path = './animation/csy02_Person_Place.mov'
+                        audio_enable = 0
+                        pause = 0
+                        video_delay = 10
+                        print(len(message))
+                        av.play_av(video_path, pause, audio_enable, video_delay, len(message))
+                        # ----------------------------
                     # -------------------------------
                     print(json.dumps(answer, indent=4, ensure_ascii=False))
                     #print (info)
@@ -692,11 +753,13 @@ def main(stt_enable=1, tts_enable=1):
 
         # ----------------------------
         # To Play Video
+        '''
         if ad_event == ACTION_EVENT_APPROACH:
             video_path = './animation/csy02.mov'
             audio_enable = 1
             pause = 0
             av.play_av(video_path, pause, audio_enable)
+        '''
         # ----------------------------
 
 

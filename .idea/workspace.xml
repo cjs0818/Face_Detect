@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/animation/play_animation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/animation/csy02.mov" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/animation/play_animation.py" beforeDir="false" afterPath="$PROJECT_DIR$/animation/play_animation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tts/naver_tts.py" beforeDir="false" afterPath="$PROJECT_DIR$/tts/naver_tts.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,10 +20,10 @@
     <SUITE FILE_PATH="coverage/Face_Detect$temp.coverage" NAME="temp Coverage Results" MODIFIED="1538247796517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$gspeech.coverage" NAME="gspeech Coverage Results" MODIFIED="1538303774142" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/stt" />
     <SUITE FILE_PATH="coverage/Face_Detect$fr_dlib.coverage" NAME="fr_dlib Coverage Results" MODIFIED="1537753307270" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_recognition" />
-    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538553479989" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538573284715" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$test_play.coverage" NAME="test_play Coverage Results" MODIFIED="1538544189249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/animation" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib__1_.coverage" NAME="fd_dlib (1) Coverage Results" MODIFIED="1537276921356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_detection" />
-    <SUITE FILE_PATH="coverage/Face_Detect$play_animation.coverage" NAME="play_animation Coverage Results" MODIFIED="1538554003054" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/animation" />
+    <SUITE FILE_PATH="coverage/Face_Detect$play_animation.coverage" NAME="play_animation Coverage Results" MODIFIED="1538556422850" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/animation" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_test.coverage" NAME="fd_test Coverage Results" MODIFIED="1536970930211" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_opencv.coverage" NAME="fd_opencv Coverage Results" MODIFIED="1537009408113" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$test_gspeech.coverage" NAME="test_gspeech Coverage Results" MODIFIED="1538246098972" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/stt" />
@@ -34,11 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="423">
-              <caret line="695" selection-start-line="695" selection-end-line="698" selection-end-column="55" />
+            <state relative-caret-position="226">
+              <caret line="716" column="21" lean-forward="true" selection-start-line="716" selection-start-column="21" selection-end-line="716" selection-end-column="21" />
               <folding>
                 <element signature="e#425#443#0" expanded="true" />
               </folding>
@@ -46,14 +47,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="play_animation.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="play_animation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="524">
-              <caret line="43" column="20" selection-start-line="43" selection-start-column="20" selection-end-line="43" selection-end-column="20" />
+            <state relative-caret-position="187">
+              <caret line="11" column="38" selection-start-line="11" selection-start-column="38" selection-end-line="11" selection-end-column="38" />
               <folding>
                 <element signature="e#25#66#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="naver_tts.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="710">
+              <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -187,8 +197,9 @@
         <option value="$PROJECT_DIR$/stt/gspeech.py" />
         <option value="$PROJECT_DIR$/animation/test_play.py" />
         <option value="$PROJECT_DIR$/main_flask.py" />
-        <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/tts/naver_tts.py" />
         <option value="$PROJECT_DIR$/animation/play_animation.py" />
+        <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
   </component>
@@ -202,8 +213,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="466" />
-    <option name="y" value="110" />
+    <option name="x" value="239" />
+    <option name="y" value="23" />
     <option name="width" value="1282" />
     <option name="height" value="1072" />
   </component>
@@ -249,6 +260,11 @@
               <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
               <item name="tracker" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
+              <item name="tts" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -283,7 +299,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.play_animation">
+  <component name="RunManager" selected="Python.main">
     <configuration name="gspeech" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Face_Detect" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -390,8 +406,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.play_animation" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.play_animation" />
         <item itemvalue="Python.test_play" />
         <item itemvalue="Python.gspeech" />
         <item itemvalue="Python.test_fr_dlib" />
@@ -412,7 +428,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="466" y="110" width="1282" height="1072" extended-state="0" />
+    <frame x="239" y="23" width="1282" height="1072" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -500,13 +516,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fd_dlib_bak.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6270">
-          <caret line="431" column="8" selection-start-line="431" selection-start-column="8" selection-end-line="431" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pose_estimator.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1380">
@@ -818,22 +827,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="695" selection-start-line="695" selection-end-line="698" selection-end-column="55" />
-          <folding>
-            <element signature="e#425#443#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="710">
+          <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="524">
-          <caret line="43" column="20" selection-start-line="43" selection-start-column="20" selection-end-line="43" selection-end-column="20" />
+        <state relative-caret-position="187">
+          <caret line="11" column="38" selection-start-line="11" selection-start-column="38" selection-end-line="11" selection-end-column="38" />
           <folding>
             <element signature="e#25#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="716" column="21" lean-forward="true" selection-start-line="716" selection-start-column="21" selection-end-line="716" selection-end-column="21" />
+          <folding>
+            <element signature="e#425#443#0" expanded="true" />
           </folding>
         </state>
       </provider>

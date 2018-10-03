@@ -67,7 +67,7 @@ class NaverTTS():
     def __init__(self, speaker=0, speed=0):
         self.speaker = speakers[speaker]
         self.speed=str(speed)
-    def play(self, txt):
+    def play(self, txt, block=True):
         encText = urllib.parse.quote(txt)
         data = "speaker=" + self.speaker + "&speed=" + self.speed + "&text=" + encText;
 
@@ -83,7 +83,8 @@ class NaverTTS():
 
             #외부 프로그램 사용 playsound or vlc
             if(os_name.find('Darwin') >= 0):
-                playsound(tmpPlayPath)  # For OSX
+                #block = True    # True: blocking,  False: Non-blocking
+                playsound(tmpPlayPath, block)  # For OSX
             else:
                 os.system('cvlc ' + tmpPlayPath + ' --play-and-exit') # For Linux
 
