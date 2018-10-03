@@ -201,7 +201,7 @@ def main(stt_enable=1, tts_enable=1):
     # ----------------------------
     # To Play Video: The first frame
     av = Play_AV()
-    video_path = './animation/csy02_known_approach.mov'
+    video_path = './animation/ani01_known_approach.mov'
     audio_enable = 0
     pause = 1
     av.play_av(video_path, pause, audio_enable)
@@ -459,7 +459,7 @@ def main(stt_enable=1, tts_enable=1):
                 if info["english_name"] == eng_name:
                     kor_name = name
 
-            video_path = './animation/csy02_known_approach.mov'
+            video_path = './animation/ani01_known_approach.mov'
 
 
             if len(kor_name) > 0:   #  MongoDB에서 한국이름을 찾을 수 있는 경우
@@ -487,7 +487,7 @@ def main(stt_enable=1, tts_enable=1):
                     elif dt.seconds > 0:
                         message = message + " " + str(dt.seconds) + "초만에 오셨군요"
                         how_long = str(dt.seconds) + "초"
-                    video_path = './animation/csy02_known_approach_memory.mov'
+                    video_path = './animation/ani01_known_approach_memory.mov'
                 except Exception as e:
                     pass
                 print(message)
@@ -499,6 +499,7 @@ def main(stt_enable=1, tts_enable=1):
                 print(message)
 
                 event_data = {'visitor_name': 'UNKNOWN'}
+                video_path = './animation/ani01_unknown_approach.mov'
 
             # ===============================
             # TTS
@@ -512,7 +513,7 @@ def main(stt_enable=1, tts_enable=1):
                 #video_path = './animation/csy02_known_approach.mov'
                 audio_enable = 0
                 pause = 0
-                video_delay = 70
+                video_delay = 100
                 av.play_av(video_path, pause, audio_enable, video_delay)
                 # ----------------------------
             # -------------------------------
@@ -549,10 +550,10 @@ def main(stt_enable=1, tts_enable=1):
 
                 # ----------------------------
                 # To Play Video
-                video_path = './animation/csy02_Person_Place.mov'
+                video_path = './animation/ani01_Person_Place.mov'
                 audio_enable = 0
                 pause = 0
-                video_delay = 60
+                video_delay = 100
                 av.play_av(video_path, pause, audio_enable, video_delay)
                 # ----------------------------
             # -------------------------------
@@ -574,10 +575,10 @@ def main(stt_enable=1, tts_enable=1):
 
                     # ----------------------------
                     # To Play Video
-                    video_path = './animation/csy02_GoodBye.mov'
+                    video_path = './animation/ani01_GoodBye.mov'
                     audio_enable = 0
                     pause = 0
-                    video_delay = 56
+                    video_delay = 100
                     av.play_av(video_path, pause, audio_enable, video_delay)
                     # ----------------------------
                 # ----------------------------
@@ -634,10 +635,10 @@ def main(stt_enable=1, tts_enable=1):
 
                         # ----------------------------
                         # To Play Video
-                        video_path = './animation/csy02_GoodBye.mov'
+                        video_path = './animation/ani01_GoodBye.mov'
                         audio_enable = 0
                         pause = 0
-                        video_delay = 80
+                        video_delay = 100
                         av.play_av(video_path, pause, audio_enable, video_delay)
                         # ----------------------------
                     # -------------------------------
@@ -660,10 +661,10 @@ def main(stt_enable=1, tts_enable=1):
 
                     # ----------------------------
                     # To Play Video
-                    video_path = './animation/csy02_Hi_Short.mp4'
+                    video_path = './animation/ani01_Hi_Short.mov'
                     audio_enable = 0
                     pause = 0
-                    video_delay = 60
+                    video_delay = 120
                     print(len(message))
                     av.play_av(video_path, pause, audio_enable, video_delay, len(message))
                     # ----------------------------
@@ -724,10 +725,10 @@ def main(stt_enable=1, tts_enable=1):
 
                         # ----------------------------
                         # To Play Video
-                        video_path = './animation/csy02_Hi_Short.mp4'
+                        video_path = './animation/ani01_Hi_Short.mov'
                         audio_enable = 0
                         pause = 0
-                        video_delay = 60
+                        video_delay = 150
                         print(len(message))
                         av.play_av(video_path, pause, audio_enable, video_delay, len(message))
                         # ----------------------------

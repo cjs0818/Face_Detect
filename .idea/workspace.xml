@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/animation/play_animation.py" beforeDir="false" afterPath="$PROJECT_DIR$/animation/play_animation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/animation/csy02.ctiProject" beforeDir="false" afterPath="$PROJECT_DIR$/animation/csy02.ctiProject" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,7 +17,7 @@
     <SUITE FILE_PATH="coverage/Face_Detect$temp.coverage" NAME="temp Coverage Results" MODIFIED="1538247796517" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$gspeech.coverage" NAME="gspeech Coverage Results" MODIFIED="1538303774142" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/stt" />
     <SUITE FILE_PATH="coverage/Face_Detect$fr_dlib.coverage" NAME="fr_dlib Coverage Results" MODIFIED="1537753307270" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_recognition" />
-    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538586870998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Face_Detect$main.coverage" NAME="main Coverage Results" MODIFIED="1538605508784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Face_Detect$test_play.coverage" NAME="test_play Coverage Results" MODIFIED="1538544189249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/animation" />
     <SUITE FILE_PATH="coverage/Face_Detect$fd_dlib__1_.coverage" NAME="fd_dlib (1) Coverage Results" MODIFIED="1537276921356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/face_detection" />
     <SUITE FILE_PATH="coverage/Face_Detect$play_animation.coverage" NAME="play_animation Coverage Results" MODIFIED="1538580141813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/animation" />
@@ -36,8 +35,8 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="643">
-              <caret line="780" lean-forward="true" selection-start-line="780" selection-end-line="780" />
+            <state relative-caret-position="194">
+              <caret line="515" column="27" selection-start-line="515" selection-start-column="16" selection-end-line="515" selection-end-column="27" />
               <folding>
                 <element signature="e#425#443#0" expanded="true" />
               </folding>
@@ -49,7 +48,7 @@
         <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="134">
-              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="e#25#66#0" expanded="true" />
               </folding>
@@ -128,7 +127,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>min_width</find>
       <find>-1</find>
       <find>obj_tracking</find>
       <find>result</find>
@@ -158,6 +156,7 @@
       <find>tts</find>
       <find>dialog_flag</find>
       <find>event_name</find>
+      <find>video_delay</find>
     </findStrings>
     <replaceStrings>
       <replace>ACTION_EVENT_DISAPPEAR</replace>
@@ -835,7 +834,7 @@
     <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="134">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
           <folding>
             <element signature="e#25#66#0" expanded="true" />
           </folding>
@@ -844,8 +843,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="780" lean-forward="true" selection-start-line="780" selection-end-line="780" />
+        <state relative-caret-position="194">
+          <caret line="515" column="27" selection-start-line="515" selection-start-column="16" selection-end-line="515" selection-end-column="27" />
           <folding>
             <element signature="e#425#443#0" expanded="true" />
           </folding>
