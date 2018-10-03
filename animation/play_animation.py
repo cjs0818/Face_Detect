@@ -26,7 +26,10 @@ class Play_AV():
                 player = MediaPlayer(video_path)
 
             grabbed, play_frame = video.read()
-            cv2.imshow("Video", play_frame)
+            winname = "Video"
+            cv2.namedWindow(winname)
+            cv2.moveWindow(winname, 0, 10)
+            cv2.imshow(winname, play_frame)
 
             if pause == 0:
                 while True:

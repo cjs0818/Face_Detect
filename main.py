@@ -637,7 +637,7 @@ def main(stt_enable=1, tts_enable=1):
                         video_path = './animation/csy02_GoodBye.mov'
                         audio_enable = 0
                         pause = 0
-                        video_delay = 60
+                        video_delay = 80
                         av.play_av(video_path, pause, audio_enable, video_delay)
                         # ----------------------------
                     # -------------------------------
@@ -742,7 +742,10 @@ def main(stt_enable=1, tts_enable=1):
 
 
         # Display the resulting frame
-        cv2.imshow('frame',frame)   # When Google Speech stt crashes, comment this out!
+        winname = "Face Recognition"
+        cv2.namedWindow(winname)
+        cv2.moveWindow(winname, 1280, 10)
+        cv2.imshow(winname,frame)   # When Google Speech stt crashes, comment this out!
 
 
 
