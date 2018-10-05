@@ -1,0 +1,11 @@
+{ 
+    "_id" : ObjectId("5ba8e97ed0c5b96ef77e1d61"), 
+    "author" : "Justin", 
+    "text" : "My first blog post!", 
+    "tags" : [
+        "mongodb", 
+        "python", 
+        "pymongo"
+    ], 
+    "date" : ISODate("2018-09-24T22:41:18.432+0000")
+}

@@ -507,6 +507,7 @@ def main(stt_enable=1, tts_enable=1):
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
                 tts.play(message, False)
+                obj_track.track_started = False
 
                 # ----------------------------
                 # To Play Video
@@ -547,6 +548,7 @@ def main(stt_enable=1, tts_enable=1):
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
                 tts.play(message, False)
+                obj_track.track_started = False
 
                 # ----------------------------
                 # To Play Video
@@ -572,6 +574,7 @@ def main(stt_enable=1, tts_enable=1):
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
                     tts.play(message, False)
+                    obj_track.track_started = False
 
                     # ----------------------------
                     # To Play Video
@@ -632,6 +635,7 @@ def main(stt_enable=1, tts_enable=1):
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
                         tts.play(message, False)
+                        obj_track.track_started = False
 
                         # ----------------------------
                         # To Play Video
@@ -658,6 +662,7 @@ def main(stt_enable=1, tts_enable=1):
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
                     tts.play(message, False)
+                    obj_track.track_started = False
 
                     # ----------------------------
                     # To Play Video
@@ -722,6 +727,7 @@ def main(stt_enable=1, tts_enable=1):
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
                         tts.play(message, False)
+                        obj_track.track_started = False
 
                         # ----------------------------
                         # To Play Video
