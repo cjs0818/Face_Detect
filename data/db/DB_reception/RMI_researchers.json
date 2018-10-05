@@ -1,0 +1,135 @@
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c74"), 
+    "name" : "최종석", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8402", 
+    "phone#" : "5618", 
+    "e-mail" : "cjs@kist.re.kr", 
+    "english_name" : "jschoi"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c75"), 
+    "name" : "임윤섭", 
+    "center" : "치매DTC융합연구단", 
+    "room#" : "8309", 
+    "phone#" : "6641", 
+    "e-mail" : "yslim@kist.re.kr", 
+    "english_name" : "yslim"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c76"), 
+    "name" : "여준구", 
+    "center" : "로봇미디어연구소", 
+    "room#" : "8301", 
+    "phone#" : "5301", 
+    "e-mail" : "yuh.junku@kist.re.kr", 
+    "english_name" : "yuh.junku"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c77"), 
+    "name" : "빈현욱", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8421", 
+    "phone#" : "6815", 
+    "e-mail" : "bhu@kist.re.kr", 
+    "english_name" : "bhu"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c78"), 
+    "name" : "이겨레", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8421", 
+    "phone#" : "6815", 
+    "e-mail" : "lkrrufp@kist.re.kr", 
+    "english_name" : "lkr"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c79"), 
+    "name" : "강다현", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8401", 
+    "phone#" : "6815", 
+    "e-mail" : "dahyun@kist.re.kr", 
+    "english_name" : "dahyun"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7a"), 
+    "name" : "김경하", 
+    "center" : "치매DTC융합연구단", 
+    "room#" : "8401", 
+    "phone#" : "4864", 
+    "e-mail" : "gyungha@kist.re.kr", 
+    "english_name" : "gyungha"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7b"), 
+    "name" : "노진홍", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8401", 
+    "phone#" : "4864", 
+    "e-mail" : "fini@kist.re.kr", 
+    "english_name" : "fini"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7c"), 
+    "name" : "이서영", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8421", 
+    "phone#" : "6815", 
+    "e-mail" : "t18102@kist.re.kr", 
+    "english_name" : "seoyung"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7d"), 
+    "name" : "전화우", 
+    "center" : "치매DTC융합연구단", 
+    "room#" : "8401", 
+    "phone#" : "4864", 
+    "e-mail" : "feelgood88@kist.re.kr", 
+    "english_name" : "feelgood88"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7e"), 
+    "name" : "아나스타샤", 
+    "center" : "지능로봇연구단", 
+    "room#" : "8421", 
+    "phone#" : "6815", 
+    "e-mail" : "anarashad94@kist.re.kr", 
+    "english_name" : "anarashad94"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c7f"), 
+    "name" : "최태민", 
+    "center" : "치매DTC융합연구단", 
+    "room#" : "8421", 
+    "phone#" : "6815", 
+    "e-mail" : "choitm0707@kist.re.kr", 
+    "english_name" : "choitm0707"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c80"), 
+    "name" : "최예진", 
+    "center" : null, 
+    "room#" : null, 
+    "phone#" : null, 
+    "e-mail" : null, 
+    "english_name" : "yjchoi"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c81"), 
+    "name" : "최예원", 
+    "center" : null, 
+    "room#" : null, 
+    "phone#" : null, 
+    "e-mail" : null, 
+    "english_name" : "ywchoi"
+}
+{ 
+    "_id" : ObjectId("5ba8ebe6bfbabf6e7cd65c82"), 
+    "name" : "조수연", 
+    "center" : null, 
+    "room#" : null, 
+    "phone#" : null, 
+    "e-mail" : null, 
+    "english_name" : "sycho"
+}
