@@ -1,33 +1,60 @@
-import cv2
-import numpy as np
- 
-# Create a VideoCapture object and read from input file
-# If the input is the camera, pass 0 instead of the video file name
-cap = cv2.VideoCapture('test01.mov')
- 
-# Check if camera opened successfully
-if (cap.isOpened()== False): 
-  print("Error opening video stream or file")
- 
-# Read until video is completed
-while(cap.isOpened()):
-  # Capture frame-by-frame
-  ret, frame = cap.read()
-  if ret == True:
- 
-    # Display the resulting frame
-    cv2.imshow('Frame',frame)
- 
-    # Press Q on keyboard to  exit
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-      break
- 
-  # Break the loop
-  else: 
-    break
- 
-# When everything done, release the video capture object
-cap.release()
- 
-# Closes all the frames
-cv2.destroyAllWindows()
+import sys
+from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5 import QtGui
+
+import vlc
+
+class ExWindow(QMainWindow):
+
+    def __init__(self):
+        super().__init__()
+        self.init_ui()
+
+    def init_ui(self):
+
+        p = vlc.Instance()
+        player = p.media_player_new()
+        Media = p.media_new('ani01_Hi_Short.mov')
+        Media.get_mrl()
+        player.set_media(Media)
+
+        self.setGeometry(300, 300, 400, 300)
+        self.setWindowTitle('Main Window')
+        self.show()
+
+        player.play()
+
+
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = ExWindow()
+    sys.exit(app.exec_())
+
+
+'''
+import vlc
+import sys
+
+if sys.platform == "darwin":
+    from PyQt4 import QtCore
+    from PyQt4 import QtGui
+
+    p = vlc.Instance()
+    player = p.media_player_new()
+    Media = p.media_new('ani01_Hi_Short.mov')
+    Media.get_mrl()
+    player.set_media(Media)
+
+    vlcApp = QtGui.QApplication(sys.argv)
+    vlcWidget = QtGui.QFrame()
+    vlcWidget.resize(700, 700)
+    vlcWidget.show()
+    player.set_nsobject(vlcWidget.winId())
+    
+'''
+
+#p=vlc.MediaPlayer('./ani01_Hi_Short.mov')
+#p.play()
+#p.get_instance() # returns the corresponding instance
