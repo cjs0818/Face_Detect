@@ -546,7 +546,12 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
                         'param': ani_parameter,
                     }
                     url = 'http://localhost:60000/message'
-                    web_api.send_post(data_send, url)
+                    try:
+                        web_api.send_post(data_send, url)
+                    except:
+                        print("You must execute main_server.py in 'animation' folder!!! ")
+                        print("Type Ctrl-c to exit! ")
+                        input()
 
                     block = True
                     tts.play(message, block)
