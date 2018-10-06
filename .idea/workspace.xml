@@ -2,6 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/data/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/face_detection/fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_detection/fd_dlib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/face_recognition/fr_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/fr_dlib.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hp_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/hp_detection.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -36,10 +41,22 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="257">
-              <caret line="552" column="52" selection-start-line="552" selection-start-column="52" selection-end-line="552" selection-end-column="52" />
+            <state relative-caret-position="1640">
+              <caret line="390" lean-forward="true" selection-start-line="390" selection-end-line="390" />
               <folding>
                 <element signature="e#425#443#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hp_detection.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/hp_detection.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="334">
+              <caret line="79" column="18" selection-start-line="79" selection-start-column="18" selection-end-line="79" selection-end-column="18" />
+              <folding>
+                <element signature="e#352#370#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,20 +98,8 @@
       <file leaf-file-name="naver_tts.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1011">
+            <state relative-caret-position="1257">
               <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test_gspeech.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/stt/test_gspeech.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="1" selection-start-line="1" selection-end-line="1" />
-              <folding>
-                <element signature="e#24#38#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -111,6 +116,15 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="action_detect.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="51">
+              <caret line="3" selection-start-line="3" selection-end-line="5" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -123,9 +137,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Gspeech</find>
-      <find>flag</find>
-      <find>pause</find>
       <find>resume</find>
       <find>stt_enable</find>
       <find>MicrophoneStream</find>
@@ -153,6 +164,9 @@
       <find>play</find>
       <find>tts.play</find>
       <find>ani01_Hi_Short</find>
+      <find>send</find>
+      <find>get_data</find>
+      <find>predictor</find>
     </findStrings>
     <replaceStrings>
       <replace>ACTION_EVENT_DISAPPEAR</replace>
@@ -174,7 +188,6 @@
         <option value="$PROJECT_DIR$/face-train.py" />
         <option value="$PROJECT_DIR$/pose_estimator.py" />
         <option value="$PROJECT_DIR$/fd_dlib.py" />
-        <option value="$PROJECT_DIR$/face_detection/fd_dlib.py" />
         <option value="$PROJECT_DIR$/head_pose_detection/hpd.py" />
         <option value="$PROJECT_DIR$/face_recognition/save_face_descriptor.py" />
         <option value="$PROJECT_DIR$/tracker/obj_tracker.py.pyi" />
@@ -182,7 +195,6 @@
         <option value="$PROJECT_DIR$/main_fd_dlib.py" />
         <option value="$PROJECT_DIR$/tracker/obj_tracker.py" />
         <option value="$PROJECT_DIR$/action_detection/action_detect.py" />
-        <option value="$PROJECT_DIR$/face_recognition/fr_dlib.py" />
         <option value="$PROJECT_DIR$/chatbot/dialogflow.py" />
         <option value="$PROJECT_DIR$/stt/test_gspeech.py" />
         <option value="$PROJECT_DIR$/temp.py" />
@@ -197,6 +209,10 @@
         <option value="$PROJECT_DIR$/main_server.py" />
         <option value="$PROJECT_DIR$/animation/main_server.py" />
         <option value="$PROJECT_DIR$/web/post.py" />
+        <option value="$PROJECT_DIR$/data/database.py" />
+        <option value="$PROJECT_DIR$/face_detection/fd_dlib.py" />
+        <option value="$PROJECT_DIR$/hp_detection.py" />
+        <option value="$PROJECT_DIR$/face_recognition/fr_dlib.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -213,7 +229,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="638" />
     <option name="y" value="23" />
-    <option name="width" value="1282" />
+    <option name="width" value="1133" />
     <option name="height" value="1072" />
   </component>
   <component name="ProjectView">
@@ -232,12 +248,22 @@
             <path>
               <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
               <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
-              <item name="animation" type="462c0819:PsiDirectoryNode" />
+              <item name="action_detection" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
               <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
               <item name="chatbot" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Face_Detect" type="462c0819:PsiDirectoryNode" />
+              <item name="face_detection" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Face_Detect" type="b2602c69:ProjectViewProjectNode" />
@@ -412,17 +438,17 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="638" y="23" width="1282" height="1072" extended-state="0" />
+    <frame x="638" y="23" width="1133" height="1072" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5003595" side_tool="true" weight="0.32786885" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49964055" visible="true" weight="0.32615384" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49964055" visible="true" weight="0.32615384" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
-      <window_info content_ui="combo" id="Project" order="2" visible="true" weight="0.18225807" />
+      <window_info active="true" content_ui="combo" id="Project" order="2" visible="true" weight="0.2071494" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="3" />
@@ -486,13 +512,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fd_opencv.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="795">
-          <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -685,13 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/face_detection/fd_dlib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-228">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/main_flask.py" />
     <entry file="file://$PROJECT_DIR$/test.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -730,27 +742,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-512">
-          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="122">
-          <caret line="139" column="8" selection-start-line="139" selection-start-column="8" selection-end-line="139" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hp_detection.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="15" column="10" lean-forward="true" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/animation/test_play.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -771,13 +762,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1011">
-          <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/chatbot/danbee.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1256">
@@ -795,12 +779,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
+    <entry file="file://$PROJECT_DIR$/data/database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-39">
-          <caret line="70" selection-start-line="70" selection-end-line="74" selection-end-column="20" />
+        <state relative-caret-position="1037">
+          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
           <folding>
-            <element signature="e#25#66#0" expanded="true" />
+            <element signature="e#25#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/face_detection/fd_dlib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="582">
+          <caret line="49" column="39" selection-start-line="49" selection-start-column="39" selection-end-line="49" selection-end-column="39" />
+          <folding>
+            <element signature="e#178#188#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1257">
+          <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/action_detection/action_detect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" selection-start-line="3" selection-end-line="5" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hp_detection.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="79" column="18" selection-start-line="79" selection-start-column="18" selection-end-line="79" selection-end-column="18" />
+          <folding>
+            <element signature="e#352#370#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -815,10 +833,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/face_recognition/fr_dlib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="322" column="22" selection-start-line="322" selection-start-column="22" selection-end-line="322" selection-end-column="22" />
+          <folding>
+            <element signature="e#576#594#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/animation/play_animation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-39">
+          <caret line="70" selection-start-line="70" selection-end-line="74" selection-end-column="20" />
+          <folding>
+            <element signature="e#25#66#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="552" column="52" selection-start-line="552" selection-start-column="52" selection-end-line="552" selection-end-column="52" />
+        <state relative-caret-position="1640">
+          <caret line="390" lean-forward="true" selection-start-line="390" selection-end-line="390" />
           <folding>
             <element signature="e#425#443#0" expanded="true" />
           </folding>

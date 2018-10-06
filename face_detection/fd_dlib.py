@@ -47,7 +47,7 @@ while(True):
         end_cord_y = d.bottom()
         stroke = 2
         cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
-
+    # ---------------------------------
 
 
     # Display the resulting frame

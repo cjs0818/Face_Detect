@@ -20,16 +20,10 @@ import dlib
 import os
 from multiprocessing import Process, Queue
 import sys
-#from skimage import io
-#from PIL import Image
 
-import csv
 
-# Mongo DB
-from pymongo import MongoClient
+
 import datetime
-import pprint
-
 
 
 
@@ -87,47 +81,18 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 # Object Tracking by Dlib correlation_tracker
 from tracker.obj_tracker import Obj_Tracker
 
-
 # ----------------------------
 # To Play Video: The first frame
 from animation.play_animation import Play_AV
-
 
 # -----------------------
 # Web_API class for web POST
 from web.post import Web_API
 
+# -----------------------
+# Database
+from data.database import Database, MongoDB
 
-# ----------------------------------------------------
-# database from CSV file
-# ----------------------------------------------------
-def get_datatbase(filename):
-    #filename = 'RMI_researchers.csv'
-
-    with open(filename, 'r', encoding='UTF-8-sig') as f:
-        csv_data = csv.reader(f, delimiter=',')
-        print("-------------")
-        dict = {}
-        row_cnt = 0
-        for row in csv_data:
-            row_cnt = row_cnt + 1
-            if row_cnt == 1:
-                key = row
-            else:
-                for i in range(0, len(row), 1):
-                    if i == 0:
-                        # print(dict_name)
-                        dict_info = {}
-                    else:
-                        dict_info.update({key[i]: row[i]})
-                        # print(dict_info)
-                dict.update({row[0]: dict_info})
-                # print("dict_name = ", dict_name)
-
-    # json_data = json.dumps(dict, indent=4, ensure_ascii=False)
-    # print(json_data)
-
-    return dict
 
 
 '''
@@ -145,22 +110,6 @@ def cam_loop(queue_from_cam):
         queue_from_cam.put(frame)
 #------------------------------
 '''
-
-# Mongo DB
-#    folder: BASE_DIR/data/db
-class MongoDB():
-    def __init__(self, db_name="DB_reception", coll_name="RMI_researchers"):
-        self.db_client = MongoClient('localhost', 27017)
-        #self.db = self.db_client["DB_Episode"]
-        #self.coll = self.db.coll_Test
-        self.db = self.db_client[db_name]
-        self.coll = self.db[coll_name]
-
-    def insert(self, post):
-        post_id = self.mdb_collection.insert_one(post).inserted_id
-        coll_list = self.mdb.collection_names()
-        print(coll_list)
-
 
 
 def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
@@ -218,8 +167,6 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
     # ----------------------------
     # Head Pose Detection: by Dlib
     predictor_path = "./shape_predictor_68_face_landmarks.dat"
-    predictor = dlib.shape_predictor(predictor_path)
-
     hpd = HeadPose(sample_frame, predictor_path)
 
 
@@ -242,18 +189,9 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
 
     # ------------------------
     # Load Database
-    #PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
-    #DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
-    #filename = DB_DIR + "/RMI_researchers.csv"
-    filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
-    db = get_datatbase(filename)
-
-
-    # --------------------------------
-    # Create NaverTTS Class
-    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
-    #tts.play("안녕하십니까?")
-
+    filename = BASE_DIR + "/RMI_researchers.csv"
+    C_db = Database()
+    db = C_db.get_datatbase(filename)
 
     # --------------------------------
     # Mongo DB
@@ -280,14 +218,16 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
     chat = ChatBot(chatbot_id)
 
 
+    # --------------------------------
+    # Create NaverTTS Class
+    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    #tts.play("안녕하십니까?")
+
+
     # -----------------------
     # Web_API class for web POST
     web_api = Web_API()
 
-
-
-    # Multi-processing
-    procs = []
 
     # For instantaneous image capture
     capture_idx = 0
@@ -304,46 +244,12 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-
-        '''
-        # ---------------------------------
-        # Face Detection
-    
-        # Ask the detector to find the bounding boxes of each face. The 1 in the
-        # second argument indicates that we should upsample the image 1 time. This
-        # will make everything bigger and allow us to detect more faces.
-        
-        dets = detector(frame, 1)
-        print("Number of faces detected: {}".format(len(dets)))
-    
-    
-        for k, d in enumerate(dets):
-    
-            print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(
-                k, d.left(), d.top(), d.right(), d.bottom()))
-    
-            # Draw ROI box for each face found by face detection
-            color = (255, 0, 0)  # BGR 0-255
-            x = d.left()
-            y = d.top()
-            end_cord_x = d.right()
-            end_cord_y = d.bottom()
-            stroke = 2
-            cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
-        '''
-
         max_width = 0   #frame.shape[0]
         max_width_id = -1
 
-
-
-        #-------------------------------------
-        #  일정시간마다 tracking reset하기
-        if iter % 100 == 0:
-            obj_track.track_started = False
-            if obj_track.track_started == True:
-                if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
-                    event_detect.reset()
+        # ---------------------------------
+        # Face Recognition
+        fr_labels, fr_box, fr_min_dist, max_width_id = fr.face_recognition_iter(iter, frame, obj_track, event_detect)
         iter += 1
 
         # 아니면, 매번 얼굴인식 수행
@@ -351,99 +257,13 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
         #(fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
         #-------------------------------------
 
-        # --------------------------------------
-        # Object Tracking for undetected face
-        #   Ref: https://www.codesofinterest.com/2018/02/track-any-object-in-video-with-dlib.html
-        if obj_track.track_started == False:
-            # ---------------------------------
-            # Face Recognition
-            (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
 
-            if len(fr_labels) > 0:
-                obj_track.track_started = True
-                obj_track.start_tracking(frame, fr_box[max_width_id])
-                obj_track.label = fr_labels[max_width_id]
-                obj_track.tracking(frame)
-                obj_track.min_dist = fr_min_dist[max_width_id]
+        # ---------------------------------
+        # Head Pose Detection for the closed face,
+        hpd.head_pose_detection_closed_face(frame, fr_labels, fr_box, max_width_id)
 
-        else:
-            if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
-                event_detect.reset()
-
-                # ---------------------------------
-                # Face Recognition
-                (fr_labels, fr_box, fr_min_dist) = fr.face_recognition(frame)
-
-                if len(fr_labels) > 0:
-                    obj_track.track_started = True
-                    obj_track.start_tracking(frame, fr_box[max_width_id])
-                    obj_track.label = fr_labels[max_width_id]
-                    obj_track.tracking(frame)
-            else:
-                max_width_id = 0
-                fr_labels = []
-                fr_box = []
-                fr_min_dist = []
-                fr_labels.append(obj_track.label)
-                fr_box.append(obj_track.roi)
-                fr_min_dist.append(obj_track.min_dist)
-
-                obj_track.tracking(frame)
-                if obj_track.track_started == False:
-                    fr_labels = []
-                    fr_box = []
-        # --------------------------------------
-
-
-        # --------------------------------------
-        # Display for the name of the selected face
-        for id in range(len(fr_labels)):
-            selected_label = fr_labels[id]
-            d = fr_box[id]
-            min_dist = fr_min_dist[id]
-
-            if(selected_label != None):
-                #print(selected_label)
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                conf_str = "{0:3.1f}".format(min_dist)
-                name = selected_label + ", [" + conf_str + "]"
-                color = (255, 255, 255)
-                stroke = 1   # 글씨 굵기 ?
-                cv2.putText(frame, name, (d.left(), d.top()), font, 0.5, color, stroke, cv2.LINE_AA)
-
-
-            # ---------------------------------
-            #   Select the closed face
-            d_width = d.right() - d.left()
-            if(d_width > max_width):
-                max_width_id = id
-
-        if(len(fr_labels) > 0):
-            # ---------------------------------
-            # Head Pose Detection for the closed face,
-
-            # Get the landmarks/parts for the face in box d.
-            d = fr_box[max_width_id]
-            shape = hpd.predictor(frame, d)    # predict 68_face_landmarks
-            #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
-
-            # Find Head Pose using the face landmarks and Draw them on the screen.
-            (p1, p2) = hpd.draw_landmark_headpose(frame, shape)
-            roi_ratio = (d.right() - d.left()) / frame.shape[0]
-
-            dist = np.subtract(p2, p1)
-            dist = np.sqrt(np.dot(dist, dist))
-            dist_ratio = dist / (d.right() - d.left())
-
-            roi_ratio_th = 0.15
-            dist_ratio_th = 0.75  # 0.03
-            #print(" ")
-            #print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
-            if roi_ratio > roi_ratio_th and dist_ratio < dist_ratio_th:
-                cv2.line(frame, p1, p2, (0, 0, 255), 2)
-            else:
-                cv2.line(frame, p1, p2, (0, 255, 0), 2)
-
+        # ----------------------------
+        #   Action Event Detection: action_detection/action_detection.py
         (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
 
@@ -550,7 +370,7 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
                         web_api.send_post(data_send, url)
                     except:
                         print("You must execute main_server.py in 'animation' folder!!! ")
-                        print("Type Ctrl-c to exit! ")
+                        print("Type Ctrl-c to exit!     SDA")
                         input()
 
                     block = True
@@ -909,10 +729,8 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
         if key_in == ord('q'):
             break
         elif key_in == ord('c'):
-            f_name = "./images/capture" + str(capture_idx) + ".png"
+            f_name = BASE_DIR + "/images/capture" + str(capture_idx) + ".png"
             print("Captured to file: {}".format(f_name))
-            #BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-            #f_name = BASE_DIR + f_name
             capture_idx += 1
             cv2.imwrite(f_name, frame)
 
@@ -923,7 +741,6 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
         cv2.namedWindow(winname)
         cv2.moveWindow(winname, 1280, 10)
         cv2.imshow(winname,frame)   # When Google Speech stt crashes, comment this out!
-
 
 
 

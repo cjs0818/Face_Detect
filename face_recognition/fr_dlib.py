@@ -36,6 +36,13 @@ class FaceRecog():
         self.detector = dlib.get_frontal_face_detector()
         self.fr_th = fr_th
 
+        self.max_width = 0   #frame.shape[0]
+        self.max_width_id = -1
+
+        self.fr_labels = []
+        self.fr_box = []
+        self.fr_min_dist = []
+
         # ----------------------------
         # Face Recognition: by Dlib
         #predictor_path = "./shape_predictor_5_face_landmarks.dat"
@@ -221,6 +228,96 @@ class FaceRecog():
                 fr_min_dist.append(min_dist)
 
         return(fr_labels, fr_box, fr_min_dist)
+
+
+    def face_recognition_iter(self, iter, frame, obj_track, event_detect):
+        #-------------------------------------
+        #  일정시간마다 tracking reset하기
+        fr_labels = self.fr_labels
+        max_width = self.max_width
+        max_width_id = self.max_width_id
+        fr_box = self.fr_box
+
+        if iter % 100 == 0:
+            obj_track.track_started = False
+            if obj_track.track_started == True:
+                if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
+                    event_detect.reset()
+
+
+        # --------------------------------------
+        # Object Tracking for undetected face
+        #   Ref: https://www.codesofinterest.com/2018/02/track-any-object-in-video-with-dlib.html
+        if obj_track.track_started == False:
+            # ---------------------------------
+            # Face Recognition
+            (fr_labels, fr_box, fr_min_dist) = self.face_recognition(frame)
+
+            if len(fr_labels) > 0:
+                obj_track.track_started = True
+                obj_track.start_tracking(frame, fr_box[max_width_id])
+                obj_track.label = fr_labels[max_width_id]
+                obj_track.tracking(frame)
+                obj_track.min_dist = fr_min_dist[max_width_id]
+
+        else:
+            if len(fr_labels) > 0 and fr_labels[max_width_id] == "unknown_far":
+                event_detect.reset()
+
+                # ---------------------------------
+                # Face Recognition
+                (fr_labels, fr_box, fr_min_dist) = self.face_recognition(frame)
+
+                if len(fr_labels) > 0:
+                    obj_track.track_started = True
+                    obj_track.start_tracking(frame, fr_box[max_width_id])
+                    obj_track.label = fr_labels[max_width_id]
+                    obj_track.tracking(frame)
+            else:
+                max_width_id = 0
+                fr_labels = []
+                fr_box = []
+                fr_min_dist = []
+                fr_labels.append(obj_track.label)
+                fr_box.append(obj_track.roi)
+                fr_min_dist.append(obj_track.min_dist)
+
+                obj_track.tracking(frame)
+                if obj_track.track_started == False:
+                    fr_labels = []
+                    fr_box = []
+
+        # --------------------------------------
+        # Display for the name of the selected face
+        for id in range(len(fr_labels)):
+            selected_label = fr_labels[id]
+            d = fr_box[id]
+            min_dist = fr_min_dist[id]
+
+            if(selected_label != None):
+                #print(selected_label)
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                conf_str = "{0:3.1f}".format(min_dist)
+                name = selected_label + ", [" + conf_str + "]"
+                color = (255, 255, 255)
+                stroke = 1   # 글씨 굵기 ?
+                cv2.putText(frame, name, (d.left(), d.top()), font, 0.5, color, stroke, cv2.LINE_AA)
+
+            # ---------------------------------
+            #   Select the closed face
+            d_width = d.right() - d.left()
+            if(d_width > max_width):
+                max_width_id = id
+
+
+        self.fr_labels = fr_labels
+        self.fr_box = fr_box
+        self.fr_min_dist = fr_min_dist
+        self.fr_max_width_id = max_width_id
+        # --------------------------------------
+
+        return fr_labels, fr_box, fr_min_dist, max_width_id
+        #return fr_labels, fr_box, fr_min_dist, obj_track.track_started
 
 
     def face_recognition_indiv(self, frame):

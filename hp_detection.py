@@ -62,6 +62,33 @@ class HeadPose():
         ])
 
 
+    def head_pose_detection_closed_face(self, frame, fr_labels, fr_box, max_width_id):
+        if(len(fr_labels) > 0):
+            # ---------------------------------
+            # Head Pose Detection for the closed face,
+
+            # Get the landmarks/parts for the face in box d.
+            d = fr_box[max_width_id]
+            shape = self.predictor(frame, d)    # predict 68_face_landmarks
+            #print("Part 0: {}, Part 1: {} ...".format(shape.part(0), shape.part(1)))
+
+            # Find Head Pose using the face landmarks and Draw them on the screen.
+            (p1, p2) = self.draw_landmark_headpose(frame, shape)
+            roi_ratio = (d.right() - d.left()) / frame.shape[0]
+
+            dist = np.subtract(p2, p1)
+            dist = np.sqrt(np.dot(dist, dist))
+            dist_ratio = dist / (d.right() - d.left())
+
+            roi_ratio_th = 0.15
+            dist_ratio_th = 0.75  # 0.03
+            #print(" ")
+            #print("roi_ratio: %3.2f, dist_ratio: %5.4f" % (roi_ratio, dist_ratio))
+            if roi_ratio > roi_ratio_th and dist_ratio < dist_ratio_th:
+                cv2.line(frame, p1, p2, (0, 0, 255), 2)
+            else:
+                cv2.line(frame, p1, p2, (0, 255, 0), 2)
+
 
     def draw_landmark_headpose(self, frame, shape):
         """Get marks ready for pose estimation from 68 marks"""
