@@ -142,31 +142,39 @@ def animation(q):   # multiprocessing Process with Queue
 
 app = Flask('__name__')
 
-#@app.route('/message', methods=['POST', 'GET'])
-@app.route('/message', methods=['POST'])
+@app.route('/message', methods=['POST', 'GET'])
+#@app.route('/message', methods=['POST'])
 def message():
+    if request.method == 'POST':
+        post = request.get_json(force=True)
+        answer = post['speech']
+        print (answer)
 
-    res = request.get_json(force=True)
-    answer = res['speech']
-    print (answer)
-
-    #return jsonify(res)
-    #return answer
-
-    ani_parameter = {
-        'video_path': BASE_DIR + "/ani01_known_approach.mov",
-        'pause': 0,
-        'audio_enable': 0,
-        'video_delay': 90,
-        'audio_length': len("최종석님, 안녕하십니까? 반갑습니다.")
-    }
-
-    q_param.put(ani_parameter)
+        #return jsonify(res)
+        #return answer
 
 
-    resp = Response('로그인 성공!',status=200)
-    #print (resp)
-    return resp
+        '''
+        ani_parameter = {
+            'video_path': BASE_DIR + "/ani01_known_approach.mov",
+            'pause': 0,
+            'audio_enable': 0,
+            'video_delay': 90,
+            'audio_length': len("최종석님, 안녕하십니까? 반갑습니다.")
+        }
+        '''
+        ani_parameter = post['param']
+
+
+        q_param.put(ani_parameter)
+
+
+        resp = Response('로그인 성공!',status=200)
+        #print (resp)
+        return resp
+
+    elif request.method == 'GET':
+        print("GET!")
 
 
 
@@ -178,6 +186,7 @@ if __name__ == '__main__':
     print("  --------    Proc started")
 
 
-    app.run(host='0.0.0.0', port=60000, debug=True)
+    #app.run(host='0.0.0.0', port=60000, debug=True)
+    app.run(host='0.0.0.0', port=60000, debug=True, use_reloader=False)
 
     proc.join()
