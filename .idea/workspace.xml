@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9326b24e-d334-4221-a6b0-35387bbb4953" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/data/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_detection/fd_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_detection/fd_dlib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/face_recognition/fr_dlib.py" beforeDir="false" afterPath="$PROJECT_DIR$/face_recognition/fr_dlib.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hp_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/hp_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,10 +37,22 @@
       <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1640">
-              <caret line="390" lean-forward="true" selection-start-line="390" selection-end-line="390" />
+            <state relative-caret-position="194">
+              <caret line="613" column="51" selection-start-line="613" selection-start-column="51" selection-end-line="613" selection-end-column="51" />
               <folding>
                 <element signature="e#425#443#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="database.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/database.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="382">
+              <caret line="75" column="21" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
+              <folding>
+                <element signature="e#25#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -95,15 +103,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="naver_tts.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tts/naver_tts.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1257">
-              <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="post.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/post.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -137,9 +136,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>resume</find>
-      <find>stt_enable</find>
-      <find>MicrophoneStream</find>
       <find>event_label</find>
       <find>sr_active</find>
       <find>person_to_visit</find>
@@ -167,6 +163,9 @@
       <find>send</find>
       <find>get_data</find>
       <find>predictor</find>
+      <find>db.</find>
+      <find>mgdb</find>
+      <find>tts_animation</find>
     </findStrings>
     <replaceStrings>
       <replace>ACTION_EVENT_DISAPPEAR</replace>
@@ -209,10 +208,10 @@
         <option value="$PROJECT_DIR$/main_server.py" />
         <option value="$PROJECT_DIR$/animation/main_server.py" />
         <option value="$PROJECT_DIR$/web/post.py" />
-        <option value="$PROJECT_DIR$/data/database.py" />
         <option value="$PROJECT_DIR$/face_detection/fd_dlib.py" />
         <option value="$PROJECT_DIR$/hp_detection.py" />
         <option value="$PROJECT_DIR$/face_recognition/fr_dlib.py" />
+        <option value="$PROJECT_DIR$/data/database.py" />
         <option value="$PROJECT_DIR$/main.py" />
       </list>
     </option>
@@ -779,16 +778,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1037">
-          <caret line="61" lean-forward="true" selection-start-line="61" selection-end-line="61" />
-          <folding>
-            <element signature="e#25#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/face_detection/fd_dlib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="582">
@@ -853,10 +842,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="75" column="21" selection-start-line="75" selection-start-column="21" selection-end-line="75" selection-end-column="21" />
+          <folding>
+            <element signature="e#25#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1640">
-          <caret line="390" lean-forward="true" selection-start-line="390" selection-end-line="390" />
+        <state relative-caret-position="194">
+          <caret line="613" column="51" selection-start-line="613" selection-start-column="51" selection-end-line="613" selection-end-column="51" />
           <folding>
             <element signature="e#425#443#0" expanded="true" />
           </folding>

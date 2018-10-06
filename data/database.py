@@ -42,6 +42,17 @@ class Database():
 
         return dict
 
+    def search(self, db, key, value):
+        # ----------------------------
+        # -- Search from csv file
+        kor_name = []
+        for name in db.keys():
+            info = db[name]
+            if info[key] == value:
+                kor_name = name
+
+        return kor_name
+
 # ----------------------------------------------------
 # Mongo DB
 #    folder: BASE_DIR/data/db
@@ -59,7 +70,18 @@ class MongoDB():
         coll_list = self.mdb.collection_names()
         print(coll_list)
 
+    def search(self, key, value):
+        # ------------------------
+        # Search from MongoDB
+        kor_name = []
+        name_dict = { key: value}
+        result = self.coll.find(name_dict)
+        try:
+            kor_name = result[0]["name"]
+        except Exception as e:
+            pass
 
+        return kor_name
 # ----------------------------------------------------
 # Main
 # ----------------------------------------------------

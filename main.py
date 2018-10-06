@@ -112,6 +112,66 @@ def cam_loop(queue_from_cam):
 '''
 
 
+def tts_animation(message, tts, av, web_api, gsp, obj_track, param, loop_path=[]):
+    tts_enable = param['tts_enable']
+    stt_enable = param['stt_enable']
+    ani_multiprocessing = param['ani_multiprocessing']
+    ad_event = param['ad_event']
+    video_path = param['video_path']
+    pause = param['pause']
+    audio_enable = param['audio_enable']
+    video_delay = param['video_delay']
+    audio_length = param['audio_length']
+
+    # ===============================
+    # TTS
+    if tts_enable == 1:
+        obj_track.track_started = False
+        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+            gsp.pauseMic()
+
+        # ----------------------------
+        # To Play Video
+
+        if ani_multiprocessing == 0:
+            block = False
+            tts.play(message, block)
+
+            av.play_av(video_path, pause, audio_enable, video_delay)
+            # ----------------------------
+        else:
+            ani_parameter = {
+                'video_path': video_path,
+                'pause': pause,
+                'audio_enable': audio_enable,
+                'video_delay': video_delay,
+                'audio_length': audio_length
+            }
+            data_send = {
+                'speech': message,
+                'param': ani_parameter,
+            }
+            url = 'http://localhost:60000/message'
+
+            try:
+                cnt = 0
+                if video_path == loop_path:
+                    cnt_th = int(len(message) / 15) + 1
+                else:
+                    cnt_th = 1
+
+                while cnt < cnt_th:
+                    cnt += 1
+                    web_api.send_post(data_send, url)
+            except:
+                print("You must execute main_server.py in 'animation' folder!!! ")
+                print("Type Ctrl-c to exit!     SDA")
+                input()
+
+            block = True
+            tts.play(message, block)
+
+
 def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
     if stt_enable == 1:
         dialog_flag = True  # Enable speech recognition when APPROACH, Disable when dialog ends
@@ -270,31 +330,23 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
         kor_name = []
         event_name = 'UnknownApproach'
         event_data = {'visitor_name': ""}
+
+        # ----------------------------------------
+        # 사용자가 다가온 경우 (그 순간만 수행)
         if ad_event == ACTION_EVENT_APPROACH:
             event_name = 'Approach'     # For query API of Dialogflow
             dialog_flag = True  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
             eng_name = fr_labels[max_width_id]      #  인식된 얼굴의 영문 이름 -> csv 파일에서 한국이름을 찾고자 함
 
-            #------------------------
-            # Search from MongoDB
-            #name_dict = {"english_name": eng_name}
-            #result = mgdb.coll.find(name_dict)
-            #try:
-            #    kor_name = result[0]["name"]
-            #except Exception as e:
-            #    pass
-
-            # ----------------------------
-            # -- Search from csv file
-            for name in db.keys():
-                info = db[name]
-                if info["english_name"] == eng_name:
-                    kor_name = name
+            # -----------------------------------------------
+            #  To find kor_name from eng_name using MongoDB or csv file
+            #kor_name = mgdb.search("english_name", eng_name)
+            kor_name = C_db.search(db, "english_name", eng_name)
+            # -----------------------------------------------
 
             video_path = BASE_DIR + '/animation/ani01_known_approach.mov'
 
-
-            if len(kor_name) > 0:   #  MongoDB에서 한국이름을 찾을 수 있는 경우
+            if len(kor_name) > 0:   #  MongoDB/CSV 에서 한국이름을 찾을 수 있는 경우
                 # -------------------------------
                 # -- Approach 할 때마다 MongoDB에 { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() } 형태로 기록
                 # -------------------------------
@@ -335,46 +387,19 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
 
             # ===============================
             # TTS
-            if tts_enable == 1:
-                obj_track.track_started = False
-                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                    gsp.pauseMic()
-
-                # ----------------------------
-                # To Play Video
-                # video_path = BASE_DIR + '/animation/csy02_known_approach.mov'
-                audio_enable = 0
-                pause = 0
-                video_delay = 100
-
-                if ani_multiprocessing == 0:
-                    block = False
-                    tts.play(message, block)
-
-                    av.play_av(video_path, pause, audio_enable, video_delay)
-                    # ----------------------------
-                else:
-                    ani_parameter = {
-                        'video_path': video_path,
-                        'pause': pause,
-                        'audio_enable': audio_enable,
-                        'video_delay': video_delay,
-                        'audio_length': len(message)
-                    }
-                    data_send = {
-                        'speech': message,
-                        'param': ani_parameter,
-                    }
-                    url = 'http://localhost:60000/message'
-                    try:
-                        web_api.send_post(data_send, url)
-                    except:
-                        print("You must execute main_server.py in 'animation' folder!!! ")
-                        print("Type Ctrl-c to exit!     SDA")
-                        input()
-
-                    block = True
-                    tts.play(message, block)
+            param = {
+                'tts_enable': tts_enable,
+                'stt_enable': stt_enable,
+                'ani_multiprocessing': ani_multiprocessing,
+                'ad_event': ad_event,
+                'video_path': video_path,
+                'audio_enable': 0,
+                'pause': 0,
+                'video_delay': 100,
+                'audio_length': len(message)
+            }
+            tts_animation(message, tts, av, web_api, gsp, obj_track, param)
+            # ===============================
 
 
             # -------------------------------
@@ -400,49 +425,30 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
             ##event_data = {'visitor_name': kor_name}
             # res = chat.event_api_dialogflow(event_name, event_data, user_key)
             # message = res['result']['fulfillment']['speech']
+            # -------------------------------------------------------------
 
 
             # ===============================
             # TTS
-            if tts_enable == 1:
-                obj_track.track_started = False
-                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                    gsp.pauseMic()
-
-                # ----------------------------
-                # To Play Video
-                video_path = BASE_DIR + '/animation/ani01_Person_Place.mov'
-                audio_enable = 0
-                pause = 0
-                video_delay = 100
-
-                if ani_multiprocessing == 0:
-                    block = False
-                    tts.play(message, block)
-
-                    av.play_av(video_path, pause, audio_enable, video_delay)
-                    # ----------------------------
-                else:
-                    ani_parameter = {
-                        'video_path': video_path,
-                        'pause': pause,
-                        'audio_enable': audio_enable,
-                        'video_delay': video_delay,
-                        'audio_length': len(message)
-                    }
-                    data_send = {
-                        'speech': message,
-                        'param': ani_parameter
-                    }
-                    url = 'http://localhost:60000/message'
-                    web_api.send_post(data_send, url)
-
-                    block = True
-                    tts.play(message, block)
-            # -------------------------------
+            param = {
+                'tts_enable': tts_enable,
+                'stt_enable': stt_enable,
+                'ani_multiprocessing': ani_multiprocessing,
+                'ad_event': ad_event,
+                'video_path': BASE_DIR + '/animation/ani01_Person_Place.mov',
+                'audio_enable': 0,
+                'pause': 0,
+                'video_delay': 100,
+                'audio_length': len(message)
+            }
+            tts_animation(message, tts, av, web_api, gsp, obj_track, param)
+            # ===============================
+        # 사용자가 다가온 경우 (그 순간만 수행) - 끝
+        # ----------------------------------------
 
 
-
+        # ----------------------------------------
+        # 음성 상호작용 하던 사람이 사라진 경우 (그 순간만 수행)
         elif ad_event == ACTION_EVENT_DISAPPEAR:
             if len(event_detect.event_label) > 0:
                 message = event_detect.event_label + "님, 안녕히 가세요."
@@ -451,52 +457,31 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
 
                 # ===============================
                 # TTS
-                if tts_enable == 1:
-                    obj_track.track_started = False
-                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                        gsp.pauseMic()
-
-                    # ----------------------------
-                    # To Play Video
-                    video_path = BASE_DIR + '/animation/ani01_GoodBye.mov'
-                    audio_enable = 0
-                    pause = 0
-                    video_delay = 100
-
-                    if ani_multiprocessing == 0:
-                        block = False
-                        tts.play(message, block)
-
-                        av.play_av(video_path, pause, audio_enable, video_delay)
-                        # ----------------------------
-                    else:
-                        ani_parameter = {
-                            'video_path': video_path,
-                            'pause': pause,
-                            'audio_enable': audio_enable,
-                            'video_delay': video_delay,
-                            'audio_length': len(message)
-                        }
-                        data_send = {
-                            'speech': message,
-                            'param': ani_parameter
-                        }
-                        url = 'http://localhost:60000/message'
-                        web_api.send_post(data_send, url)
-
-                        block = True
-                        tts.play(message, block)
-                # ----------------------------
-
+                param = {
+                    'tts_enable': tts_enable,
+                    'stt_enable': stt_enable,
+                    'ani_multiprocessing': ani_multiprocessing,
+                    'ad_event': ad_event,
+                    'video_path': BASE_DIR + '/animation/ani01_GoodBye.mov',
+                    'audio_enable': 0,
+                    'pause': 0,
+                    'video_delay': 100,
+                    'audio_length': len(message)
+                }
+                tts_animation(message, tts, av, web_api, gsp, obj_track, param)
+                # ===============================
 
             dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
 
+        # 상호작용 하던 사람이 사라진 경우 (그 순간만 수행): 끝
+        # ----------------------------------------
 
 
+        # ----------------------------------------
+        # 음성 상호작용 시작됨
         elif ad_state == ACTION_STATE_FACE_DETECTED:
-            # 음성인식
-
-
+            # ---------------------------
+            # 음성인식 시작
             try:
                 if dialog_flag:
                     if stt_enable == 1:
@@ -518,58 +503,17 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
                         dialog_flag = q_iter < q_length
                         content = query[q_iter-1]
 
-
             except Exception as e:
                 # 음성인식기의 block=False로 해 놓았을 때, 아직 버퍼에 쌓이지 않으면 오류 처리
                 content = None
                 pass
+            # 음성인식 끝
+            # ---------------------------
 
 
+            # --------------------------------------
+            # 본격적인 챗봇 구간 시작
             if dialog_flag and content is not None:
-                if (u'끝내자' in content):
-                    if len(event_detect.event_label) > 0:
-                        message = event_detect.event_label + "님, 안녕히 가세요."
-                    else:
-                        message = "네. 그럼, 안녕히 가세요."
-                    print(message)
-                    # ===============================
-                    if tts_enable == 1:
-                        obj_track.track_started = False
-                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                            gsp.pauseMic()
-
-                        # ----------------------------
-                        # To Play Video
-                        video_path = BASE_DIR + '/animation/ani01_GoodBye.mov'
-                        audio_enable = 0
-                        pause = 0
-                        video_delay = 100
-
-
-                        if ani_multiprocessing == 0:
-                            block = False
-                            tts.play(message, block)
-                            av.play_av(video_path, pause, audio_enable, video_delay)
-                            # ----------------------------
-                        else:
-                            ani_parameter = {
-                                'video_path': video_path,
-                                'pause': pause,
-                                'audio_enable': audio_enable,
-                                'video_delay': video_delay,
-                                'audio_length': len(message)
-                            }
-                            data_send = {
-                                'speech': message,
-                                'param': ani_parameter
-                            }
-                            url = 'http://localhost:60000/message'
-                            web_api.send_post(data_send, url)
-
-                            block = True
-                            tts.play(message, block)
-                    # -------------------------------
-                    break
 
                 # -------------------------------------------------------------
                 # chatbot/dialogflow.py  for Dialogflow chatbot platform
@@ -581,50 +525,32 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
                 message = res['result']['fulfillment']['speech']
 
                 # ===============================
-                if tts_enable == 1:
-                    obj_track.track_started = False
-                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                        gsp.pauseMic()
+                # TTS
+                param = {
+                    'tts_enable': tts_enable,
+                    'stt_enable': stt_enable,
+                    'ani_multiprocessing': ani_multiprocessing,
+                    'ad_event': ad_event,
+                    'video_path': BASE_DIR + '/animation/ani01_Hi_Short.mov',
+                    'audio_enable': 0,
+                    'pause': 0,
+                    'video_delay': 120,
+                    'audio_length': len(message)
+                }
+                tts_animation(message, tts, av, web_api, gsp, obj_track, param, BASE_DIR + '/animation/ani01_Hi_Short.mov')
+                # ===============================
 
-                    # ----------------------------
-                    # To Play Video
-                    video_path = BASE_DIR + '/animation/ani01_Hi_Short.mov'
-                    audio_enable = 0
-                    pause = 0
-                    video_delay = 120
-                    print(len(message))
-                    # ----------------------------
-
-                    if ani_multiprocessing == 0:
-                        block = False
-                        tts.play(message, block)
-                        av.play_av(video_path, pause, audio_enable, video_delay, len(message))
-                        # ----------------------------
+                if (u'끝내자' in content):
+                    if len(event_detect.event_label) > 0:
+                        message = event_detect.event_label + "님, 안녕히 가세요."
                     else:
-                        ani_parameter = {
-                            'video_path': video_path,
-                            'pause': pause,
-                            'audio_enable': audio_enable,
-                            'video_delay': video_delay,
-                            'audio_length': len(message)
-                        }
-                        data_send = {
-                            'speech': message,
-                            'param': ani_parameter
-                        }
-                        url = 'http://localhost:60000/message'
+                        message = "네. 그럼, 안녕히 가세요."
+                    print(message)
 
-                        cnt = 0
-                        cnt_th = int(len(message) / 15) + 1
-                        while cnt < cnt_th:
-                            cnt += 1
-                            web_api.send_post(data_send, url)
+                    break
 
-                        block = True
-                        tts.play(message, block)
-
-                # -------------------------------
-
+                # --------------------------------------------------
+                #   CSV database에서 해당 연구원의 자세한 정보를 가져와 안내함
                 try:
                     person_to_visit = res['result']['parameters']['person_to_visit']
                     # ------------------------
@@ -673,56 +599,34 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
                     print(message)
 
                     # ===============================
-                    if tts_enable == 1:
-                        obj_track.track_started = False
-                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
-                            gsp.pauseMic()
+                    # TTS
+                    param = {
+                        'tts_enable': tts_enable,
+                        'stt_enable': stt_enable,
+                        'ani_multiprocessing': ani_multiprocessing,
+                        'ad_event': ad_event,
+                        'video_path': BASE_DIR + '/animation/ani01_Hi_Short.mov',
+                        'audio_enable': 0,
+                        'pause': 0,
+                        'video_delay': 150,
+                        'audio_length': len(message)
+                    }
+                    tts_animation(message, tts, av, web_api, gsp, obj_track, param,
+                                  BASE_DIR + '/animation/ani01_Hi_Short.mov')
+                    # ===============================
 
-                        # ----------------------------
-                        # To Play Video
-                        video_path = BASE_DIR + '/animation/ani01_Hi_Short.mov'
-                        audio_enable = 0
-                        pause = 0
-                        video_delay = 150
-                        print(len(message))
-                        # ----------------------------
-
-                        if ani_multiprocessing == 0:
-                            block = False
-                            tts.play(message, block)
-                            av.play_av(video_path, pause, audio_enable, video_delay, len(message))
-                            # ----------------------------
-                        else:
-                            ani_parameter = {
-                                'video_path': video_path,
-                                'pause': pause,
-                                'audio_enable': audio_enable,
-                                'video_delay': video_delay,
-                                'audio_length': len(message)
-                            }
-                            data_send = {
-                                'speech': message,
-                                'param': ani_parameter
-                            }
-                            url = 'http://localhost:60000/message'
-
-                            cnt = 0
-                            cnt_th = int(len(message) / 15) + 1
-                            while cnt < cnt_th:
-                                cnt += 1
-                                web_api.send_post(data_send, url)
-
-                            block = True
-                            tts.play(message, block)
-
-                    # -------------------------------
                     print(json.dumps(answer, indent=4, ensure_ascii=False))
                     #print (info)
 
 
                 except Exception as e:
                     pass
-
+                #   CSV database에서 해당 연구원의 자세한 정보를 가져와 안내함 끝
+                # ------------------------------------------------
+            # 본격적인 챗봇 구간 끝
+            # --------------------------------------
+        # 음성 상호작용 끝
+        # ----------------------------------------
 
 
         key_in = cv2.waitKey(20) & 0xFF
@@ -758,6 +662,6 @@ if __name__ == '__main__':
     stt_enable = 1  # 0: Disable speech recognition (STT), 1: Enable it
     tts_enable = 1  # 0: Disable speech synthesis (TTS),   1: Enable it
 
-    ani_multiprocessing = 1   # 먼저 ./animation 폴더에서  python3 main_server.py 실행시킬 것
+    ani_multiprocessing = 0   # 먼저 ./animation 폴더에서  python3 main_server.py 실행시킬 것
 
     main(stt_enable, tts_enable, ani_multiprocessing)
