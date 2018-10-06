@@ -1,20 +1,32 @@
 # app.py
 import requests
-
 import json
+import time
 
+# ----------------------------------------------------------
+#  You need to setup PYTHONPATH to include tts/naver_tts.py
+#   ex.) export PYTHONPATH=/Users/jschoi/work/ChatBot/Receptionbot_Danbee/receptionbot:$PYTHONPATH
+from tts.naver_tts import NaverTTS  # TTS: NaverTTS
 
 
 def main():
+    # --------------------------------
+    # Create NaverTTS Class
+    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    message = '최종석님, 안녕하세요. 반갑습니다.'
+    tts.play(message, False)
 
-    text = 'Hi, Hello!'
-    user_key = 'DeepTasK'
+    ani_parameter = {
+        'video_path': './animation/ani01_known_approach.mov',
+        'pause': 0,
+        'audio_enable': 0,
+        'video_delay': 90,
+        'audio_length': len("최종석님, 안녕하십니까? 반갑습니다.")
+    }
 
     data_send = {
-        'lang': 'ko',
-        'query': text,
-        'sessionId': user_key,
-        'timezone': 'Asia/Seoul'
+        'speech': message,
+        'param': ani_parameter,
     }
 
     data_header = {
@@ -29,6 +41,9 @@ def main():
                         data=json.dumps(data_send),
                         headers=data_header)
 
+    delay = len(message) * 0.2
+    print(delay)
+    time.sleep(delay)
 
 if __name__ == '__main__':
     main()

@@ -18,7 +18,7 @@ google-cloud-speech==0.35.0	# Google Speech
 requests			# ChatBot
 Flask		# web server
 
-ffpyplayer	# To play video file
+#ffpyplayer	# To play video file
 
 Python-vlc	# To play video file
 
