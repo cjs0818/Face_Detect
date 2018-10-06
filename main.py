@@ -30,7 +30,6 @@ from pymongo import MongoClient
 import datetime
 import pprint
 
-from ffpyplayer.player import MediaPlayer
 
 
 

@@ -23,13 +23,14 @@ app = Flask('__name__')
 
 def gen():
 
+    '''
     #vlc_instance = vlc.Instance('--no-audio', '--fullscreen')
     vlc_instance = vlc.Instance()
     player = vlc_instance.media_player_new()
     media = vlc_instance.media_new('../animation/ani01_known_approach.mov')
     player.set_media(media)
     player.play()
-
+    '''
 
     '''
     # This will start an `omxplayer` process, this might
@@ -95,6 +96,10 @@ def message():
     #return resp
 
 
+
+
+
+
     return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -105,4 +110,26 @@ def message():
 
 
 if __name__ == '__main__':
+
+    cap = cv2.VideoCapture('../animation/ani01_Hi_Short.mov')
+    cv2.namedWindow('Video Play', cv2.WINDOW_AUTOSIZE)
+
+    frame_count = 0
+    while (cap.isOpened()):
+        ret, frame = cap.read()
+
+        frame_count += 1
+        #print(frame_count)
+
+        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        # cv2.imshow('frame',gray)
+        try:
+            cv2.imshow('Video Play', frame)
+        except:
+            pass
+        
+        if cv2.waitKey(15) & 0xFF == ord('q'):
+           break
+
     app.run(host='0.0.0.0', port=60000, debug=True)
