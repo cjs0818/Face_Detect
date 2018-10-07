@@ -168,6 +168,7 @@ class FaceRecog():
         # will make everything bigger and allow us to detect more faces.
         dets = self.detector(frame, 1)
         #print("Number of faces detected: {}".format(len(dets)))
+        # ---------------------------------
 
         fr_labels = []
         fr_box = []

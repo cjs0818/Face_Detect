@@ -53,10 +53,16 @@ $ pip3 install virtualenv virtualenvwrapper
 
 
 ## Download git source files & create virtualenv
-- Download git source files
+- Download git source files in you work directory
 ```
 $ git clone https://github.com/cjs0818/Face_Detect.git
-$ cd Face_Detect
+$ cd Face_Detect  # Let's say this director is BASE_DIR
+```
+
+- Set PYTHONPATH environment variable
+```
+$ export BASE_DIR=<your_work_dir>/Face_Detect   # For me, ~/work/ChatBot/Face_Detect
+$ export PYTHONPATH=$BASE_DIR:$PYTHONPATH
 ```
 
 - Note, **tensorflow is not compatible with python3.7**.

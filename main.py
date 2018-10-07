@@ -113,6 +113,18 @@ def cam_loop(queue_from_cam):
 
 
 def tts_animation(message, tts, av, web_api, gsp, obj_track, param, loop_path=[]):
+    '''
+
+    :param message: Text for tts (text to speech)
+    :param tts: Class for NaverTTS() in tts/naver_tts.py
+    :param av: Class for Play_AV() in animation/play_animation.py
+    :param web_api: Class for Web_API() in main_server.py
+    :param gsp: Class for stt: Gspeech()
+    :param obj_track: Class for Obj_Tracker in tracker/obj_tracker.py
+    :param param: parameters (dict) for tts_enable, stt_enable, ani_multiprocessing, ad_event, video_path, pause, audio_enable, video_delay, audio_length
+    :param loop_path: path to a video file which needs to be repeated more
+    :return:
+    '''
     tts_enable = param['tts_enable']
     stt_enable = param['stt_enable']
     ani_multiprocessing = param['ani_multiprocessing']

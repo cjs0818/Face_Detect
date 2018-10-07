@@ -40,7 +40,10 @@ class Obj_Tracker():
 
         self.roi = dlib.rectangle(x,y, x1, y1)
 
-        if x < 0 or y1 < 0 or x1 > image.shape[1] or y1 > image.shape[0]:
+        margin = int(image.shape[0]/10)
+
+        #if x < 0 or y1 < 0 or x1 > image.shape[1] or y1 > image.shape[0]:
+        if x < margin or y1 < margin or x1 > (image.shape[1]-margin) or y1 > (image.shape[0]-margin):
             #print("Lost!!!")
             self.track_started = False  # if the new_roi is out of the image, report the tracked object has been lost.
             self.track_running = False
