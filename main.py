@@ -631,7 +631,8 @@ def main(stt_enable=1, tts_enable=1, ani_multiprocessing=1):
         # ----------------------------------------
 
 
-        key_in = cv2.waitKey(20) & 0xFF
+        #key_in = cv2.waitKey(20) & 0xFF
+        key_in = cv2.waitKey(10) & 0xFF
         if key_in == ord('q'):
             break
         elif key_in == ord('c'):
