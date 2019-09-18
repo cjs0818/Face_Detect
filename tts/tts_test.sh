@@ -1,1 +1,1 @@
-curl  -d "speaker=jinho&speed=0&text=안녕하세요 저는 천동이입니다." "https://naveropenapi.apigw.ntruss.com/voice/v1/tts" -H "Content-Type: application/x-www-form-urlencoded" -H "X-NCP-APIGW-API-KEY-ID: eyrxb9rg98" -H "X-NCP-APIGW-API-KEY: DK9FvMgRTGBYu1IYLYMpUCniGoku8iaQ5e7bHi1D" > tts.mp3
+curl  -d "speaker=jinho&speed=0&text=안녕하세요 저는 천동이입니다." "https://naveropenapi.apigw.ntruss.com/voice/v1/tts" -H "Content-Type: application/x-www-form-urlencoded" -H "X-NCP-APIGW-API-KEY-ID: eyrxb9rg98" -H "X-NCP-APIGW-API-KEY: "<YOUR KEY>" > tts.mp3
