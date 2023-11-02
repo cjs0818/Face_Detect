@@ -150,8 +150,9 @@ drawPolyline(im, landmarks, 60, 67, true); // Inner lip
 
 
 def main():
-
-    cap = cv2.VideoCapture(0)
+    camera_idx = 0
+    #camera_idx = 1
+    cap = cv2.VideoCapture(camera_idx)
     cap.set(3, 320)
     cap.set(4, 240)
 

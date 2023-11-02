@@ -127,6 +127,7 @@ class Gspeech(Thread):
         self.config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=RATE,
+            model="latest_long",    # To speed up the response of 'is_final'
             language_code=self.language_code)
         self.streaming_config = speech.StreamingRecognitionConfig(
             config=self.config,

@@ -5,16 +5,24 @@ matplotlib
 scikit-image
 scikit-learn
 opencv-contrib-python
-google-cloud-vision==0.30.1
+#google-cloud-vision==0.30.1
+google-cloud-vision
 Pillow
-tensorflow==1.9.0  # python3.6.5 호환성문제시 -> (https://github.com/lakshayg/tensorflow-build)
-vlc
+#tensorflow==1.9.0  # python3.6.5 호환성문제시 -> (https://github.com/lakshayg/tensorflow-build)
+tensorflow  # python3.6.5 호환성문제시 -> (https://github.com/lakshayg/tensorflow-build)
+#vlc	# macOS에서 eror 발생
 pyaudio
 pyobjc		# for OSX
 playsound	# for OSX
 pymongo
-pprint
-google-cloud-speech==0.35.0	# Google Speech
+#pprint # macOS에서 eror 발생
+#google-cloud-speech==0.35.0	# Google Speech
+google-cloud-speech	# Google Speech
 requests			# ChatBot
 #pyglet		# AVBin required: [OSX] http://avbin.github.io/AVbin/Download.html, [Linux] sudo apt-get install libavbin-dev libavbin0
 #Pillow==5.0.0
+
+google-cloud-dialogflow
+google-cloud-speech
+#pyttsx3
+py3-tts
