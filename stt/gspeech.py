@@ -21,8 +21,14 @@ import re
 import sys
 
 from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
+#from google.cloud.speech import enums
+#from google.cloud.speech import types
+
+#from google.cloud import speech_v1 as speech
+#from google.cloud.speech_v1 import enums
+#from google.cloud.speech_v1 import types
+
+
 import pyaudio
 from six.moves import queue
 from threading import Thread
@@ -118,11 +124,11 @@ class Gspeech(Thread):
         self._buff = queue.Queue()
 
         self.client = speech.SpeechClient()
-        self.config = types.RecognitionConfig(
-            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+        self.config = speech.RecognitionConfig(
+            encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
             sample_rate_hertz=RATE,
             language_code=self.language_code)
-        self.streaming_config = types.StreamingRecognitionConfig(
+        self.streaming_config = speech.StreamingRecognitionConfig(
             config=self.config,
             interim_results=True)
 
@@ -139,7 +145,7 @@ class Gspeech(Thread):
         with MicrophoneStream(RATE, CHUNK) as stream:
             self.mic = stream
             audio_generator = stream.generator()
-            requests = (types.StreamingRecognizeRequest(audio_content=content)
+            requests = (speech.StreamingRecognizeRequest(audio_content=content)
                         for content in audio_generator)
 
             responses = self.client.streaming_recognize(self.streaming_config, requests)

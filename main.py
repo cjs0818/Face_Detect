@@ -34,14 +34,16 @@ import pprint
 
 #-------------------------------------------------------------
 # chatbot/dialogflow.py  for Dialogflow chatbot platform
-from chatbot.dialogflow import ChatBot   # Chatbot platform: Dialogflow.ai
+#from chatbot.dialogflow import ChatBot   # Chatbot platform: Dialogflow.ai
+from chatbot.dialogflow_v2 import ChatBot   # Chatbot platform: Dialogflow.ai
 from stt.gspeech import Gspeech     # STT: Google Cloud Speech
 import json
 
 # ----------------------------------------------------------
 #  You need to setup PYTHONPATH to include tts/naver_tts.py
 #   ex.) export PYTHONPATH=/Users/jschoi/work/ChatBot/Receptionbot_Danbee/receptionbot:$PYTHONPATH
-from tts.naver_tts import NaverTTS  # TTS: NaverTTS
+#from tts.naver_tts import NaverTTS  # TTS: NaverTTS
+from tts.pyttsx3_tts import PyTTSX3  # TTS: NaverTTS
 
 
 # ----------------------------
@@ -139,7 +141,8 @@ def cam_loop(queue_from_cam):
 #    folder: BASE_DIR/data/db
 class MongoDB():
     def __init__(self, db_name="DB_reception", coll_name="RMI_researchers"):
-        self.db_client = MongoClient('localhost', 27017)
+        #self.db_client = MongoClient('localhost', 27017)
+        self.db_client = MongoClient('mongodb+srv://pristine70:cjsy6918@atlascluster.zytuhxo.mongodb.net/')
         #self.db = self.db_client["DB_Episode"]
         #self.coll = self.db.coll_Test
         self.db = self.db_client[db_name]
@@ -227,9 +230,9 @@ def main(stt_enable=1, tts_enable=1):
 
     # --------------------------------
     # Create NaverTTS Class
-    tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    #tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    tts = PyTTSX3()
     #tts.play("안녕하십니까?")
-
 
     # --------------------------------
     # Mongo DB
@@ -251,9 +254,14 @@ def main(stt_enable=1, tts_enable=1):
 
     # -------------------------------------------------------------
     # chatbot/dialogflow.py  for Dialogflow chatbot platform
-    user_key = 'DeepTasK'
-    chatbot_id = 'c54e4466-d26d-4966-af1f-ca4d087d0c4a'
-    chat = ChatBot(chatbot_id)
+    #user_key = 'DeepTasK'
+    #chatbot_id = 'c54e4466-d26d-4966-af1f-ca4d087d0c4a'
+    #chat = ChatBot(chatbot_id)
+
+    project_id = "receptionbot-3b113"
+    session_id = "your-session-id"
+    language_code = 'ko-KR'  # a BCP-47 language tag
+    chat = ChatBot()
 
 
     # Multi-processing
@@ -505,8 +513,11 @@ def main(stt_enable=1, tts_enable=1):
             #res = chat.event_api_dialogflow(event_name, event_data, user_key)
             #message = res['result']['fulfillment']['speech']
             content = "안녕, 안내를 부탁해요"
-            res = chat.get_answer_dialogflow(content, user_key)
-            message = res['result']['fulfillment']['speech']
+            #res = chat.get_answer_dialogflow(content, user_key)
+            #message = res['result']['fulfillment']['speech']
+            
+            message = chat.detect_intent(project_id, session_id, content, language_code)
+
 
             # ===============================
             # TTS
@@ -586,8 +597,11 @@ def main(stt_enable=1, tts_enable=1):
                 #context_flag = True
                 #context_value = "EventApproachHello-followup"
                 #res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
-                res = chat.get_answer_dialogflow(content, user_key)
-                message = res['result']['fulfillment']['speech']
+                
+                #res = chat.get_answer_dialogflow(content, user_key)
+                #message = res['result']['fulfillment']['speech']
+
+                message = chat.detect_intent(project_id, session_id, content, language_code)
 
                 # ===============================
                 if tts_enable == 1:

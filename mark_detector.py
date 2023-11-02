@@ -77,13 +77,16 @@ class MarkDetector:
         # Load a (frozen) Tensorflow model into memory.
         detection_graph = tf.Graph()
         with detection_graph.as_default():
-            od_graph_def = tf.GraphDef()
-            with tf.gfile.GFile(mark_model, 'rb') as fid:
+            #od_graph_def = tf.GraphDef()
+            od_graph_def = tf.compat.v1.GraphDef()
+            #with tf.gfile.GFile(mark_model, 'rb') as fid:
+            with tf.compat.v2.io.gfile.GFile(mark_model, 'rb') as fid:
                 serialized_graph = fid.read()
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
         self.graph = detection_graph
-        self.sess = tf.Session(graph=detection_graph)
+        #self.sess = tf.Session(graph=detection_graph)
+        self.sess = tf.compat.v1.Session(graph=detection_graph)
 
     @staticmethod
     def draw_box(image, boxes, box_color=(255, 255, 255)):
