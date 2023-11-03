@@ -26,3 +26,5 @@ google-cloud-dialogflow
 google-cloud-speech
 #pyttsx3
 py3-tts
+gTTS
+pydub
