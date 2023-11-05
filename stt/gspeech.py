@@ -38,6 +38,7 @@ import time
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
+
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
@@ -48,6 +49,7 @@ class MicrophoneStream(object):
         self._buff = queue.Queue()
         self.closed = True
         self.isPause = False
+
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
@@ -135,6 +137,16 @@ class Gspeech(Thread):
 
         self.mic = None
         self.status = True
+
+        # Font Color
+        self.RED   = "\033[1;31m"  
+        self.GREEN = "\033[0;32m"
+        self.YELLOW = "\033[0;33m"
+        self.BLUE  = "\033[1;34m"
+        self.CYAN  = "\033[1;36m"
+        self.RESET = "\033[0;0m"
+        self.BOLD    = "\033[;1m"
+        self.REVERSE = "\033[;7m"
 
         self.daemon = True
         self.start()

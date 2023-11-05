@@ -30,7 +30,9 @@ from pymongo import MongoClient
 import datetime
 import pprint
 from gtts import gTTS
-
+#import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 #-------------------------------------------------------------
 # chatbot/dialogflow.py  for Dialogflow chatbot platform
@@ -93,8 +95,13 @@ from tracker.obj_tracker import Obj_Tracker
 import threading
 from threading import Lock
 
-from playsound import playsound
-from pydub import AudioSegment
+
+if sys.platform == "linux" or sys.platform == "linux2":
+    BASE_PATH = '/home/jschoi/work/Face_Detect/' # for Linux
+elif sys.platform == "darwin":
+    BASE_PATH='/Users/jschoi/work/Face_Detect/' # for macOS 
+
+sys.path.append(BASE_PATH + '../ffmpeg')
 
 # ----------------------------------------------------
 # database from CSV file
@@ -196,8 +203,8 @@ class FI():  # Face Interaction Class
         self.fr_labels = []
         self.fr_box = []
         self.fr_min_dist = 0
-        self.ad_state = 0
-        self.ad_event = 0
+        self.ad_state = []
+        self.ad_event = []
 
     def run(self):
         # Capture frame-by-frame
@@ -226,7 +233,6 @@ class FI():  # Face Interaction Class
         '''
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
         '''
         # ---------------------------------
@@ -381,62 +387,313 @@ class FI():  # Face Interaction Class
 
         return frame
 
+def gtts_play(text):
+    tts = gTTS(text=text, lang='ko')
 
+    fileName1 = "output.mp3"
+    fileName2 = BASE_PATH + fileName1
+    tts.save(fileName2)
+    #playsound.playsound(fileName)
 
-def Thread_TTS(q, tts):
+    # Load the MP3 file
+    audio = AudioSegment.from_mp3(fileName2)
+
+    # Speed up the audio (adjust the speed factor as needed)
+    speed_factor = 1.3
+    sped_up_audio = audio.speedup(playback_speed=speed_factor)
+
+    # Play the sped-up audio
+    play(sped_up_audio)
+
+def Thread_ChatBot(chat, gsp, fi, db, mgdb, mgdb_event): #(stt_enable, tts_enable, gsp, fi, chat, db, tts, mgdb, mgdb_event):
+
+    project_id = "receptionbot-3b113"
+    session_id = "your-session-id"
+    language_code = 'ko-KR'  # a BCP-47 language tag
+
     while True:
-        if q.empty() is False:
-            message = q.get()
-            print(f"message: {message}, tts.engine.isBusy(): {tts.engine.isBusy()}")
-            tts.play(message)
-            while tts.engine.isBusy():
-                time.sleep(0.01)
-        else:
-            pass
-    
-class C_ChatBot(): #(stt_enable, tts_enable, gsp, fi, chat, db, tts, mgdb, mgdb_event):
-    def __init__(self, stt_enable, tts_enable, gsp, fi, chat, db, tts, mgdb, mgdb_event):
-        self.stt_enable = stt_enable
-        self.tts_enable = tts_enable
-        self.gsp = gsp
-        self.fi = fi
-        self.chat = chat
-        self.db = db
-        self.tts = tts
-        self.mgdb = mgdb
-        self.mgdb_event = mgdb_event
-
-        self.queue = Queue()
-        thread_tts = threading.Thread(target=Thread_TTS, args=(self.queue,tts,))
-        #thread_tts.daemon = True
-        thread_tts.start()
-
-         
-    def run(self):
-        fi = self.fi
-        gsp = self.gsp
-        db = self.db
-        tts = self.tts
-        chat = self.chat
-
-        project_id = "receptionbot-3b113"
-        session_id = "your-session-id"
-        language_code = 'ko-KR'  # a BCP-47 language tag
+        #--------------------------------------------
+        # Copy variables from Face Interaction Class
+        max_width = fi.max_width
+        max_width_id = fi.max_width_id
+        fr_labels = fi.fr_labels
+        fr_box = fi.fr_box
+        fr_min_dist = fi.fr_min_dist
+        ad_state = fi.ad_state
+        ad_event = fi.ad_event
+        event_detect = fi.event_detect
+        #--------------------------------------------
         
-        cnt = 0
-        while True:
-            if cnt < 3:
-                message = f"테스트입니다 {cnt}"
-                self.queue.put(message)
-                cnt = cnt + 1
-            else:
-                break
-        print(f"cnt: {cnt}")
+        kor_name = []
+        event_name = 'UnknownApproach'
+        event_data = {'visitor_name': ""}
+
+        #print(f"ad_event: {ad_event}, ACTION_EVENT_APPROACH: {ACTION_EVENT_APPROACH}")        
+        if ad_event == ACTION_EVENT_APPROACH:
+            event_name = 'Approach'     # For query API of Dialogflow
+            dialog_flag = True  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+            eng_name = fr_labels[max_width_id]      #  인식된 얼굴의 영문 이름 -> csv 파일에서 한국이름을 찾고자 함
+
+            #------------------------
+            # Search from MongoDB
+            #name_dict = {"english_name": eng_name}
+            #result = mgdb.coll.find(name_dict)
+            #try:
+            #    kor_name = result[0]["name"]
+            #except Exception as e:
+            #    pass
+
+            # ----------------------------
+            # -- Search from csv file
+            for name in db.keys():
+                info = db[name]
+                if info["english_name"] == eng_name:
+                    kor_name = name
 
 
+            if len(kor_name) > 0:   #  MongoDB에서 한국이름을 찾을 수 있는 경우
+                # -------------------------------
+                # -- Approach 할 때마다 MongoDB에 { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() } 형태로 기록
+                # -------------------------------
+                # dict_contents = { "event": "approach", "name": kor_name, "datetime": datetime.datetime.now() }
+                # mgdb_event.coll.insert_one(dict_contents)
+                # -------------------------------
+                dt = []
+                for ret in mgdb_event.coll.find({"name": kor_name}):
+                    last_time = ret['datetime']
+                    now = datetime.datetime.now()
+                    dt = now - last_time
+                #print(dt)
+                #print("days: ", dt.days, ", seconds: ", dt.seconds)
+
+
+                event_detect.event_label = kor_name
+                message = kor_name + "님, 안녕하세요? 반갑습니다."
+                try:
+                    if dt.days > 0:
+                        message = message + " " + str(dt.days) + "일만에 오셨군요."
+                        how_long = str(dt.days) + "일"
+                    elif dt.seconds > 0:
+                        message = message + " " + str(dt.seconds) + "초만에 오셨군요"
+                        how_long = str(dt.seconds) + "초"
+                except Exception as e:
+                    pass
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
+
+                event_data = {'visitor_name': kor_name}
+
+            else:   # MongoDB에서 한국이름을 찾을 수 없는 경우
+                message = "안녕하십니까? 저는 안내를 도와드리는 ReceptionBot입니다."
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
+
+                event_data = {'visitor_name': 'UNKNOWN'}
+
+            # ===============================
+            # TTS
+            if tts_enable == 1:
+                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                    gsp.pauseMic()
+                gtts_play(message)
+
+            # -------------------------------
+            # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
+            # if tts_enable == 1:
+            #    for proc in procs:
+            #        proc.join()
+            #        procs.pop()
+            #    proc = Process(target=tts.play, args=(message,))
+            #    procs.append(proc)
+            #    proc.start()
+            #    print("Proc started! proc: ", proc, "  len(procs): ", len(procs))
+            # -------------------------------
+
+            # -------------------------------------------------------------
+            # chatbot/dialogflow.py  for Dialogflow chatbot platform
+            #    v1 API
+            ##event_name = 'Approach'
+            ##event_data = {'visitor_name': kor_name}
+            #res = chat.event_api_dialogflow(event_name, event_data, user_key)
+            #message = res['result']['fulfillment']['speech']
+            content = "안녕, 안내를 부탁해요"
+            #res = chat.get_answer_dialogflow(content, user_key)
+            #message = res['result']['fulfillment']['speech']
+            
+            message = chat.detect_intent(project_id, session_id, content, language_code)
+            sys.stdout.write(gsp.BLUE)
+            print("[BOT]: " + message)
+            sys.stdout.write(gsp.RESET)
+            #print(tts.engine.isBusy())
+
+            # ===============================
+            # TTS
+            if tts_enable == 1:
+                if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                    gsp.pauseMic()
+                gtts_play(message)
+            # -------------------------------
+
+        elif ad_event == ACTION_EVENT_DISAPPEAR:
+            if len(event_detect.event_label) > 0:
+                message = event_detect.event_label + "님, 안녕히 가세요."
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
+                event_detect.event_label = []
+                # ===============================
+                # TTS
+                if tts_enable == 1:
+                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                        gsp.pauseMic()
+                    gtts_play(message)
+            dialog_flag = False
+
+        elif ad_state == ACTION_STATE_FACE_DETECTED:
+            # 음성인식
+
+            #dialog_flag = False
+
+            try:
+                if dialog_flag:
+                    if stt_enable == 1:
+                        # -------------------------------
+                        # STT 재시작
+                        #print("------- 음성인식 대기중 -------")
+                        gsp.resumeMic()
+                        block = False
+                        content = gsp.getText(block)
+                        if content is not None:
+                            print (content)
+                        else:
+                            # 구글 음성인식기의 경우 1분 제한을 넘으면 None 발생 -> 다시 클래스를 생성시킴
+                            print("Recreate Gspeech()!")
+                            del gsp
+                            gsp = Gspeech()
+                    else:
+                        q_iter = q_iter + 1
+                        dialog_flag = q_iter < q_length
+                        content = query[q_iter-1]
+
+
+            except Exception as e:
+                # 음성인식기의 block=False로 해 놓았을 때, 아직 버퍼에 쌓이지 않으면 오류 처리
+                content = None
+                pass
+
+            #dialog_flag = False
+
+            if dialog_flag and content is not None:
+                if (u'끝내자' in content):
+                    if len(event_detect.event_label) > 0:
+                        message = event_detect.event_label + "님, 안녕히 가세요."
+                    else:
+                        message = "네. 안녕히 가세요."
+                    sys.stdout.write(gsp.BLUE)
+                    print("[BOT]: " + message)
+                    sys.stdout.write(gsp.RESET)
+                    # ===============================
+                    if tts_enable == 1:
+                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                            gsp.pauseMic()
+                        gtts_play(message)
+                    # -------------------------------
+                    break
+
+                # -------------------------------------------------------------
+                # chatbot/dialogflow.py  for Dialogflow chatbot platform
+                #    v1 API
+                #context_flag = True
+                #context_value = "EventApproachHello-followup"
+                #res = chat.get_answer_dialogflow(content, user_key, context_flag, context_value)
+                
+                #res = chat.get_answer_dialogflow(content, user_key)
+                #message = res['result']['fulfillment']['speech']
+
+                message = chat.detect_intent(project_id, session_id, content, language_code)
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
+
+                # ===============================
+                if tts_enable == 1:
+                    if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                        gsp.pauseMic()
+                    gtts_play(message)
+                # -------------------------------
+
+                try:
+                    person_to_visit = res['result']['parameters']['person_to_visit']
+                    # ------------------------
+                    # 최종석 박사 -> 최종석
+                    # 최종석 -> 최종석
+                    # ------------------------
+                    person_to_visit2 = person_to_visit.split()
+                    person_to_visit2 = person_to_visit2[0]
+                    #print (person_to_visit2)
+
+                    print('============= print from internal process ==================')
+                    # ------------------------
+                    # database에 해당 name의 사람이 있으면 그 사람의 information을 갖고 오고,
+                    # ''     ''      ''     ''  없으면 ERROR를 갖고 온다.
+                    # ------------------------
+                    try:
+                        info = db[person_to_visit2]
+                        try:
+                            room_num = info["room#"]
+                            message = person_to_visit + "님은 " + room_num + "호 에 계시며, 자세한 정보는 다음과 같습니다."
+                        except:
+                            message = person_to_visit + "님의 정보는 다음과 같습니다."
+                        
+                        #info = {
+                        #    "name": "최종석",
+                        #    "information": {
+                        #        "center": "지능로봇연구단",
+                        #        "room#": "8402",
+                        #        "phone#": "5618",
+                        #        "e-mail": "cjs@kist.re.kr"
+                        #    }
+                        #}
+                        
+                        # print('   information about ', name, ': ', json.dumps(info, indent=4, ensure_ascii=False))
+
+
+                        # This is the end of a dialog
+                        #dialog_flag = False  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
+                        #if stt_enable == 1:
+                        #    gsp.pauseMic()
+                    except:
+                        message = "죄송합니다만, KIST 국제협력관에서 " + person_to_visit + "님의 정보를 찾을 수 없습니다."
+                        message = message + " 찾으시는 다른 분이 계시면 말씀하세요. 끝내시려면 끝내자 라고 해주세요."
+                        info = 'ERROR'
+
+                    answer = {
+                        'name': person_to_visit2,
+                        'information': info
+                    }
+                    
+                    sys.stdout.write(gsp.BLUE)
+                    print("[BOT]: " + message)
+                    sys.stdout.write(gsp.BLUE)
+
+                    # ===============================
+                    if tts_enable == 1:
+                        if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
+                            gsp.pauseMic()
+                        gtts_play(message)
+                    # -------------------------------
+                    print(json.dumps(answer, indent=4, ensure_ascii=False))
+                    #print (info)
+
+
+                except Exception as e:
+                    pass
 
 
 def main(stt_enable=1, tts_enable=1):
+
     if stt_enable == 1:
         dialog_flag = True  # Enable speech recognition when APPROACH, Disable when dialog ends
         gsp = Gspeech()
@@ -487,7 +744,7 @@ def main(stt_enable=1, tts_enable=1):
     # --------------------------------
     # Create NaverTTS Class
     #tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
-    tts = PyTTSX3()
+    #tts = PyTTSX3()
     #tts.play("안녕하십니까?")
 
     # --------------------------------
@@ -507,6 +764,13 @@ def main(stt_enable=1, tts_enable=1):
     #pprint.pprint(result[0])
     #print(result[0]["name"])
 
+    # ------------------------------------------
+    # Generate a class for event detection such as approach or disappear
+    event_detect = Event_Detector()
+
+    # ------------------------
+    # Object Tracking by Dlib correlation_tracker
+    obj_track = Obj_Tracker()
 
     # -------------------------------------------------------------
     # chatbot/dialogflow.py  for Dialogflow chatbot platform
@@ -518,8 +782,9 @@ def main(stt_enable=1, tts_enable=1):
     chat = ChatBot()
 
     #-----------------------------------------------------
-    c_chatbot = C_ChatBot(stt_enable, tts_enable, gsp, fi, chat, db, tts, mgdb, mgdb_event)
-    c_chatbot.run()
+    thread_chatbot = threading.Thread(target=Thread_ChatBot, args=(chat,gsp,fi,db,mgdb,mgdb_event))
+    thread_chatbot.daemon = True
+    thread_chatbot.start()
 
     # Multi-processing
     procs = []
@@ -530,8 +795,6 @@ def main(stt_enable=1, tts_enable=1):
     while(True):
         # Capture frame-by-frame
         frame = fi.run()
-
-        
 
         #time.sleep(0.01)
         # -------------------------------

@@ -29,8 +29,10 @@ import csv
 from pymongo import MongoClient
 import datetime
 import pprint
-
-
+from gtts import gTTS
+#import playsound
+from pydub import AudioSegment
+from pydub.playback import play
 
 #-------------------------------------------------------------
 # chatbot/dialogflow.py  for Dialogflow chatbot platform
@@ -88,6 +90,18 @@ smile_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_smile.xml')
 # Object Tracking by Dlib correlation_tracker
 from tracker.obj_tracker import Obj_Tracker
 
+# ------------------------
+# Thread (thread_chatbot)
+import threading
+from threading import Lock
+
+
+if sys.platform == "linux" or sys.platform == "linux2":
+    BASE_PATH = '/home/jschoi/work/Face_Detect/' # for Linux
+elif sys.platform == "darwin":
+    BASE_PATH='/Users/jschoi/work/Face_Detect/' # for macOS 
+
+sys.path.append(BASE_PATH + '../ffmpeg')
 
 # ----------------------------------------------------
 # database from CSV file
@@ -153,125 +167,63 @@ class MongoDB():
         coll_list = self.mdb.collection_names()
         print(coll_list)
 
+class FI():  # Face Interaction Class
+    def __init__(self, cap):
 
+        cap.set(3, 320)
+        cap.set(4, 240)
 
-def main(stt_enable=1, tts_enable=1):
-    if stt_enable == 1:
-        dialog_flag = True  # Enable speech recognition when APPROACH, Disable when dialog ends
-        gsp = Gspeech()
-    else:
-        # 음성인식 아닌 경우, 테스트 query에 대해 문장 단위로 테스트
-        query = [
-            "사람",
-                "아나스타샤를 찾으러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "최종석 박사님을 만나러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "홍길동님을 찾으러 왔어요",
-            "안녕, 안내를 부탁해요",
-            "사람",
-                "여진구 박사님이요",
-                "끝내자"
-                 ]
-        q_length = len(query)
-        q_iter = 0
-        dialog_flag = q_iter < q_length
+        ret, sample_frame = cap.read()
 
+        self.cap = cap
+        # ----------------------------
+        # Head Pose Detection: by Dlib
+        predictor_path = "./shape_predictor_68_face_landmarks.dat"
+        #predictor = dlib.shape_predictor(predictor_path)
+        self.hpd = HeadPose(sample_frame, predictor_path)
 
-    cap = cv2.VideoCapture(0)
-    cap.set(3, 320)
-    cap.set(4, 240)
+        # ------------------------------------------
+        # Dlib: Load labels_id & face_descriptors of registered faces
+        predictor_path = "face_recognition/shape_predictor_5_face_landmarks.dat"
+        face_rec_model_path = "face_recognition/dlib_face_recognition_resnet_model_v1.dat"
+        self.fr = FaceRecog(predictor_path, face_rec_model_path, fr_th=0.5)
+        self.iter = 0
+        # ------------------------------------------
 
-    ret, sample_frame = cap.read()
+        # ------------------------------------------
+        # Generate a class for event detection such as approach or disappear
+        self.event_detect = Event_Detector()
 
-    '''
-    cam_process = Process(target=cam_loop, args=(queue_from_cam,))
-    cam_process.start()
-    while queue_from_cam.empty():
-        pass
-    sample_frame = queue_from_cam.get()
-    '''
+        # ------------------------
+        # Object Tracking by Dlib correlation_tracker
+        self.obj_track = Obj_Tracker()
 
-    # ----------------------------
-    # Head Pose Detection: by Dlib
-    predictor_path = "./shape_predictor_68_face_landmarks.dat"
-    predictor = dlib.shape_predictor(predictor_path)
+        self.max_width = 0  #frame.shape[0]
+        self.max_width_id = -1
+        self.fr_labels = []
+        self.fr_box = []
+        self.fr_min_dist = 0
+        self.ad_state = []
+        self.ad_event = []
 
-    hpd = HeadPose(sample_frame, predictor_path)
-
-
-    # ------------------------------------------
-    # Dlib: Load labels_id & face_descriptors of registered faces
-    predictor_path = "face_recognition/shape_predictor_5_face_landmarks.dat"
-    face_rec_model_path = "face_recognition/dlib_face_recognition_resnet_model_v1.dat"
-    fr = FaceRecog(predictor_path, face_rec_model_path, fr_th=0.5)
-    iter = 0
-    # ------------------------------------------
-
-
-    # ------------------------------------------
-    # Generate a class for event detection such as approach or disappear
-    event_detect = Event_Detector()
-
-    # ------------------------
-    # Object Tracking by Dlib correlation_tracker
-    obj_track = Obj_Tracker()
-
-    # ------------------------
-    # Load Database
-    #PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
-    #DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
-    #filename = DB_DIR + "/RMI_researchers.csv"
-    filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
-    db = get_datatbase(filename)
-
-
-    # --------------------------------
-    # Create NaverTTS Class
-    #tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
-    tts = PyTTSX3()
-    #tts.play("안녕하십니까?")
-
-    # --------------------------------
-    # Mongo DB
-    db_name = "DB_reception"        # define a Database
-    coll_name = "RMI_researchers"   # define a Collection
-    mgdb = MongoDB(db_name, coll_name)
-
-    db_name = "DB_reception"        # define a Database
-    coll_name = "Event"             # define a Collection
-    mgdb_event = MongoDB(db_name, coll_name)
-
-    # Test the 'find' of Mongo DB
-    #eng_name = "jschoi"
-    #name_dict = { "english_name": eng_name }
-    #result = mgdb.coll.find(name_dict)
-    #pprint.pprint(result[0])
-    #print(result[0]["name"])
-
-
-    # -------------------------------------------------------------
-    # chatbot/dialogflow.py  for Dialogflow chatbot platform
-    #user_key = 'DeepTasK'
-    #chatbot_id = 'c54e4466-d26d-4966-af1f-ca4d087d0c4a'
-    #chat = ChatBot(chatbot_id)
-
-    project_id = "receptionbot-3b113"
-    session_id = "your-session-id"
-    language_code = 'ko-KR'  # a BCP-47 language tag
-    chat = ChatBot()
-
-
-    # Multi-processing
-    procs = []
-
-    # For instantaneous image capture
-    capture_idx = 0
-
-    while(True):
+    def run(self):
         # Capture frame-by-frame
+        cap = self.cap
+
+        hpd = self.hpd
+        fr = self.fr
+        event_detect = self.event_detect
+        obj_track = self.obj_track
+
+        iter = self.iter
+        max_width = self.max_width
+        max_width_id = self.max_width_id
+        fr_labels = self.fr_labels
+        fr_box = self.fr_box
+        fr_min_dist = self.fr_min_dist
+        ad_state = self.ad_state
+        ad_event = self.ad_event
+
         ret, frame = cap.read()
 
         '''
@@ -281,7 +233,6 @@ def main(stt_enable=1, tts_enable=1):
         '''
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
 
         '''
         # ---------------------------------
@@ -310,8 +261,6 @@ def main(stt_enable=1, tts_enable=1):
             cv2.rectangle(frame, (x, y), (end_cord_x, end_cord_y), color, stroke)
         '''
 
-        max_width = 0   #frame.shape[0]
-        max_width_id = -1
 
 
 
@@ -391,14 +340,16 @@ def main(stt_enable=1, tts_enable=1):
 
 
             # ---------------------------------
-            #   Select the closed face
+            #   Select the closest face
             d_width = d.right() - d.left()
             if(d_width > max_width):
                 max_width_id = id
+                max_width = d_width
+
 
         if(len(fr_labels) > 0):
             # ---------------------------------
-            # Head Pose Detection for the closed face,
+            # Head Pose Detection for the closest face,
 
             # Get the landmarks/parts for the face in box d.
             d = fr_box[max_width_id]
@@ -422,12 +373,62 @@ def main(stt_enable=1, tts_enable=1):
             else:
                 cv2.line(frame, p1, p2, (0, 255, 0), 2)
 
+
         (ad_state, ad_event) = event_detect.approach_disappear(fr_labels, fr_box, max_width_id)
 
+        self.iter = iter
+        self.fr_labels = fr_labels
+        self.fr_box = fr_box
+        self.fr_min_dist = fr_min_dist
+        self.max_max_width = max_width
+        self.max_width_id = max_width_id
+        self.ad_state = ad_state
+        self.ad_event = ad_event
 
+        return frame
+
+def gtts_play(text):
+    tts = gTTS(text=text, lang='ko')
+
+    fileName1 = "output.mp3"
+    fileName2 = BASE_PATH + fileName1
+    tts.save(fileName2)
+    #playsound.playsound(fileName)
+
+    # Load the MP3 file
+    audio = AudioSegment.from_mp3(fileName2)
+
+    # Speed up the audio (adjust the speed factor as needed)
+    speed_factor = 1.3
+    sped_up_audio = audio.speedup(playback_speed=speed_factor)
+
+    # Play the sped-up audio
+    play(sped_up_audio)
+
+def Thread_ChatBot(chat, gsp, fi, db, mgdb, mgdb_event): #(stt_enable, tts_enable, gsp, fi, chat, db, tts, mgdb, mgdb_event):
+
+    project_id = "receptionbot-3b113"
+    session_id = "your-session-id"
+    language_code = 'ko-KR'  # a BCP-47 language tag
+
+    while True:
+        #--------------------------------------------
+        # Copy variables from Face Interaction Class
+        max_width = fi.max_width
+        max_width_id = fi.max_width_id
+        fr_labels = fi.fr_labels
+        fr_box = fi.fr_box
+        fr_min_dist = fi.fr_min_dist
+        ad_state = fi.ad_state
+        ad_event = fi.ad_event
+        event_detect = fi.event_detect
+        #--------------------------------------------
+        
         kor_name = []
         event_name = 'UnknownApproach'
         event_data = {'visitor_name': ""}
+
+        #print(f"ad_event: {ad_event}, ACTION_EVENT_APPROACH: {ACTION_EVENT_APPROACH}")        
         if ad_event == ACTION_EVENT_APPROACH:
             event_name = 'Approach'     # For query API of Dialogflow
             dialog_flag = True  # Enable dialog when APPROACH, Disable when dialog end   # 대화 종료 시, 카메라 인식을 위해 음성인식을 끈다. -> ACTION_EVENT_APPROACH 이벤트 발생 시 다시 stt_enable = 1로 켠다
@@ -477,13 +478,17 @@ def main(stt_enable=1, tts_enable=1):
                         how_long = str(dt.seconds) + "초"
                 except Exception as e:
                     pass
-                print(message)
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
 
                 event_data = {'visitor_name': kor_name}
 
             else:   # MongoDB에서 한국이름을 찾을 수 없는 경우
                 message = "안녕하십니까? 저는 안내를 도와드리는 ReceptionBot입니다."
-                print(message)
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
 
                 event_data = {'visitor_name': 'UNKNOWN'}
 
@@ -492,7 +497,8 @@ def main(stt_enable=1, tts_enable=1):
             if tts_enable == 1:
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
-                tts.play(message)
+                gtts_play(message)
+
             # -------------------------------
             # Multiprocessing을 시도했으나, cv2.VideoCapture()로 인해 수행이 안됨 -> 확인 필요
             # if tts_enable == 1:
@@ -517,29 +523,32 @@ def main(stt_enable=1, tts_enable=1):
             #message = res['result']['fulfillment']['speech']
             
             message = chat.detect_intent(project_id, session_id, content, language_code)
-
+            sys.stdout.write(gsp.BLUE)
+            print("[BOT]: " + message)
+            sys.stdout.write(gsp.RESET)
+            #print(tts.engine.isBusy())
 
             # ===============================
             # TTS
             if tts_enable == 1:
                 if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                     gsp.pauseMic()
-                tts.play(message)
+                gtts_play(message)
             # -------------------------------
-
-
 
         elif ad_event == ACTION_EVENT_DISAPPEAR:
             if len(event_detect.event_label) > 0:
                 message = event_detect.event_label + "님, 안녕히 가세요."
-                print(message)
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
                 event_detect.event_label = []
                 # ===============================
                 # TTS
                 if tts_enable == 1:
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
-                    tts.play(message)
+                    gtts_play(message)
             dialog_flag = False
 
         elif ad_state == ACTION_STATE_FACE_DETECTED:
@@ -582,12 +591,14 @@ def main(stt_enable=1, tts_enable=1):
                         message = event_detect.event_label + "님, 안녕히 가세요."
                     else:
                         message = "네. 안녕히 가세요."
-                    print(message)
+                    sys.stdout.write(gsp.BLUE)
+                    print("[BOT]: " + message)
+                    sys.stdout.write(gsp.RESET)
                     # ===============================
                     if tts_enable == 1:
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
-                        tts.play(message)
+                        gtts_play(message)
                     # -------------------------------
                     break
 
@@ -602,12 +613,15 @@ def main(stt_enable=1, tts_enable=1):
                 #message = res['result']['fulfillment']['speech']
 
                 message = chat.detect_intent(project_id, session_id, content, language_code)
+                sys.stdout.write(gsp.BLUE)
+                print("[BOT]: " + message)
+                sys.stdout.write(gsp.RESET)
 
                 # ===============================
                 if tts_enable == 1:
                     if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                         gsp.pauseMic()
-                    tts.play(message)
+                    gtts_play(message)
                 # -------------------------------
 
                 try:
@@ -659,13 +673,16 @@ def main(stt_enable=1, tts_enable=1):
                         'name': person_to_visit2,
                         'information': info
                     }
-                    print(message)
+                    
+                    sys.stdout.write(gsp.BLUE)
+                    print("[BOT]: " + message)
+                    sys.stdout.write(gsp.BLUE)
 
                     # ===============================
                     if tts_enable == 1:
                         if stt_enable == 1:  # TTS 하는 동안 STT 일시 중지 --
                             gsp.pauseMic()
-                        tts.play(message)
+                        gtts_play(message)
                     # -------------------------------
                     print(json.dumps(answer, indent=4, ensure_ascii=False))
                     #print (info)
@@ -674,12 +691,116 @@ def main(stt_enable=1, tts_enable=1):
                 except Exception as e:
                     pass
 
+
+def main(stt_enable=1, tts_enable=1):
+
+    if stt_enable == 1:
+        dialog_flag = True  # Enable speech recognition when APPROACH, Disable when dialog ends
+        gsp = Gspeech()
+    else:
+        # 음성인식 아닌 경우, 테스트 query에 대해 문장 단위로 테스트
+        query = [
+            "사람",
+                "아나스타샤를 찾으러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "최종석 박사님을 만나러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "홍길동님을 찾으러 왔어요",
+            "안녕, 안내를 부탁해요",
+            "사람",
+                "여진구 박사님이요",
+                "끝내자"
+                 ]
+        q_length = len(query)
+        q_iter = 0
+        dialog_flag = q_iter < q_length
+
+
+    cap = cv2.VideoCapture(0)
+
+
+    fi = FI(cap)    # Face Interaction Class
+
+    '''
+    cam_process = Process(target=cam_loop, args=(queue_from_cam,))
+    cam_process.start()
+    while queue_from_cam.empty():
+        pass
+    sample_frame = queue_from_cam.get()
+    '''
+
+
+    # ------------------------
+    # Load Database
+    #PARENT_DIR = os.path.dirname(os.path.abspath(__file__)) + "/.."
+    #DB_DIR = os.path.join(PARENT_DIR, "Receptionbot_Danbee/receptionbot")
+    #filename = DB_DIR + "/RMI_researchers.csv"
+    filename = os.path.dirname(os.path.abspath(__file__)) + "/RMI_researchers.csv"
+    db = get_datatbase(filename)
+
+
+    # --------------------------------
+    # Create NaverTTS Class
+    #tts = NaverTTS(0,-1)    # Create a NaverTTS() class from tts/naver_tts.py
+    #tts = PyTTSX3()
+    #tts.play("안녕하십니까?")
+
+    # --------------------------------
+    # Mongo DB
+    db_name = "DB_reception"        # define a Database
+    coll_name = "RMI_researchers"   # define a Collection
+    mgdb = MongoDB(db_name, coll_name)
+
+    db_name = "DB_reception"        # define a Database
+    coll_name = "Event"             # define a Collection
+    mgdb_event = MongoDB(db_name, coll_name)
+
+    # Test the 'find' of Mongo DB
+    #eng_name = "jschoi"
+    #name_dict = { "english_name": eng_name }
+    #result = mgdb.coll.find(name_dict)
+    #pprint.pprint(result[0])
+    #print(result[0]["name"])
+
+    # ------------------------------------------
+    # Generate a class for event detection such as approach or disappear
+    event_detect = Event_Detector()
+
+    # ------------------------
+    # Object Tracking by Dlib correlation_tracker
+    obj_track = Obj_Tracker()
+
+    # -------------------------------------------------------------
+    # chatbot/dialogflow.py  for Dialogflow chatbot platform
+    #user_key = 'DeepTasK'
+    #chatbot_id = 'c54e4466-d26d-4966-af1f-ca4d087d0c4a'
+    #chat = ChatBot(chatbot_id)
+
+
+    chat = ChatBot()
+
+    #-----------------------------------------------------
+    thread_chatbot = threading.Thread(target=Thread_ChatBot, args=(chat,gsp,fi,db,mgdb,mgdb_event))
+    thread_chatbot.daemon = True
+    thread_chatbot.start()
+
+    # Multi-processing
+    procs = []
+
+    # For instantaneous image capture
+    capture_idx = 0
+
+    while(True):
+        # Capture frame-by-frame
+        frame = fi.run()
+
         #time.sleep(0.01)
         # -------------------------------
         # STT 재시작
         #if stt_enable == 1 and tts_enable == 1:
         #    gsp.resumeMic()
-
 
 
         # Display the resulting frame
