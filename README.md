@@ -155,6 +155,13 @@ cv2.destroyAllWindows()
 
 ## Install ffmpeg
 ### For the use of AudioSegment.from_mp3()
+  - Install using conda
+    ```
+    conda install ffmpeg
+    ```
+
+ or
+ 
  - Download the source file into '~/work' folder
    ```
    git clone https://git.ffmpeg.org/ffmpeg.git
